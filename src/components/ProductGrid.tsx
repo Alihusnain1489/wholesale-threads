@@ -1,17 +1,58 @@
 
-import React from 'react';
-import { Button } from "@/components/ui/button";
+import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Star, Heart, ShoppingCart } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Product } from "@/pages/Index";
 
 interface ProductGridProps {
   products: Product[];
   onAddToCart: (product: Product) => void;
+  selectedCategory: string;
+  onCategoryChange: (category: string) => void;
 }
 
-const ProductGrid = ({ products, onAddToCart }: ProductGridProps) => {
+const ProductGrid = ({ products, onAddToCart, selectedCategory, onCategoryChange }: ProductGridProps) => {
+  const [sortBy, setSortBy] = useState('name');
+  const [priceFilter, setPriceFilter] = useState('all');
+
+  const categories = ['All', 'Lawn', 'Chiffon', 'Silk', 'Cotton', 'Georgette'];
+
+  const filteredAndSortedProducts = React.useMemo(() => {
+    let filtered = [...products];
+
+    // Price filter
+    if (priceFilter !== 'all') {
+      switch (priceFilter) {
+        case 'under2000':
+          filtered = filtered.filter(p => p.price < 2000);
+          break;
+        case '2000-3000':
+          filtered = filtered.filter(p => p.price >= 2000 && p.price <= 3000);
+          break;
+        case 'above3000':
+          filtered = filtered.filter(p => p.price > 3000);
+          break;
+      }
+    }
+
+    // Sorting
+    switch (sortBy) {
+      case 'price-low':
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-high':
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+      case 'name':
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+    }
+
+    return filtered;
+  }, [products, sortBy, priceFilter]);
+
   return (
     <section id="products" className="py-16 bg-white">
       <div className="container mx-auto px-4">
@@ -19,14 +60,60 @@ const ProductGrid = ({ products, onAddToCart }: ProductGridProps) => {
           Our Premium Collection
         </h2>
         
+        {/* Filters and Sorting */}
+        <div className="mb-8 space-y-4">
+          {/* Categories */}
+          <div className="flex flex-wrap justify-center gap-3">
+            {categories.map(category => (
+              <Button
+                key={category}
+                variant={selectedCategory === category ? "default" : "outline"}
+                onClick={() => onCategoryChange(category)}
+                className={selectedCategory === category 
+                  ? "rounded-full bg-amber-600 hover:bg-amber-700 text-white" 
+                  : "rounded-full border-amber-200 text-amber-700 hover:bg-amber-50"
+                }
+              >
+                {category}
+              </Button>
+            ))}
+          </div>
+
+          {/* Filters and Sort */}
+          <div className="flex flex-wrap justify-center gap-4">
+            <Select value={priceFilter} onValueChange={setPriceFilter}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Filter by Price" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Prices</SelectItem>
+                <SelectItem value="under2000">Under ₨2,000</SelectItem>
+                <SelectItem value="2000-3000">₨2,000 - ₨3,000</SelectItem>
+                <SelectItem value="above3000">Above ₨3,000</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="name">Name (A-Z)</SelectItem>
+                <SelectItem value="price-low">Price (Low to High)</SelectItem>
+                <SelectItem value="price-high">Price (High to Low)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {products.map(product => (
+          {filteredAndSortedProducts.map(product => (
             <Card key={product.id} className="group hover:shadow-lg transition-all duration-300 border border-gray-200 overflow-hidden">
               <div className="relative overflow-hidden">
                 <img 
                   src={product.imageUrl} 
                   alt={product.name}
-                  className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 {product.originalPrice && (
                   <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600 text-xs">
@@ -40,63 +127,29 @@ const ProductGrid = ({ products, onAddToCart }: ProductGridProps) => {
                     </Badge>
                   </div>
                 )}
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute top-2 right-2 bg-white/80 hover:bg-white text-gray-600 hover:text-red-500 h-8 w-8"
-                >
-                  <Heart className="h-3 w-3" />
-                </Button>
               </div>
               
               <CardContent className="p-4">
-                <div className="flex items-center mb-2">
-                  <div className="flex text-yellow-400">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-3 w-3 fill-current" />
-                    ))}
-                  </div>
-                  <span className="text-xs text-gray-500 ml-2">(4.8)</span>
-                </div>
+                <h3 className="font-semibold text-lg mb-2 text-gray-800 text-center">{product.name}</h3>
                 
-                <h3 className="font-semibold text-sm mb-2 text-gray-800 line-clamp-2">{product.name}</h3>
-                <p className="text-gray-600 text-xs mb-3 line-clamp-2">{product.description}</p>
-                
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center space-x-1">
-                    <span className="text-lg font-bold text-amber-700">
-                      ₨ {product.price.toLocaleString()}
+                <div className="flex items-center justify-center space-x-2">
+                  <span className="text-xl font-bold text-amber-700">
+                    ₨ {product.price.toLocaleString()}
+                  </span>
+                  {product.originalPrice && (
+                    <span className="text-sm text-gray-400 line-through">
+                      ₨ {product.originalPrice.toLocaleString()}
                     </span>
-                    {product.originalPrice && (
-                      <span className="text-sm text-gray-400 line-through">
-                        ₨ {product.originalPrice.toLocaleString()}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                
-                <Button 
-                  onClick={() => onAddToCart(product)}
-                  disabled={!product.inStock}
-                  className="w-full bg-amber-100 hover:bg-amber-200 text-amber-800 disabled:opacity-50 disabled:cursor-not-allowed text-sm py-2 border border-amber-200"
-                >
-                  {product.inStock ? (
-                    <>
-                      <ShoppingCart className="h-3 w-3 mr-2" />
-                      Add to Cart
-                    </>
-                  ) : (
-                    'Out of Stock'
                   )}
-                </Button>
+                </div>
               </CardContent>
             </Card>
           ))}
         </div>
         
-        {products.length === 0 && (
+        {filteredAndSortedProducts.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">No products found in this category.</p>
+            <p className="text-gray-500 text-lg">No products found matching your criteria.</p>
           </div>
         )}
       </div>

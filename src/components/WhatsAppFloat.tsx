@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, Phone } from "lucide-react";
 
 const WhatsAppFloat = () => {
   const handleWhatsAppClick = () => {
@@ -12,17 +12,25 @@ const WhatsAppFloat = () => {
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
-      <Button
-        onClick={handleWhatsAppClick}
-        className="h-14 w-14 rounded-full bg-green-500 hover:bg-green-600 shadow-lg hover:shadow-xl transition-all duration-300 animate-pulse"
-        size="icon"
-      >
-        <MessageCircle className="h-6 w-6 text-white" />
-      </Button>
-      
-      {/* Tooltip */}
-      <div className="absolute bottom-16 right-0 bg-black text-white text-xs px-2 py-1 rounded opacity-0 hover:opacity-100 transition-opacity whitespace-nowrap">
-        Chat with us on WhatsApp
+      <div className="relative group">
+        <Button
+          onClick={handleWhatsAppClick}
+          className="h-16 w-16 rounded-2xl bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-2xl hover:shadow-green-500/25 transition-all duration-300 border-2 border-white"
+          size="icon"
+        >
+          <MessageCircle className="h-7 w-7 text-white" />
+        </Button>
+        
+        {/* Ripple effect */}
+        <div className="absolute inset-0 rounded-2xl bg-green-500/30 animate-ping"></div>
+        
+        {/* Tooltip */}
+        <div className="absolute bottom-20 right-0 bg-gray-800 text-white text-sm px-4 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap shadow-lg">
+          <div className="relative">
+            Chat with us on WhatsApp
+            <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
+          </div>
+        </div>
       </div>
     </div>
   );

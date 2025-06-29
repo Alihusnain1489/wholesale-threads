@@ -91,8 +91,6 @@ const Index = () => {
     }
   ];
 
-  const categories = ['All', 'Lawn', 'Chiffon', 'Silk', 'Cotton', 'Georgette'];
-
   const filteredProducts = selectedCategory === 'All' 
     ? products 
     : products.filter(product => product.category === selectedCategory);
@@ -190,32 +188,12 @@ const Index = () => {
       {/* Hero Section */}
       <HeroSection />
 
-      {/* Categories */}
-      <section className="py-8 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">Shop by Category</h2>
-          <div className="flex flex-wrap justify-center gap-3">
-            {categories.map(category => (
-              <Button
-                key={category}
-                variant={selectedCategory === category ? "default" : "outline"}
-                onClick={() => setSelectedCategory(category)}
-                className={selectedCategory === category 
-                  ? "rounded-full bg-amber-600 hover:bg-amber-700 text-white" 
-                  : "rounded-full border-amber-200 text-amber-700 hover:bg-amber-50"
-                }
-              >
-                {category}
-              </Button>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Products Grid */}
       <ProductGrid 
         products={filteredProducts} 
         onAddToCart={addToCart}
+        selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
       />
 
       {/* Contact Section */}
