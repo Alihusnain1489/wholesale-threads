@@ -2,34 +2,42 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Phone, Mail, MessageCircle, MapPin, Clock, Star } from "lucide-react";
+import { Phone, Mail, MessageCircle, MapPin, Clock, Star, Award, Shield, Truck } from "lucide-react";
 
 const ContactSection = () => {
   return (
-    <section id="contact" className="py-16 bg-gradient-to-br from-pink-50 to-purple-50">
-      <div className="container mx-auto px-4">
+    <section id="contact" className="py-16 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23e0e7ff" fill-opacity="0.3"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
+      
+      <div className="container mx-auto px-4 relative">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+          <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
             Get in Touch
           </h2>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Have questions about our fabrics? Need bulk pricing? We're here to help you find the perfect materials for your needs.
+          <p className="text-gray-600 text-xl max-w-3xl mx-auto leading-relaxed">
+            Have questions about our fabrics? Need bulk pricing? We're here to help you find the perfect materials for your needs with personalized service and expert guidance.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-          <Card className="text-center hover:shadow-lg transition-shadow border-0 shadow-md">
-            <CardHeader>
-              <div className="w-12 h-12 bg-gradient-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                <MessageCircle className="h-6 w-6 text-white" />
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mb-12">
+          <Card className="text-center hover:shadow-2xl transition-all duration-300 border-0 shadow-lg bg-white/80 backdrop-blur-sm hover:scale-105 group">
+            <CardHeader className="pb-4">
+              <div className="relative">
+                <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-green-200 transition-shadow">
+                  <MessageCircle className="h-8 w-8 text-white" />
+                </div>
+                <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                  <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                </div>
               </div>
-              <CardTitle className="text-lg">WhatsApp</CardTitle>
+              <CardTitle className="text-xl text-gray-800 group-hover:text-green-600 transition-colors">WhatsApp</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-4">Chat with us directly</p>
+            <CardContent className="pb-6">
+              <p className="text-gray-600 mb-4 text-sm">Chat with us directly for instant responses</p>
               <Button 
                 onClick={() => window.open('https://wa.me/923261052244', '_blank')}
-                className="w-full bg-green-500 hover:bg-green-600"
+                className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:shadow-green-200 transition-all duration-300"
               >
                 <MessageCircle className="h-4 w-4 mr-2" />
                 Chat Now
@@ -37,20 +45,20 @@ const ContactSection = () => {
             </CardContent>
           </Card>
 
-          <Card className="text-center hover:shadow-lg transition-shadow border-0 shadow-md">
-            <CardHeader>
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Phone className="h-6 w-6 text-white" />
+          <Card className="text-center hover:shadow-2xl transition-all duration-300 border-0 shadow-lg bg-white/80 backdrop-blur-sm hover:scale-105 group">
+            <CardHeader className="pb-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-blue-200 transition-shadow">
+                <Phone className="h-8 w-8 text-white" />
               </div>
-              <CardTitle className="text-lg">Phone</CardTitle>
+              <CardTitle className="text-xl text-gray-800 group-hover:text-blue-600 transition-colors">Phone</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-2">+92 326 1052244</p>
+            <CardContent className="pb-6">
+              <p className="text-gray-800 mb-1 font-semibold">+92 326 1052244</p>
               <p className="text-sm text-gray-500 mb-4">Call for immediate assistance</p>
               <Button 
                 onClick={() => window.open('tel:+923261052244', '_self')}
                 variant="outline"
-                className="w-full border-blue-300 text-blue-600 hover:bg-blue-50"
+                className="w-full border-2 border-blue-300 text-blue-600 hover:bg-blue-50 hover:border-blue-400 transition-all duration-300"
               >
                 <Phone className="h-4 w-4 mr-2" />
                 Call Now
@@ -58,20 +66,20 @@ const ContactSection = () => {
             </CardContent>
           </Card>
 
-          <Card className="text-center hover:shadow-lg transition-shadow border-0 shadow-md">
-            <CardHeader>
-              <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Mail className="h-6 w-6 text-white" />
+          <Card className="text-center hover:shadow-2xl transition-all duration-300 border-0 shadow-lg bg-white/80 backdrop-blur-sm hover:scale-105 group">
+            <CardHeader className="pb-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-purple-200 transition-shadow">
+                <Mail className="h-8 w-8 text-white" />
               </div>
-              <CardTitle className="text-lg">Email</CardTitle>
+              <CardTitle className="text-xl text-gray-800 group-hover:text-purple-600 transition-colors">Email</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-2 text-sm">mr.alihusnain11@gmail.com</p>
+            <CardContent className="pb-6">
+              <p className="text-gray-800 mb-1 text-sm font-semibold break-all">mr.alihusnain11@gmail.com</p>
               <p className="text-sm text-gray-500 mb-4">For detailed inquiries</p>
               <Button 
                 onClick={() => window.open('mailto:mr.alihusnain11@gmail.com', '_self')}
                 variant="outline"
-                className="w-full border-purple-300 text-purple-600 hover:bg-purple-50"
+                className="w-full border-2 border-purple-300 text-purple-600 hover:bg-purple-50 hover:border-purple-400 transition-all duration-300"
               >
                 <Mail className="h-4 w-4 mr-2" />
                 Send Email
@@ -79,54 +87,63 @@ const ContactSection = () => {
             </CardContent>
           </Card>
 
-          <Card className="text-center hover:shadow-lg transition-shadow border-0 shadow-md">
-            <CardHeader>
-              <div className="w-12 h-12 bg-gradient-to-r from-pink-400 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Clock className="h-6 w-6 text-white" />
+          <Card className="text-center hover:shadow-2xl transition-all duration-300 border-0 shadow-lg bg-white/80 backdrop-blur-sm hover:scale-105 group">
+            <CardHeader className="pb-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-pink-400 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-pink-200 transition-shadow">
+                <Clock className="h-8 w-8 text-white" />
               </div>
-              <CardTitle className="text-lg">Business Hours</CardTitle>
+              <CardTitle className="text-xl text-gray-800 group-hover:text-pink-600 transition-colors">Business Hours</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-sm text-gray-600 space-y-1">
-                <p>Mon - Sat: 9:00 AM - 8:00 PM</p>
-                <p>Sunday: 10:00 AM - 6:00 PM</p>
-                <div className="flex items-center justify-center mt-3">
-                  <div className="flex text-yellow-400">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-3 w-3 fill-current" />
-                    ))}
-                  </div>
-                  <span className="text-xs text-gray-500 ml-1">Trusted Service</span>
+            <CardContent className="pb-6">
+              <div className="text-sm text-gray-600 space-y-1 mb-4">
+                <p className="font-semibold">Mon - Sat: 9:00 AM - 8:00 PM</p>
+                <p className="font-semibold">Sunday: 10:00 AM - 6:00 PM</p>
+              </div>
+              <div className="flex items-center justify-center mb-2">
+                <div className="flex text-yellow-400">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 fill-current" />
+                  ))}
                 </div>
               </div>
+              <span className="text-xs text-gray-500 font-medium">Trusted Service Since 2020</span>
             </CardContent>
           </Card>
         </div>
 
-        <div className="mt-12 bg-white/50 backdrop-blur-sm rounded-2xl p-8 max-w-3xl mx-auto">
-          <div className="text-center">
-            <h3 className="text-2xl font-bold mb-4 text-gray-800">Why Choose Wholesale Threads?</h3>
-            <div className="grid md:grid-cols-3 gap-6 text-center">
-              <div>
-                <div className="w-12 h-12 bg-gradient-to-r from-pink-400 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Star className="h-6 w-6 text-white" />
+        <div className="mt-16 bg-white/60 backdrop-blur-lg rounded-3xl p-10 max-w-5xl mx-auto border border-white/20 shadow-2xl">
+          <div className="text-center mb-8">
+            <h3 className="text-3xl font-bold mb-6 bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+              Why Choose Wholesale Threads?
+            </h3>
+            <div className="grid md:grid-cols-4 gap-8">
+              <div className="group">
+                <div className="w-16 h-16 bg-gradient-to-br from-pink-400 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-pink-200 transition-all duration-300 group-hover:scale-110">
+                  <Star className="h-8 w-8 text-white" />
                 </div>
-                <h4 className="font-semibold mb-2">Premium Quality</h4>
-                <p className="text-sm text-gray-600">Hand-picked fabrics from trusted suppliers</p>
+                <h4 className="font-bold mb-3 text-lg text-gray-800">Premium Quality</h4>
+                <p className="text-sm text-gray-600 leading-relaxed">Hand-picked fabrics from trusted suppliers with quality assurance</p>
               </div>
-              <div>
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <MapPin className="h-6 w-6 text-white" />
+              <div className="group">
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-purple-200 transition-all duration-300 group-hover:scale-110">
+                  <Truck className="h-8 w-8 text-white" />
                 </div>
-                <h4 className="font-semibold mb-2">Fast Delivery</h4>
-                <p className="text-sm text-gray-600">Quick shipping across Pakistan</p>
+                <h4 className="font-bold mb-3 text-lg text-gray-800">Fast Delivery</h4>
+                <p className="text-sm text-gray-600 leading-relaxed">Quick and secure shipping across Pakistan with tracking</p>
               </div>
-              <div>
-                <div className="w-12 h-12 bg-gradient-to-r from-indigo-400 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Phone className="h-6 w-6 text-white" />
+              <div className="group">
+                <div className="w-16 h-16 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-indigo-200 transition-all duration-300 group-hover:scale-110">
+                  <Phone className="h-8 w-8 text-white" />
                 </div>
-                <h4 className="font-semibold mb-2">24/7 Support</h4>
-                <p className="text-sm text-gray-600">Always here to help you</p>
+                <h4 className="font-bold mb-3 text-lg text-gray-800">24/7 Support</h4>
+                <p className="text-sm text-gray-600 leading-relaxed">Always here to help with dedicated customer service</p>
+              </div>
+              <div className="group">
+                <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-green-200 transition-all duration-300 group-hover:scale-110">
+                  <Award className="h-8 w-8 text-white" />
+                </div>
+                <h4 className="font-bold mb-3 text-lg text-gray-800">Best Prices</h4>
+                <p className="text-sm text-gray-600 leading-relaxed">Wholesale rates with bulk discounts and special offers</p>
               </div>
             </div>
           </div>

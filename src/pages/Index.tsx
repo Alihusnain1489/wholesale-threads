@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -9,6 +10,8 @@ import CartSidebar from "@/components/CartSidebar";
 import BookingDialog from "@/components/BookingDialog";
 import ContactSection from "@/components/ContactSection";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
+import StitchingSection from "@/components/StitchingSection";
+import ProductDetailModal from "@/components/ProductDetailModal";
 
 export interface Product {
   id: number;
@@ -16,6 +19,7 @@ export interface Product {
   price: number;
   originalPrice?: number;
   imageUrl: string;
+  hoverImageUrl?: string;
   category: string;
   inStock: boolean;
   description: string;
@@ -29,6 +33,8 @@ const Index = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isProductDetailOpen, setIsProductDetailOpen] = useState(false);
 
   const products: Product[] = [
     {
@@ -37,9 +43,10 @@ const Index = () => {
       price: 2500,
       originalPrice: 3000,
       imageUrl: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=300&fit=crop",
+      hoverImageUrl: "https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=400&h=300&fit=crop",
       category: "Lawn",
       inStock: true,
-      description: "High-quality cotton lawn fabric perfect for summer wear"
+      description: "High-quality cotton lawn fabric perfect for summer wear. This premium fabric offers excellent breathability and comfort, making it ideal for everyday wear. The soft texture and vibrant colors make it a popular choice for Pakistani traditional dresses."
     },
     {
       id: 2,
@@ -47,9 +54,10 @@ const Index = () => {
       price: 1800,
       originalPrice: 2200,
       imageUrl: "https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=400&h=300&fit=crop",
+      hoverImageUrl: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&h=300&fit=crop",
       category: "Chiffon",
       inStock: true,
-      description: "Elegant chiffon fabric with matching dupatta"
+      description: "Elegant chiffon fabric with matching dupatta. This delicate and flowing fabric is perfect for formal occasions and party wear. The lightweight material drapes beautifully and adds a touch of elegance to any outfit."
     },
     {
       id: 3,
@@ -57,18 +65,20 @@ const Index = () => {
       price: 4500,
       originalPrice: 5500,
       imageUrl: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&h=300&fit=crop",
+      hoverImageUrl: "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=400&h=300&fit=crop",
       category: "Silk",
       inStock: true,
-      description: "Luxurious silk fabric for special occasions"
+      description: "Luxurious silk fabric for special occasions. Made from premium quality silk, this fabric offers a rich texture and lustrous finish. Perfect for weddings, festivals, and special celebrations."
     },
     {
       id: 4,
       name: "Cotton Karandi Fabric",
       price: 2200,
       imageUrl: "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=400&h=300&fit=crop",
+      hoverImageUrl: "https://images.unsplash.com/photo-1583391733981-3cd898f6dbff?w=400&h=300&fit=crop",
       category: "Cotton",
       inStock: true,
-      description: "Comfortable cotton karandi for daily wear"
+      description: "Comfortable cotton karandi for daily wear. This versatile fabric is perfect for casual and semi-formal occasions. The cotton blend ensures comfort while maintaining a polished appearance."
     },
     {
       id: 5,
@@ -76,24 +86,31 @@ const Index = () => {
       price: 3200,
       originalPrice: 3800,
       imageUrl: "https://images.unsplash.com/photo-1583391733981-3cd898f6dbff?w=400&h=300&fit=crop",
+      hoverImageUrl: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=300&fit=crop",
       category: "Lawn",
       inStock: false,
-      description: "Beautiful embroidered lawn with intricate designs"
+      description: "Beautiful embroidered lawn with intricate designs. Features hand-embroidered motifs and delicate patterns that showcase traditional Pakistani craftsmanship. Currently out of stock due to high demand."
     },
     {
       id: 6,
       name: "Georgette Party Wear",
       price: 3800,
       imageUrl: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=300&fit=crop",
+      hoverImageUrl: "https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=400&h=300&fit=crop",
       category: "Georgette",
       inStock: true,
-      description: "Elegant georgette fabric for party occasions"
+      description: "Elegant georgette fabric for party occasions. This flowing and graceful fabric is perfect for evening wear and special events. The lightweight material creates beautiful draping effects."
     }
   ];
 
   const filteredProducts = selectedCategory === 'All' 
     ? products 
     : products.filter(product => product.category === selectedCategory);
+
+  const handleProductClick = (product: Product) => {
+    setSelectedProduct(product);
+    setIsProductDetailOpen(true);
+  };
 
   const addToCart = (product: Product) => {
     if (!product.inStock) {
@@ -194,10 +211,22 @@ const Index = () => {
         onAddToCart={addToCart}
         selectedCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
+        onProductClick={handleProductClick}
       />
+
+      {/* Stitching Section */}
+      <StitchingSection />
 
       {/* Contact Section */}
       <ContactSection />
+
+      {/* Product Detail Modal */}
+      <ProductDetailModal 
+        product={selectedProduct}
+        isOpen={isProductDetailOpen}
+        onOpenChange={setIsProductDetailOpen}
+        onAddToCart={addToCart}
+      />
 
       {/* Cart Sidebar */}
       <CartSidebar 
@@ -221,7 +250,7 @@ const Index = () => {
                 Wholesale Threads
               </h3>
               <p className="text-gray-300">
-                Premium Pakistani unstitched fabrics for women. Quality guaranteed with wholesale prices.
+                Premium Pakistani unstitched fabrics for women. Quality guaranteed with wholesale prices and custom stitching services.
               </p>
             </div>
             
@@ -241,6 +270,7 @@ const Index = () => {
                 <li>Chiffon</li>
                 <li>Silk</li>
                 <li>Cotton</li>
+                <li>Georgette</li>
               </ul>
             </div>
             

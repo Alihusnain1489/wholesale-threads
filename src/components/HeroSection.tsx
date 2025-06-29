@@ -12,7 +12,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative h-screen bg-gray-50 overflow-hidden">
+    <section className="relative w-full h-[450px] bg-gray-50 overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
         <img 
