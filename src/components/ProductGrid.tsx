@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star, Heart, ShoppingCart } from "lucide-react";
 import { Product } from "@/pages/Index";
@@ -19,23 +19,23 @@ const ProductGrid = ({ products, onAddToCart }: ProductGridProps) => {
           Our Premium Collection
         </h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {products.map(product => (
-            <Card key={product.id} className="group hover:shadow-xl transition-all duration-300 border-0 shadow-lg overflow-hidden">
+            <Card key={product.id} className="group hover:shadow-lg transition-all duration-300 border border-gray-200 overflow-hidden">
               <div className="relative overflow-hidden">
                 <img 
                   src={product.imageUrl} 
                   alt={product.name}
-                  className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 {product.originalPrice && (
-                  <Badge className="absolute top-3 left-3 bg-red-500 hover:bg-red-600">
+                  <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600 text-xs">
                     {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
                   </Badge>
                 )}
                 {!product.inStock && (
                   <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                    <Badge variant="destructive" className="text-lg px-4 py-2">
+                    <Badge variant="destructive" className="text-sm px-3 py-1">
                       Out of Stock
                     </Badge>
                   </div>
@@ -43,32 +43,32 @@ const ProductGrid = ({ products, onAddToCart }: ProductGridProps) => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute top-3 right-3 bg-white/80 hover:bg-white text-gray-600 hover:text-red-500"
+                  className="absolute top-2 right-2 bg-white/80 hover:bg-white text-gray-600 hover:text-red-500 h-8 w-8"
                 >
-                  <Heart className="h-4 w-4" />
+                  <Heart className="h-3 w-3" />
                 </Button>
               </div>
               
-              <CardContent className="p-6">
+              <CardContent className="p-4">
                 <div className="flex items-center mb-2">
                   <div className="flex text-yellow-400">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-current" />
+                      <Star key={i} className="h-3 w-3 fill-current" />
                     ))}
                   </div>
-                  <span className="text-sm text-gray-500 ml-2">(4.8)</span>
+                  <span className="text-xs text-gray-500 ml-2">(4.8)</span>
                 </div>
                 
-                <h3 className="font-bold text-lg mb-2 text-gray-800">{product.name}</h3>
-                <p className="text-gray-600 text-sm mb-4 line-clamp-2">{product.description}</p>
+                <h3 className="font-semibold text-sm mb-2 text-gray-800 line-clamp-2">{product.name}</h3>
+                <p className="text-gray-600 text-xs mb-3 line-clamp-2">{product.description}</p>
                 
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-2xl font-bold text-pink-600">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center space-x-1">
+                    <span className="text-lg font-bold text-amber-700">
                       ₨ {product.price.toLocaleString()}
                     </span>
                     {product.originalPrice && (
-                      <span className="text-lg text-gray-400 line-through">
+                      <span className="text-sm text-gray-400 line-through">
                         ₨ {product.originalPrice.toLocaleString()}
                       </span>
                     )}
@@ -78,11 +78,11 @@ const ProductGrid = ({ products, onAddToCart }: ProductGridProps) => {
                 <Button 
                   onClick={() => onAddToCart(product)}
                   disabled={!product.inStock}
-                  className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-amber-100 hover:bg-amber-200 text-amber-800 disabled:opacity-50 disabled:cursor-not-allowed text-sm py-2 border border-amber-200"
                 >
                   {product.inStock ? (
                     <>
-                      <ShoppingCart className="h-4 w-4 mr-2" />
+                      <ShoppingCart className="h-3 w-3 mr-2" />
                       Add to Cart
                     </>
                   ) : (

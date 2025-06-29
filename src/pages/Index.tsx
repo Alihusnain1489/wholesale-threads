@@ -1,13 +1,7 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { ShoppingCart, MessageCircle, Star, Heart, Phone, Mail, MapPin } from "lucide-react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { ShoppingCart, Phone, Mail } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import HeroSection from "@/components/HeroSection";
 import ProductGrid from "@/components/ProductGrid";
@@ -159,16 +153,16 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b shadow-sm">
+      <header className="sticky top-0 z-40 bg-white border-b shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-pink-500 to-purple-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-amber-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">W</span>
               </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-bold text-gray-800">
                 Wholesale Threads
               </h1>
             </div>
@@ -178,12 +172,12 @@ const Index = () => {
                 variant="outline"
                 size="sm"
                 onClick={() => setIsCartOpen(true)}
-                className="relative"
+                className="relative border-amber-200 text-amber-700 hover:bg-amber-50"
               >
                 <ShoppingCart className="h-4 w-4 mr-2" />
                 Cart
                 {cartItems.length > 0 && (
-                  <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                  <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs bg-amber-600">
                     {cartItems.reduce((sum, item) => sum + item.quantity, 0)}
                   </Badge>
                 )}
@@ -197,7 +191,7 @@ const Index = () => {
       <HeroSection />
 
       {/* Categories */}
-      <section className="py-8 bg-white/50">
+      <section className="py-8 bg-white">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">Shop by Category</h2>
           <div className="flex flex-wrap justify-center gap-3">
@@ -206,7 +200,10 @@ const Index = () => {
                 key={category}
                 variant={selectedCategory === category ? "default" : "outline"}
                 onClick={() => setSelectedCategory(category)}
-                className="rounded-full"
+                className={selectedCategory === category 
+                  ? "rounded-full bg-amber-600 hover:bg-amber-700 text-white" 
+                  : "rounded-full border-amber-200 text-amber-700 hover:bg-amber-50"
+                }
               >
                 {category}
               </Button>
@@ -238,30 +235,30 @@ const Index = () => {
       <WhatsAppFloat />
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      <footer className="bg-gray-800 text-white py-12">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <h3 className="text-xl font-bold mb-4 bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
+              <h3 className="text-xl font-bold mb-4 text-amber-400">
                 Wholesale Threads
               </h3>
-              <p className="text-gray-400">
+              <p className="text-gray-300">
                 Premium Pakistani unstitched fabrics for women. Quality guaranteed with wholesale prices.
               </p>
             </div>
             
             <div>
               <h4 className="font-semibold mb-4">Quick Links</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#home" className="hover:text-pink-400 transition-colors">Home</a></li>
-                <li><a href="#products" className="hover:text-pink-400 transition-colors">Products</a></li>
-                <li><a href="#contact" className="hover:text-pink-400 transition-colors">Contact</a></li>
+              <ul className="space-y-2 text-gray-300">
+                <li><a href="#home" className="hover:text-amber-400 transition-colors">Home</a></li>
+                <li><a href="#products" className="hover:text-amber-400 transition-colors">Products</a></li>
+                <li><a href="#contact" className="hover:text-amber-400 transition-colors">Contact</a></li>
               </ul>
             </div>
             
             <div>
               <h4 className="font-semibold mb-4">Categories</h4>
-              <ul className="space-y-2 text-gray-400">
+              <ul className="space-y-2 text-gray-300">
                 <li>Lawn</li>
                 <li>Chiffon</li>
                 <li>Silk</li>
@@ -271,14 +268,14 @@ const Index = () => {
             
             <div>
               <h4 className="font-semibold mb-4">Contact Info</h4>
-              <div className="space-y-2 text-gray-400">
+              <div className="space-y-2 text-gray-300">
                 <p className="flex items-center"><Phone className="h-4 w-4 mr-2" /> +92 326 1052244</p>
                 <p className="flex items-center"><Mail className="h-4 w-4 mr-2" /> mr.alihusnain11@gmail.com</p>
               </div>
             </div>
           </div>
           
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+          <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
             <p>&copy; 2024 Wholesale Threads. All rights reserved.</p>
           </div>
         </div>
