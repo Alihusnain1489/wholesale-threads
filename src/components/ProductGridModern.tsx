@@ -19,7 +19,7 @@ const ProductGridModern = ({ products, onAddToCart, selectedCategory, onCategory
   const [sortBy, setSortBy] = useState('newest');
   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
 
-  const categories = ['All', 'Dresses', 'Tops', 'Bottoms', 'Accessories'];
+  const categories = ['All', 'Lawn', 'Cotton', 'Chiffon', 'Silk', 'Festive', 'Formal'];
 
   const filteredProducts = selectedCategory === 'All' 
     ? products 
@@ -31,10 +31,10 @@ const ProductGridModern = ({ products, onAddToCart, selectedCategory, onCategory
         {/* Header */}
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-black mb-4">
-            FEATURED PRODUCTS
+            UNSTITCHED WOMEN'S COLLECTION
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Discover our carefully curated selection of premium clothing and accessories
+            Discover our exquisite range of unstitched fabrics with beautiful designs and premium quality
           </p>
         </div>
 
@@ -127,14 +127,20 @@ const ProductGridModern = ({ products, onAddToCart, selectedCategory, onCategory
                 </h3>
                 <div className="flex items-center space-x-2">
                   <span className="font-bold text-black">
-                    £{product.price}
+                    PKR {product.price.toLocaleString()}
                   </span>
                   {product.originalPrice && (
                     <span className="text-sm text-gray-400 line-through">
-                      £{product.originalPrice}
+                      PKR {product.originalPrice.toLocaleString()}
                     </span>
                   )}
                 </div>
+                
+                {product.pieces && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    {product.pieces} Piece Unstitched
+                  </p>
+                )}
                 
                 {/* Quick Add to Cart */}
                 <Button 
