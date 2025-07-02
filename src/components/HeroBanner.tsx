@@ -5,7 +5,7 @@ const HeroBanner = () => {
   return (
     <section
       className="relative bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: "url('public/bg-web.webp')" }}
+      style={{ backgroundImage: "url('public/lovable-uploads/bg-web.webp')" }}
     >
       <div className=" w-full h-[400px]">
         <div className="container mx-0  py-16">
