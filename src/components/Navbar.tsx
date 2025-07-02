@@ -20,13 +20,11 @@ interface NavbarProps {
   cartItemsCount: number;
   onCartOpen: () => void;
   onLoginOpen: () => void;
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
 }
 
-const Navbar = ({ cartItemsCount, onCartOpen, onLoginOpen }: NavbarProps) => {
-  const [searchQuery, setSearchQuery] = useState('');
-
-  
-
+const Navbar = ({ cartItemsCount, onCartOpen, onLoginOpen, searchQuery, onSearchChange }: NavbarProps) => {
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
       {/* Top Bar */}
@@ -72,7 +70,7 @@ const Navbar = ({ cartItemsCount, onCartOpen, onLoginOpen }: NavbarProps) => {
                 type="text"
                 placeholder="Search for products..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => onSearchChange(e.target.value)}
                 className="pl-10 pr-4 py-2 w-full border-gray-300 focus:border-black focus:ring-0"
               />
             </div>
@@ -103,14 +101,19 @@ const Navbar = ({ cartItemsCount, onCartOpen, onLoginOpen }: NavbarProps) => {
                 </Button>
               </SheetTrigger>
               <SheetContent>
-               
+                <div className="mt-8">
+                  <Input
+                    type="text"
+                    placeholder="Search for products..."
+                    value={searchQuery}
+                    onChange={(e) => onSearchChange(e.target.value)}
+                    className="w-full mb-4"
+                  />
+                </div>
               </SheetContent>
             </Sheet>
           </div>
         </div>
-
-        {/* Navigation Menu - Desktop */}
-       
       </div>
     </header>
   );

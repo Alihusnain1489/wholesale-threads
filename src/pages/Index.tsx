@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -16,6 +17,7 @@ import ProductDetailModal from "@/components/ProductDetailModal";
 import LoginForm from "@/components/LoginForm";
 import ComplaintForm from "@/components/ComplaintForm";
 import OrderStatusForm from "@/components/OrderStatusForm";
+import StitchingSection from "@/components/StitchingSection";
 
 export interface Product {
   id: number;
@@ -50,19 +52,21 @@ const Index = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [isComplaintOpen, setIsComplaintOpen] = useState(false);
   const [isOrderStatusOpen, setIsOrderStatusOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [visibleProductCount, setVisibleProductCount] = useState(12);
 
   const products: Product[] = [
     {
       id: 1,
-      name: "Premium Embroidered Lawn Suit",
+      name: "Premium Embroidered Lawn Suit - Chikankari Collection",
       price: 4500,
       originalPrice: 6000,
       imageUrl: "/lovable-uploads/169fe697-18b5-4551-babf-b05ff42d17cc.png",
       hoverImageUrl: "/lovable-uploads/5544a434-4a1f-46cc-b113-10304bbc10aa.png",
-      category: "Lawn",
+      category: "Chikankari",
       inStock: true,
-      description: "Beautiful coral pink embroidered lawn suit with intricate floral patterns. Perfect for summer wear.",
-      productCode: "LW-001",
+      description: "Beautiful coral pink embroidered lawn suit with intricate chikankari work and floral patterns. Perfect for summer wear.",
+      productCode: "CHK-001",
       stockLeft: 12,
       color: "Coral Pink",
       fabric: "Lawn",
@@ -71,14 +75,14 @@ const Index = () => {
     },
     {
       id: 2,
-      name: "Floral Print Casual Suit",
+      name: "Traditional Chunri Print Casual Suit",
       price: 3200,
       imageUrl: "/lovable-uploads/e8642cf1-db46-4c35-bba3-39817a416de8.png",
       hoverImageUrl: "/lovable-uploads/c8ac127f-e55a-4890-b64d-1b029f32ef38.png",
-      category: "Cotton",
+      category: "Chunri",
       inStock: true,
-      description: "Elegant teal floral print suit with comfortable cotton fabric. Ideal for daily wear.",
-      productCode: "CT-002",
+      description: "Elegant teal chunri print suit with comfortable cotton fabric. Traditional bandhani patterns ideal for daily wear.",
+      productCode: "CHN-002",
       stockLeft: 25,
       color: "Teal Green",
       fabric: "Cotton",
@@ -87,15 +91,15 @@ const Index = () => {
     },
     {
       id: 3,
-      name: "Luxury Chiffon Collection",
+      name: "Dhoop Kinaray Luxury Collection",
       price: 8500,
       originalPrice: 10000,
       imageUrl: "/lovable-uploads/558c5917-b7c4-4092-9c5e-63316f2d53d6.png",
       hoverImageUrl: "/lovable-uploads/4a031324-00d1-4c00-95b9-3c959bd9a70c.png",
-      category: "Chiffon",
+      category: "Dhoop Kinaray",
       inStock: true,
-      description: "Stunning teal chiffon suit with heavy embroidery and sequin work. Perfect for special occasions.",
-      productCode: "CF-003",
+      description: "Stunning teal chiffon suit with heavy embroidery and sequin work from our signature Dhoop Kinaray collection.",
+      productCode: "DK-003",
       stockLeft: 8,
       color: "Teal Blue",
       fabric: "Chiffon",
@@ -104,14 +108,14 @@ const Index = () => {
     },
     {
       id: 4,
-      name: "Vibrant Pink Festive Wear",
+      name: "The Floral World - Vibrant Pink Collection",
       price: 5500,
       imageUrl: "/lovable-uploads/d9b3d47c-7b5d-4b19-82d2-0e406e0696b8.png",
       hoverImageUrl: "/lovable-uploads/a83a0091-d12d-4f2b-b8c9-f03315dc5666.png",
-      category: "Festive",
+      category: "The Floral World",
       inStock: true,
-      description: "Bright pink festive suit with golden embellishments and matching dupatta.",
-      productCode: "FT-004",
+      description: "Bright pink floral suit with golden embellishments from The Floral World collection.",
+      productCode: "FW-004",
       stockLeft: 15,
       color: "Hot Pink",
       fabric: "Silk Blend",
@@ -120,14 +124,14 @@ const Index = () => {
     },
     {
       id: 5,
-      name: "Designer Formal Collection",
+      name: "Tribute to Mothers - Designer Formal Collection",
       price: 7200,
       originalPrice: 9000,
       imageUrl: "/lovable-uploads/515e1bb2-b7a9-4126-8e72-203817453fb8.png",
-      category: "Formal",
+      category: "Tribute to Mothers",
       inStock: true,
-      description: "Elegant maroon formal suit with intricate embroidery work. Perfect for weddings and formal events.",
-      productCode: "FM-005",
+      description: "Elegant maroon formal suit with intricate embroidery work from our Tribute to Mothers collection.",
+      productCode: "TM-005",
       stockLeft: 6,
       color: "Maroon",
       fabric: "Silk",
@@ -136,25 +140,53 @@ const Index = () => {
     },
     {
       id: 6,
-      name: "Summer Breeze Lawn",
+      name: "Premium Luxury Summer Breeze",
       price: 3800,
       imageUrl: "/lovable-uploads/5544a434-4a1f-46cc-b113-10304bbc10aa.png",
       hoverImageUrl: "/lovable-uploads/c8ac127f-e55a-4890-b64d-1b029f32ef38.png",
-      category: "Lawn",
+      category: "Premium Luxury",
       inStock: true,
-      description: "Light and airy lawn fabric with delicate floral print. Perfect for summer comfort.",
-      productCode: "LW-006",
+      description: "Light and airy luxury lawn fabric with delicate floral print from our Premium Luxury collection.",
+      productCode: "PL-006",
       stockLeft: 20,
       color: "Light Green",
-      fabric: "Lawn",
+      fabric: "Premium Lawn",
+      pieces: 3,
+      includes: ["Shirt", "Trouser", "Dupatta"]
+    },
+    // Additional products for better demonstration
+    {
+      id: 7,
+      name: "Chikankari White Elegance",
+      price: 4200,
+      imageUrl: "/lovable-uploads/169fe697-18b5-4551-babf-b05ff42d17cc.png",
+      category: "Chikankari",
+      inStock: true,
+      description: "Classic white chikankari suit with traditional threadwork.",
+      productCode: "CHK-007",
+      stockLeft: 18,
+      color: "White",
+      fabric: "Cotton",
+      pieces: 3,
+      includes: ["Shirt", "Trouser", "Dupatta"]
+    },
+    {
+      id: 8,
+      name: "Chunri Festival Special",
+      price: 3500,
+      originalPrice: 4200,
+      imageUrl: "/lovable-uploads/e8642cf1-db46-4c35-bba3-39817a416de8.png",
+      category: "Chunri",
+      inStock: true,
+      description: "Festive chunri print in vibrant colors perfect for celebrations.",
+      productCode: "CHN-008",
+      stockLeft: 22,
+      color: "Multi Color",
+      fabric: "Cotton Silk",
       pieces: 3,
       includes: ["Shirt", "Trouser", "Dupatta"]
     }
   ];
-
-  const filteredProducts = selectedCategory === 'All' 
-    ? products 
-    : products.filter(product => product.category === selectedCategory);
 
   const handleProductClick = (product: Product) => {
     setSelectedProduct(product);
@@ -218,6 +250,10 @@ const Index = () => {
 
   const cartItemsCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
+  const handleLoadMore = () => {
+    setVisibleProductCount(prev => prev + 8);
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
@@ -228,6 +264,8 @@ const Index = () => {
           setIsLogin(true);
           setIsLoginOpen(true);
         }}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
       />
 
       {/* Hero Banner */}
@@ -235,12 +273,18 @@ const Index = () => {
 
       {/* Product Grid */}
       <ProductGridModern 
-        products={filteredProducts} 
+        products={products} 
         onAddToCart={addToCart}
         selectedCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
         onProductClick={handleProductClick}
+        searchQuery={searchQuery}
+        visibleCount={visibleProductCount}
+        onLoadMore={handleLoadMore}
       />
+
+      {/* Stitching Section */}
+      <StitchingSection />
 
       {/* Newsletter Section */}
       <NewsletterSection />

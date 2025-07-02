@@ -1,10 +1,10 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Heart, Eye } from "lucide-react";
+import { Heart, Eye, Filter, Grid3X3, Grid2X2, LayoutGrid } from "lucide-react";
 import { Product } from "@/pages/Index";
 
 interface ProductGridModernProps {
@@ -13,17 +13,69 @@ interface ProductGridModernProps {
   selectedCategory: string;
   onCategoryChange: (category: string) => void;
   onProductClick: (product: Product) => void;
+  searchQuery: string;
+  visibleCount: number;
+  onLoadMore: () => void;
 }
 
-const ProductGridModern = ({ products, onAddToCart, selectedCategory, onCategoryChange, onProductClick }: ProductGridModernProps) => {
+const ProductGridModern = ({ products, onAddToCart, selectedCategory, onCategoryChange, onProductClick, searchQuery, visibleCount, onLoadMore }: ProductGridModernProps) => {
   const [sortBy, setSortBy] = useState('newest');
   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
+  const [viewMode, setViewMode] = useState<'2' | '3' | '4'>('4');
 
-  const categories = ['All', 'Lawn', 'Cotton', 'Chiffon', 'Silk', 'Festive', 'Formal'];
+  const categories = [
+    { name: 'All', label: 'All Products' },
+    { name: 'Chikankari', label: 'CHIKANKARI' },
+    { name: 'Chunri', label: 'CHUNRI' },
+    { name: 'Dhoop Kinaray', label: 'DHOOP KINARAY' },
+    { name: 'The Floral World', label: 'THE FLORAL WORLD' },
+    { name: 'Tribute to Mothers', label: 'TRIBUTE TO MOTHERS' },
+    { name: 'Premium Luxury', label: 'PREMIUM LUXURY' }
+  ];
 
-  const filteredProducts = selectedCategory === 'All' 
-    ? products 
-    : products.filter(product => product.category === selectedCategory);
+  const filteredAndSortedProducts = useMemo(() => {
+    let filtered = selectedCategory === 'All' 
+      ? products 
+      : products.filter(product => product.category === selectedCategory);
+
+    // Apply search filter
+    if (searchQuery.trim()) {
+      filtered = filtered.filter(product =>
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.color?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.fabric?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Apply sorting
+    switch (sortBy) {
+      case 'price-low':
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-high':
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+      case 'popular':
+        filtered.sort((a, b) => (b.stockLeft || 0) - (a.stockLeft || 0));
+        break;
+      case 'newest':
+      default:
+        filtered.sort((a, b) => b.id - a.id);
+        break;
+    }
+
+    return filtered;
+  }, [products, selectedCategory, searchQuery, sortBy]);
+
+  const visibleProducts = filteredAndSortedProducts.slice(0, visibleCount);
+  const hasMore = visibleProducts.length < filteredAndSortedProducts.length;
+
+  const gridCols = {
+    '2': 'grid-cols-2',
+    '3': 'grid-cols-2 md:grid-cols-3',
+    '4': 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
+  };
 
   return (
     <section className="py-16 bg-white">
@@ -38,41 +90,84 @@ const ProductGridModern = ({ products, onAddToCart, selectedCategory, onCategory
           </p>
         </div>
 
-        {/* Filters */}
+        {/* Category Filters */}
+        <div className="flex flex-wrap justify-center gap-4 mb-8">
+          {categories.map(category => (
+            <div
+              key={category.name}
+              className={`relative cursor-pointer ${selectedCategory === category.name ? 'text-black' : 'text-gray-500'}`}
+              onClick={() => onCategoryChange(category.name)}
+            >
+              <span className="text-sm font-medium hover:text-black transition-colors">
+                {category.label}
+              </span>
+              {selectedCategory === category.name && (
+                <div className="absolute -bottom-2 left-0 right-0 h-0.5 bg-black"></div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Filters and Display Options */}
         <div className="flex flex-wrap items-center justify-between mb-8 gap-4">
-          <div className="flex flex-wrap gap-2">
-            {categories.map(category => (
-              <Button
-                key={category}
-                variant={selectedCategory === category ? "default" : "outline"}
-                onClick={() => onCategoryChange(category)}
-                className={selectedCategory === category 
-                  ? "bg-black text-white hover:bg-gray-800" 
-                  : "border-gray-300 text-black hover:bg-gray-50"
-                }
-                size="sm"
-              >
-                {category}
-              </Button>
-            ))}
+          <div className="flex items-center space-x-4">
+            <Button variant="outline" size="sm" className="border-gray-300">
+              <Filter className="h-4 w-4 mr-2" />
+              Filters
+            </Button>
+            <span className="text-sm text-gray-600">
+              {filteredAndSortedProducts.length} items
+            </span>
           </div>
 
-          <Select value={sortBy} onValueChange={setSortBy}>
-            <SelectTrigger className="w-48">
-              <SelectValue placeholder="Sort by" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="newest">Newest First</SelectItem>
-              <SelectItem value="price-low">Price: Low to High</SelectItem>
-              <SelectItem value="price-high">Price: High to Low</SelectItem>
-              <SelectItem value="popular">Most Popular</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
+              <span className="text-sm text-gray-600">Display:</span>
+              <div className="flex space-x-1">
+                <Button
+                  variant={viewMode === '2' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setViewMode('2')}
+                  className="p-2"
+                >
+                  <Grid2X2 className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant={viewMode === '3' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setViewMode('3')}
+                  className="p-2"
+                >
+                  <Grid3X3 className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant={viewMode === '4' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setViewMode('4')}
+                  className="p-2"
+                >
+                  <LayoutGrid className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="newest">New Arrivals</SelectItem>
+                <SelectItem value="price-low">Price: Low to High</SelectItem>
+                <SelectItem value="price-high">Price: High to Low</SelectItem>
+                <SelectItem value="popular">Most Popular</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {filteredProducts.map(product => (
+        <div className={`grid ${gridCols[viewMode]} gap-6`}>
+          {visibleProducts.map(product => (
             <Card 
               key={product.id} 
               className="group border-0 shadow-none cursor-pointer"
@@ -162,11 +257,17 @@ const ProductGridModern = ({ products, onAddToCart, selectedCategory, onCategory
         </div>
 
         {/* Load More */}
-        <div className="text-center mt-12">
-          <Button variant="outline" className="border-black text-black hover:bg-black hover:text-white px-8 py-3">
-            LOAD MORE
-          </Button>
-        </div>
+        {hasMore && (
+          <div className="text-center mt-12">
+            <Button 
+              variant="outline" 
+              className="border-black text-black hover:bg-black hover:text-white px-8 py-3"
+              onClick={onLoadMore}
+            >
+              LOAD MORE
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   );
