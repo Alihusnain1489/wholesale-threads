@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -53,7 +52,8 @@ const Index = () => {
   const [isComplaintOpen, setIsComplaintOpen] = useState(false);
   const [isOrderStatusOpen, setIsOrderStatusOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [visibleProductCount, setVisibleProductCount] = useState(12);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
 
   const products: Product[] = [
     {
@@ -154,7 +154,6 @@ const Index = () => {
       pieces: 3,
       includes: ["Shirt", "Trouser", "Dupatta"]
     },
-    // Additional products for better demonstration
     {
       id: 7,
       name: "Chikankari White Elegance",
@@ -183,6 +182,190 @@ const Index = () => {
       stockLeft: 22,
       color: "Multi Color",
       fabric: "Cotton Silk",
+      pieces: 3,
+      includes: ["Shirt", "Trouser", "Dupatta"]
+    },
+    // Adding 12 more products to reach 20 total
+    {
+      id: 9,
+      name: "Royal Embroidered Chiffon Suite",
+      price: 9800,
+      originalPrice: 12000,
+      imageUrl: "/lovable-uploads/558c5917-b7c4-4092-9c5e-63316f2d53d6.png",
+      category: "Premium Luxury",
+      inStock: true,
+      description: "Luxurious royal blue chiffon suit with heavy golden embroidery.",
+      productCode: "PL-009",
+      stockLeft: 5,
+      color: "Royal Blue",
+      fabric: "Chiffon",
+      pieces: 3,
+      includes: ["Shirt", "Trouser", "Dupatta"]
+    },
+    {
+      id: 10,
+      name: "Garden Paradise Lawn Collection",
+      price: 3800,
+      imageUrl: "/lovable-uploads/d9b3d47c-7b5d-4b19-82d2-0e406e0696b8.png",
+      category: "The Floral World",
+      inStock: true,
+      description: "Beautiful garden-inspired lawn suit with vibrant floral prints.",
+      productCode: "FW-010",
+      stockLeft: 28,
+      color: "Multi Floral",
+      fabric: "Lawn",
+      pieces: 3,
+      includes: ["Shirt", "Trouser", "Dupatta"]
+    },
+    {
+      id: 11,
+      name: "Traditional Bandhani Chunri",
+      price: 2800,
+      imageUrl: "/lovable-uploads/e8642cf1-db46-4c35-bba3-39817a416de8.png",
+      category: "Chunri",
+      inStock: true,
+      description: "Authentic bandhani chunri with traditional tie-dye patterns.",
+      productCode: "CHN-011",
+      stockLeft: 35,
+      color: "Red & Yellow",
+      fabric: "Cotton",
+      pieces: 3,
+      includes: ["Shirt", "Trouser", "Dupatta"]
+    },
+    {
+      id: 12,
+      name: "Mother's Love Collection",
+      price: 6500,
+      imageUrl: "/lovable-uploads/515e1bb2-b7a9-4126-8e72-203817453fb8.png",
+      category: "Tribute to Mothers",
+      inStock: true,
+      description: "Heartwarming collection dedicated to mothers with elegant designs.",
+      productCode: "TM-012",
+      stockLeft: 14,
+      color: "Burgundy",
+      fabric: "Silk Cotton",
+      pieces: 3,
+      includes: ["Shirt", "Trouser", "Dupatta"]
+    },
+    {
+      id: 13,
+      name: "Delicate Chikan Embroidery",
+      price: 4800,
+      imageUrl: "/lovable-uploads/169fe697-18b5-4551-babf-b05ff42d17cc.png",
+      category: "Chikankari",
+      inStock: true,
+      description: "Intricate chikan embroidery on soft cotton fabric.",
+      productCode: "CHK-013",
+      stockLeft: 16,
+      color: "Cream",
+      fabric: "Cotton",
+      pieces: 3,
+      includes: ["Shirt", "Trouser", "Dupatta"]
+    },
+    {
+      id: 14,
+      name: "Sunset Dhoop Kinaray",
+      price: 7800,
+      originalPrice: 9500,
+      imageUrl: "/lovable-uploads/558c5917-b7c4-4092-9c5e-63316f2d53d6.png",
+      category: "Dhoop Kinaray",
+      inStock: true,
+      description: "Sunset-inspired colors with golden borders from Dhoop Kinaray collection.",
+      productCode: "DK-014",
+      stockLeft: 11,
+      color: "Orange Sunset",
+      fabric: "Chiffon",
+      pieces: 3,
+      includes: ["Shirt", "Trouser", "Dupatta"]
+    },
+    {
+      id: 15,
+      name: "Premium Cotton Comfort",
+      price: 3400,
+      imageUrl: "/lovable-uploads/5544a434-4a1f-46cc-b113-10304bbc10aa.png",
+      category: "Premium Luxury",
+      inStock: true,
+      description: "Premium cotton suit with ultimate comfort and style.",
+      productCode: "PL-015",
+      stockLeft: 32,
+      color: "Mint Green",
+      fabric: "Premium Cotton",
+      pieces: 3,
+      includes: ["Shirt", "Trouser", "Dupatta"]
+    },
+    {
+      id: 16,
+      name: "Floral Symphony Collection",
+      price: 5200,
+      imageUrl: "/lovable-uploads/d9b3d47c-7b5d-4b19-82d2-0e406e0696b8.png",
+      category: "The Floral World",
+      inStock: true,
+      description: "Symphony of flowers in beautiful pastel shades.",
+      productCode: "FW-016",
+      stockLeft: 19,
+      color: "Pastel Multi",
+      fabric: "Lawn",
+      pieces: 3,
+      includes: ["Shirt", "Trouser", "Dupatta"]
+    },
+    {
+      id: 17,
+      name: "Vintage Chunri Revival",
+      price: 3600,
+      imageUrl: "/lovable-uploads/e8642cf1-db46-4c35-bba3-39817a416de8.png",
+      category: "Chunri",
+      inStock: false,
+      description: "Vintage-inspired chunri patterns with modern touch.",
+      productCode: "CHN-017",
+      stockLeft: 0,
+      color: "Vintage Blue",
+      fabric: "Cotton Silk",
+      pieces: 3,
+      includes: ["Shirt", "Trouser", "Dupatta"]
+    },
+    {
+      id: 18,
+      name: "Elegant Evening Chikankari",
+      price: 5800,
+      originalPrice: 7200,
+      imageUrl: "/lovable-uploads/169fe697-18b5-4551-babf-b05ff42d17cc.png",
+      category: "Chikankari",
+      inStock: true,
+      description: "Perfect for evening occasions with elegant chikankari work.",
+      productCode: "CHK-018",
+      stockLeft: 9,
+      color: "Deep Purple",
+      fabric: "Cotton Silk",
+      pieces: 3,
+      includes: ["Shirt", "Trouser", "Dupatta"]
+    },
+    {
+      id: 19,
+      name: "Golden Hour Dhoop Kinaray",
+      price: 8900,
+      imageUrl: "/lovable-uploads/558c5917-b7c4-4092-9c5e-63316f2d53d6.png",
+      category: "Dhoop Kinaray",
+      inStock: true,
+      description: "Capturing the golden hour beauty in fabric form.",
+      productCode: "DK-019",
+      stockLeft: 7,
+      color: "Golden Yellow",
+      fabric: "Silk Chiffon",
+      pieces: 3,
+      includes: ["Shirt", "Trouser", "Dupatta"]
+    },
+    {
+      id: 20,
+      name: "Mother's Day Special Edition",
+      price: 6800,
+      imageUrl: "/lovable-uploads/515e1bb2-b7a9-4126-8e72-203817453fb8.png",
+      category: "Tribute to Mothers",
+      inStock: true,
+      description: "Special edition for Mother's Day with heartfelt designs.",
+      productCode: "TM-020",
+      stockLeft: 12,
+      color: "Rose Gold",
+      fabric: "Silk",
       pieces: 3,
       includes: ["Shirt", "Trouser", "Dupatta"]
     }
@@ -250,10 +433,6 @@ const Index = () => {
 
   const cartItemsCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
-  const handleLoadMore = () => {
-    setVisibleProductCount(prev => prev + 8);
-  };
-
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
@@ -279,8 +458,9 @@ const Index = () => {
         onCategoryChange={setSelectedCategory}
         onProductClick={handleProductClick}
         searchQuery={searchQuery}
-        visibleCount={visibleProductCount}
-        onLoadMore={handleLoadMore}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+        itemsPerPage={itemsPerPage}
       />
 
       {/* Stitching Section */}

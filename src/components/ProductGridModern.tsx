@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Heart, Eye, Filter, Grid3X3, Grid2X2, LayoutGrid } from "lucide-react";
 import { Product } from "@/pages/Index";
 
@@ -14,11 +15,22 @@ interface ProductGridModernProps {
   onCategoryChange: (category: string) => void;
   onProductClick: (product: Product) => void;
   searchQuery: string;
-  visibleCount: number;
-  onLoadMore: () => void;
+  currentPage: number;
+  onPageChange: (page: number) => void;
+  itemsPerPage: number;
 }
 
-const ProductGridModern = ({ products, onAddToCart, selectedCategory, onCategoryChange, onProductClick, searchQuery, visibleCount, onLoadMore }: ProductGridModernProps) => {
+const ProductGridModern = ({ 
+  products, 
+  onAddToCart, 
+  selectedCategory, 
+  onCategoryChange, 
+  onProductClick, 
+  searchQuery,
+  currentPage,
+  onPageChange,
+  itemsPerPage
+}: ProductGridModernProps) => {
   const [sortBy, setSortBy] = useState('newest');
   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
   const [viewMode, setViewMode] = useState<'2' | '3' | '4'>('4');
@@ -68,37 +80,45 @@ const ProductGridModern = ({ products, onAddToCart, selectedCategory, onCategory
     return filtered;
   }, [products, selectedCategory, searchQuery, sortBy]);
 
-  const visibleProducts = filteredAndSortedProducts.slice(0, visibleCount);
-  const hasMore = visibleProducts.length < filteredAndSortedProducts.length;
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredAndSortedProducts.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentProducts = filteredAndSortedProducts.slice(startIndex, endIndex);
 
   const gridCols = {
-    '2': 'grid-cols-2',
-    '3': 'grid-cols-2 md:grid-cols-3',
-    '4': 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
+    '2': 'grid-cols-1 sm:grid-cols-2',
+    '3': 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
+    '4': 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+  };
+
+  const handlePageChange = (page: number) => {
+    onPageChange(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-8 md:py-16 bg-white">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-black mb-4">
+        <div className="text-center mb-8 md:mb-12">
+          <h2 className="text-2xl md:text-3xl font-bold text-black mb-4">
             UNSTITCHED WOMEN'S COLLECTION
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <p className="text-gray-600 max-w-2xl mx-auto text-sm md:text-base">
             Discover our exquisite range of unstitched fabrics with beautiful designs and premium quality
           </p>
         </div>
 
         {/* Category Filters */}
-        <div className="flex flex-wrap justify-center gap-4 mb-8">
+        <div className="flex flex-wrap justify-center gap-2 md:gap-4 mb-6 md:mb-8">
           {categories.map(category => (
             <div
               key={category.name}
-              className={`relative cursor-pointer ${selectedCategory === category.name ? 'text-black' : 'text-gray-500'}`}
+              className={`relative cursor-pointer px-2 py-1 ${selectedCategory === category.name ? 'text-black' : 'text-gray-500'}`}
               onClick={() => onCategoryChange(category.name)}
             >
-              <span className="text-sm font-medium hover:text-black transition-colors">
+              <span className="text-xs md:text-sm font-medium hover:text-black transition-colors">
                 {category.label}
               </span>
               {selectedCategory === category.name && (
@@ -109,20 +129,20 @@ const ProductGridModern = ({ products, onAddToCart, selectedCategory, onCategory
         </div>
 
         {/* Filters and Display Options */}
-        <div className="flex flex-wrap items-center justify-between mb-8 gap-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 md:mb-8 gap-4">
           <div className="flex items-center space-x-4">
-            <Button variant="outline" size="sm" className="border-gray-300">
+            <Button variant="outline" size="sm" className="border-gray-300 text-xs md:text-sm">
               <Filter className="h-4 w-4 mr-2" />
               Filters
             </Button>
-            <span className="text-sm text-gray-600">
+            <span className="text-xs md:text-sm text-gray-600">
               {filteredAndSortedProducts.length} items
             </span>
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
             <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-600">Display:</span>
+              <span className="text-xs md:text-sm text-gray-600">Display:</span>
               <div className="flex space-x-1">
                 <Button
                   variant={viewMode === '2' ? 'default' : 'outline'}
@@ -152,7 +172,7 @@ const ProductGridModern = ({ products, onAddToCart, selectedCategory, onCategory
             </div>
 
             <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-48">
+              <SelectTrigger className="w-full sm:w-48">
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent>
@@ -166,8 +186,8 @@ const ProductGridModern = ({ products, onAddToCart, selectedCategory, onCategory
         </div>
 
         {/* Product Grid */}
-        <div className={`grid ${gridCols[viewMode]} gap-6`}>
-          {visibleProducts.map(product => (
+        <div className={`grid ${gridCols[viewMode]} gap-4 md:gap-6 mb-8`}>
+          {currentProducts.map(product => (
             <Card 
               key={product.id} 
               className="group border-0 shadow-none cursor-pointer"
@@ -175,7 +195,7 @@ const ProductGridModern = ({ products, onAddToCart, selectedCategory, onCategory
               onMouseLeave={() => setHoveredProduct(null)}
               onClick={() => onProductClick(product)}
             >
-              <div className="relative overflow-hidden bg-gray-50 aspect-[3/4] mb-4">
+              <div className="relative overflow-hidden bg-gray-50 aspect-[3/4] mb-3 md:mb-4">
                 <img 
                   src={product.imageUrl} 
                   alt={product.name}
@@ -217,15 +237,15 @@ const ProductGridModern = ({ products, onAddToCart, selectedCategory, onCategory
               </div>
               
               <CardContent className="p-0">
-                <h3 className="font-medium text-black mb-2 line-clamp-2 text-sm">
+                <h3 className="font-medium text-black mb-2 line-clamp-2 text-xs md:text-sm">
                   {product.name}
                 </h3>
                 <div className="flex items-center space-x-2">
-                  <span className="font-bold text-black">
+                  <span className="font-bold text-black text-sm md:text-base">
                     PKR {product.price.toLocaleString()}
                   </span>
                   {product.originalPrice && (
-                    <span className="text-sm text-gray-400 line-through">
+                    <span className="text-xs md:text-sm text-gray-400 line-through">
                       PKR {product.originalPrice.toLocaleString()}
                     </span>
                   )}
@@ -256,16 +276,38 @@ const ProductGridModern = ({ products, onAddToCart, selectedCategory, onCategory
           ))}
         </div>
 
-        {/* Load More */}
-        {hasMore && (
-          <div className="text-center mt-12">
-            <Button 
-              variant="outline" 
-              className="border-black text-black hover:bg-black hover:text-white px-8 py-3"
-              onClick={onLoadMore}
-            >
-              LOAD MORE
-            </Button>
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-center">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious 
+                    onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
+                    className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                  />
+                </PaginationItem>
+                
+                {[...Array(totalPages)].map((_, index) => (
+                  <PaginationItem key={index + 1}>
+                    <PaginationLink
+                      onClick={() => handlePageChange(index + 1)}
+                      isActive={currentPage === index + 1}
+                      className="cursor-pointer"
+                    >
+                      {index + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                
+                <PaginationItem>
+                  <PaginationNext 
+                    onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
+                    className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           </div>
         )}
       </div>
