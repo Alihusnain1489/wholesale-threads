@@ -25,15 +25,7 @@ interface NavbarProps {
 const Navbar = ({ cartItemsCount, onCartOpen, onLoginOpen }: NavbarProps) => {
   const [searchQuery, setSearchQuery] = useState('');
 
-  const navCategories = [
-    { name: 'New In', href: '#new' },
-    { name: 'Dresses', href: '#dresses' },
-    { name: 'Tops', href: '#tops' },
-    { name: 'Bottoms', href: '#bottoms' },
-    { name: 'Shoes', href: '#shoes' },
-    { name: 'Accessories', href: '#accessories' },
-    { name: 'Sale', href: '#sale' }
-  ];
+  
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
@@ -52,7 +44,7 @@ const Navbar = ({ cartItemsCount, onCartOpen, onLoginOpen }: NavbarProps) => {
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <span>Free shipping on orders over £50</span>
+              <span>Free shipping on orders over 5000pkr</span>
               <div className="flex items-center space-x-2">
                 <MapPin className="h-3 w-3" />
                 <span>Store Locator</span>
@@ -111,36 +103,14 @@ const Navbar = ({ cartItemsCount, onCartOpen, onLoginOpen }: NavbarProps) => {
                 </Button>
               </SheetTrigger>
               <SheetContent>
-                <nav className="flex flex-col space-y-4 mt-8">
-                  {navCategories.map((category) => (
-                    <a
-                      key={category.name}
-                      href={category.href}
-                      className="text-lg font-medium hover:text-gray-600 transition-colors"
-                    >
-                      {category.name}
-                    </a>
-                  ))}
-                </nav>
+               
               </SheetContent>
             </Sheet>
           </div>
         </div>
 
         {/* Navigation Menu - Desktop */}
-        <nav className="hidden md:flex justify-center mt-4 border-t pt-4">
-          <div className="flex space-x-8">
-            {navCategories.map((category) => (
-              <a
-                key={category.name}
-                href={category.href}
-                className="text-sm font-medium text-black hover:text-gray-600 transition-colors uppercase tracking-wide"
-              >
-                {category.name}
-              </a>
-            ))}
-          </div>
-        </nav>
+       
       </div>
     </header>
   );
