@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -5,7 +6,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ShoppingCart, Phone, Mail, MapPin, Clock, Facebook, Instagram, Twitter, Youtube, User, FileText, Package } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
-import HeroBanner from "@/components/HeroBanner";
+import ImageSlider from "@/components/ImageSlider";
 import ProductGridModern from "@/components/ProductGridModern";
 import CartSidebar from "@/components/CartSidebar";
 import BookingDialog from "@/components/BookingDialog";
@@ -447,8 +448,8 @@ const Index = () => {
         onSearchChange={setSearchQuery}
       />
 
-      {/* Hero Banner */}
-      <HeroBanner />
+      {/* Image Slider */}
+      <ImageSlider />
 
       {/* Product Grid */}
       <ProductGridModern 

@@ -4,18 +4,15 @@ import { Button } from "@/components/ui/button";
 
 const WhatsAppFloat = () => {
   const handleWhatsAppClick = () => {
+    const phoneNumber = "923261052244";
     const message = "Hi! I'm interested in your unstitched women's clothing collection. Can you help me?";
-    const whatsappUrl = `https://wa.me/923261052244?text=${encodeURIComponent(message)}`;
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
     
-    // Validate URL before opening
-    try {
-      window.open(whatsappUrl, '_blank');
-    } catch (error) {
-      console.error('Error opening WhatsApp:', error);
-      // Fallback: copy number to clipboard
-      navigator.clipboard?.writeText('+92 326 1052244');
-      alert('WhatsApp number copied to clipboard: +92 326 1052244');
-    }
+    console.log('Opening WhatsApp URL:', whatsappUrl);
+    
+    // Open WhatsApp in a new tab/window
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
   };
 
   return (
