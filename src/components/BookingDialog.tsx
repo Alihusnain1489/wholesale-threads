@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -6,13 +7,16 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
+import { CartItem } from "@/pages/Index";
 
 interface BookingDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
+  cartItems?: CartItem[];
+  totalPrice?: number;
 }
 
-const BookingDialog = ({ isOpen, onOpenChange }: BookingDialogProps) => {
+const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0 }: BookingDialogProps) => {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -53,6 +57,13 @@ const BookingDialog = ({ isOpen, onOpenChange }: BookingDialogProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Generate cart items section for WhatsApp message
+    const cartItemsText = cartItems.length > 0 
+      ? `\n🛍️ Cart Items:\n${cartItems.map(item => 
+          `• ${item.name} - Qty: ${item.quantity} - ₨${item.price.toLocaleString()}`
+        ).join('\n')}\n💰 Total Amount: ₨${totalPrice.toLocaleString()}\n`
+      : '';
+
     // Auto-send WhatsApp message
     const phoneNumber = "923261052244";
     const message = `🧵 STITCHING ORDER BOOKING
@@ -61,7 +72,7 @@ const BookingDialog = ({ isOpen, onOpenChange }: BookingDialogProps) => {
 Name: ${formData.name}
 Phone: ${formData.phone}
 Email: ${formData.email}
-
+${cartItemsText}
 📦 Service Details:
 Service: ${formData.service}
 Fabric Type: ${formData.fabricType}
@@ -116,13 +127,13 @@ Thank you for choosing Wholesale Threads! 🌟`;
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white">
         <DialogHeader>
-          <DialogTitle>Stitching Order Booking</DialogTitle>
+          <DialogTitle className="text-xl font-bold text-black">Stitching Order Booking</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="name">Full Name</Label>
+            <Label htmlFor="name" className="text-black font-medium">Full Name</Label>
             <Input
               type="text"
               id="name"
@@ -131,11 +142,11 @@ Thank you for choosing Wholesale Threads! 🌟`;
               onChange={handleInputChange}
               placeholder="Enter your full name"
               required
-              className="w-full"
+              className="w-full border-gray-300 focus:border-black focus:ring-black"
             />
           </div>
           <div>
-            <Label htmlFor="phone">Phone Number</Label>
+            <Label htmlFor="phone" className="text-black font-medium">Phone Number</Label>
             <Input
               type="tel"
               id="phone"
@@ -143,11 +154,11 @@ Thank you for choosing Wholesale Threads! 🌟`;
               value={formData.phone}
               onChange={handleInputChange}
               placeholder="+92 300 0000000"
-              className="w-full"
+              className="w-full border-gray-300 focus:border-black focus:ring-black"
             />
           </div>
           <div>
-            <Label htmlFor="email">Email Address</Label>
+            <Label htmlFor="email" className="text-black font-medium">Email Address</Label>
             <Input
               type="email"
               id="email"
@@ -155,16 +166,16 @@ Thank you for choosing Wholesale Threads! 🌟`;
               value={formData.email}
               onChange={handleInputChange}
               placeholder="Enter your email"
-              className="w-full"
+              className="w-full border-gray-300 focus:border-black focus:ring-black"
             />
           </div>
           <div>
-            <Label htmlFor="service">Service Type</Label>
+            <Label htmlFor="service" className="text-black font-medium">Service Type</Label>
             <Select onValueChange={(value) => setFormData(prev => ({ ...prev, service: value }))}>
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full border-gray-300 focus:border-black focus:ring-black">
                 <SelectValue placeholder="Select a service" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white">
                 <SelectItem value="basic">Basic Stitching</SelectItem>
                 <SelectItem value="premium">Premium Stitching</SelectItem>
                 <SelectItem value="designer">Designer Stitching</SelectItem>
@@ -172,7 +183,7 @@ Thank you for choosing Wholesale Threads! 🌟`;
             </Select>
           </div>
           <div>
-            <Label htmlFor="fabricType">Fabric Type</Label>
+            <Label htmlFor="fabricType" className="text-black font-medium">Fabric Type</Label>
             <Input
               type="text"
               id="fabricType"
@@ -180,11 +191,11 @@ Thank you for choosing Wholesale Threads! 🌟`;
               value={formData.fabricType}
               onChange={handleInputChange}
               placeholder="Enter fabric type"
-              className="w-full"
+              className="w-full border-gray-300 focus:border-black focus:ring-black"
             />
           </div>
           <div>
-            <Label htmlFor="quantity">Quantity (Pieces)</Label>
+            <Label htmlFor="quantity" className="text-black font-medium">Quantity (Pieces)</Label>
             <Input
               type="number"
               id="quantity"
@@ -192,14 +203,14 @@ Thank you for choosing Wholesale Threads! 🌟`;
               value={formData.quantity}
               onChange={handleInputChange}
               min="1"
-              className="w-full"
+              className="w-full border-gray-300 focus:border-black focus:ring-black"
             />
           </div>
           <div>
-            <Label>Measurements (inches)</Label>
+            <Label className="text-black font-medium">Measurements (inches)</Label>
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <Label htmlFor="shirtLength">Shirt Length</Label>
+                <Label htmlFor="shirtLength" className="text-sm text-gray-600">Shirt Length</Label>
                 <Input
                   type="number"
                   id="shirtLength"
@@ -207,11 +218,11 @@ Thank you for choosing Wholesale Threads! 🌟`;
                   value={formData.measurements.shirtLength}
                   onChange={handleInputChange}
                   placeholder="e.g., 38"
-                  className="w-full"
+                  className="w-full border-gray-300 focus:border-black focus:ring-black"
                 />
               </div>
               <div>
-                <Label htmlFor="chest">Chest</Label>
+                <Label htmlFor="chest" className="text-sm text-gray-600">Chest</Label>
                 <Input
                   type="number"
                   id="chest"
@@ -219,11 +230,11 @@ Thank you for choosing Wholesale Threads! 🌟`;
                   value={formData.measurements.chest}
                   onChange={handleInputChange}
                   placeholder="e.g., 36"
-                  className="w-full"
+                  className="w-full border-gray-300 focus:border-black focus:ring-black"
                 />
               </div>
               <div>
-                <Label htmlFor="waist">Waist</Label>
+                <Label htmlFor="waist" className="text-sm text-gray-600">Waist</Label>
                 <Input
                   type="number"
                   id="waist"
@@ -231,11 +242,11 @@ Thank you for choosing Wholesale Threads! 🌟`;
                   value={formData.measurements.waist}
                   onChange={handleInputChange}
                   placeholder="e.g., 34"
-                  className="w-full"
+                  className="w-full border-gray-300 focus:border-black focus:ring-black"
                 />
               </div>
               <div>
-                <Label htmlFor="hip">Hip</Label>
+                <Label htmlFor="hip" className="text-sm text-gray-600">Hip</Label>
                 <Input
                   type="number"
                   id="hip"
@@ -243,11 +254,11 @@ Thank you for choosing Wholesale Threads! 🌟`;
                   value={formData.measurements.hip}
                   onChange={handleInputChange}
                   placeholder="e.g., 40"
-                  className="w-full"
+                  className="w-full border-gray-300 focus:border-black focus:ring-black"
                 />
               </div>
               <div>
-                <Label htmlFor="shoulder">Shoulder</Label>
+                <Label htmlFor="shoulder" className="text-sm text-gray-600">Shoulder</Label>
                 <Input
                   type="number"
                   id="shoulder"
@@ -255,11 +266,11 @@ Thank you for choosing Wholesale Threads! 🌟`;
                   value={formData.measurements.shoulder}
                   onChange={handleInputChange}
                   placeholder="e.g., 15"
-                  className="w-full"
+                  className="w-full border-gray-300 focus:border-black focus:ring-black"
                 />
               </div>
               <div>
-                <Label htmlFor="sleeve">Sleeve Length</Label>
+                <Label htmlFor="sleeve" className="text-sm text-gray-600">Sleeve Length</Label>
                 <Input
                   type="number"
                   id="sleeve"
@@ -267,23 +278,28 @@ Thank you for choosing Wholesale Threads! 🌟`;
                   value={formData.measurements.sleeve}
                   onChange={handleInputChange}
                   placeholder="e.g., 22"
-                  className="w-full"
+                  className="w-full border-gray-300 focus:border-black focus:ring-black"
                 />
               </div>
             </div>
           </div>
           <div>
-            <Label htmlFor="specialInstructions">Special Instructions</Label>
+            <Label htmlFor="specialInstructions" className="text-black font-medium">Special Instructions</Label>
             <Textarea
               id="specialInstructions"
               name="specialInstructions"
               value={formData.specialInstructions}
               onChange={handleInputChange}
               placeholder="Enter any special instructions"
-              className="w-full"
+              className="w-full border-gray-300 focus:border-black focus:ring-black"
             />
           </div>
-          <Button type="submit">Book Now</Button>
+          <Button 
+            type="submit" 
+            className="w-full bg-black text-white hover:bg-gray-800 transition-colors duration-200"
+          >
+            Book Now
+          </Button>
         </form>
       </DialogContent>
     </Dialog>
