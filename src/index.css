@@ -163,7 +163,7 @@
   }
 
   .roman-card {
-    @apply bg-white rounded-none shadow-sm hover:shadow-2xl transition-all duration-400 overflow-hidden border-0;
+    @apply bg-white rounded-none shadow-sm hover:shadow-2xl transition-all duration-300 overflow-hidden border-0;
   }
 
   .roman-input {
