@@ -143,7 +143,7 @@
 
   /* Hover effects */
   .hover-scale {
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .hover-scale:hover {
@@ -155,50 +155,50 @@
 /* Roman-inspired components */
 @layer components {
   .roman-btn-primary {
-    @apply bg-black hover:bg-gray-800 text-white font-medium py-3 px-8 rounded-none transition-all duration-300 uppercase tracking-[0.1em] text-sm;
+    @apply bg-black hover:bg-gray-800 text-white font-medium py-3 px-8 transition-all duration-300 uppercase tracking-wider text-sm;
   }
 
   .roman-btn-secondary {
-    @apply bg-white border-2 border-black text-black hover:bg-black hover:text-white font-medium py-3 px-8 rounded-none transition-all duration-300 uppercase tracking-[0.1em] text-sm;
+    @apply bg-white border-2 border-black text-black hover:bg-black hover:text-white font-medium py-3 px-8 transition-all duration-300 uppercase tracking-wider text-sm;
   }
 
   .roman-card {
-    @apply bg-white rounded-none shadow-sm hover:shadow-2xl transition-all duration-300 overflow-hidden border-0;
+    @apply bg-white shadow-sm hover:shadow-2xl transition-all duration-300 overflow-hidden border-0;
   }
 
   .roman-input {
-    @apply w-full px-4 py-3 border border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-200 rounded-none;
+    @apply w-full px-4 py-3 border border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-200;
   }
 
   /* Typography */
   .roman-heading-1 {
-    @apply text-4xl lg:text-7xl font-light text-gray-900 leading-[0.9] tracking-tight;
+    @apply text-3xl sm:text-4xl lg:text-7xl font-light text-gray-900 leading-tight tracking-tight;
   }
 
   .roman-heading-2 {
-    @apply text-3xl lg:text-5xl font-light text-gray-900 leading-tight tracking-tight;
+    @apply text-2xl sm:text-3xl lg:text-5xl font-light text-gray-900 leading-tight tracking-tight;
   }
 
   .roman-heading-3 {
-    @apply text-2xl lg:text-3xl font-medium text-gray-900 leading-tight;
+    @apply text-xl sm:text-2xl lg:text-3xl font-medium text-gray-900 leading-tight;
   }
 
   .roman-body {
-    @apply text-gray-600 leading-relaxed text-base;
+    @apply text-gray-600 leading-relaxed text-sm sm:text-base;
   }
 
   .roman-caption {
-    @apply text-sm text-gray-500 uppercase tracking-[0.1em] font-medium;
+    @apply text-xs sm:text-sm text-gray-500 uppercase tracking-wider font-medium;
   }
 
   /* Sale badge */
   .sale-badge {
-    @apply bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-none uppercase tracking-wide;
+    @apply bg-red-500 text-white text-xs font-bold px-2 py-1 uppercase tracking-wide;
   }
 
   /* Category tabs */
   .category-tab {
-    @apply relative text-sm font-medium text-gray-600 hover:text-gray-900 cursor-pointer transition-colors duration-200 uppercase tracking-[0.05em] pb-2;
+    @apply relative text-sm font-medium text-gray-600 hover:text-gray-900 cursor-pointer transition-colors duration-200 uppercase tracking-wider pb-2;
   }
 
   .category-tab.active {
@@ -213,11 +213,11 @@
 
 /* Product grid enhancements */
 .product-card {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .product-card:hover {
-  transform: translateY(-12px);
+  transform: translateY(-8px);
 }
 
 .product-image {
@@ -236,19 +236,28 @@
 /* Mobile responsive adjustments */
 @media (max-width: 768px) {
   .roman-heading-1 {
-    @apply text-2xl;
+    @apply text-2xl leading-tight;
   }
   
   .roman-heading-2 {
-    @apply text-xl;
+    @apply text-xl leading-tight;
   }
   
   .roman-heading-3 {
-    @apply text-lg;
+    @apply text-lg leading-tight;
   }
 
   .product-card:hover {
-    transform: none;
+    transform: translateY(-4px);
+  }
+
+  .roman-btn-primary,
+  .roman-btn-secondary {
+    @apply py-2 px-6 text-xs;
+  }
+
+  .category-tab {
+    @apply text-xs px-2;
   }
 }
 
@@ -273,4 +282,33 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* Responsive utilities */
+@media (max-width: 640px) {
+  .container {
+    @apply px-4;
+  }
+  
+  .grid-cols-responsive {
+    @apply grid-cols-1;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+  .grid-cols-responsive {
+    @apply grid-cols-2;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .grid-cols-responsive {
+    @apply grid-cols-3;
+  }
+}
+
+@media (min-width: 1025px) {
+  .grid-cols-responsive {
+    @apply grid-cols-4;
+  }
 }
