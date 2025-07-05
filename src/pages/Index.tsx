@@ -10,6 +10,7 @@ import ModernNewsletter from "@/components/ModernNewsletter";
 import ProductGridModern from "@/components/ProductGridModern";
 import ProductDetailModal from "@/components/ProductDetailModal";
 import CartSidebar from "@/components/CartSidebar";
+import StitchingSection from "@/components/StitchingSection";
 import { Product, CartItem } from "@/types";
 import { toast } from "@/hooks/use-toast";
 
@@ -171,6 +172,7 @@ const Index = () => {
         onPageChange={setCurrentPage}
         itemsPerPage={itemsPerPage}
       />
+      <StitchingSection />
       <CollectionGrid />
       <FeaturesSection />
       <TestimonialsSection />
