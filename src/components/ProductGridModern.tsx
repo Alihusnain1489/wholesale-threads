@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -6,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Heart, Eye, Filter, Grid3X3, Grid2X2, LayoutGrid, Percent, Clock, ChevronDown } from "lucide-react";
-import { Product } from "@/pages/Index";
+import { Product } from "@/types";
 
 interface ProductGridModernProps {
   products: Product[];
@@ -33,7 +32,7 @@ const ProductGridModern = ({
 }: ProductGridModernProps) => {
   const [sortBy, setSortBy] = useState('newest');
   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
-  const [viewMode, setViewMode] = useState<'2' | '3' | '4'>('4');
+  const [viewMode, setViewMode: React.Dispatch<React.SetStateAction<'2' | '3' | '4'>> = useState('4');
   const [showFilters, setShowFilters] = useState(false);
 
   const categories = [
