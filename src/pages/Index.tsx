@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import ModernNavbar from "@/components/ModernNavbar";
@@ -24,7 +23,7 @@ const Index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
-  // Sample products data
+  // Sample products data with PKR pricing
   const products: Product[] = [
     {
       id: 1,

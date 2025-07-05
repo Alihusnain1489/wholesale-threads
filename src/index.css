@@ -95,6 +95,27 @@
 }
 
 @layer components {
+  /* Modern responsive typography */
+  .hero-heading {
+    @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-light leading-tight;
+  }
+
+  .section-heading {
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-gray-900;
+  }
+
+  .card-heading {
+    @apply text-lg sm:text-xl font-medium text-gray-900;
+  }
+
+  .body-text {
+    @apply text-base sm:text-lg text-gray-600 leading-relaxed;
+  }
+
+  .small-text {
+    @apply text-sm sm:text-base text-gray-500;
+  }
+
   /* Modern button styles */
   .btn-modern {
     @apply inline-flex items-center justify-center px-6 py-3 text-sm font-medium rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
@@ -106,6 +127,19 @@
 
   .btn-secondary {
     @apply bg-white text-gray-900 border border-gray-300 hover:bg-gray-50 focus:ring-gray-500;
+  }
+
+  /* Currency formatting for PKR */
+  .price-primary {
+    @apply text-lg sm:text-xl font-bold text-gray-900;
+  }
+
+  .price-secondary {
+    @apply text-sm sm:text-base text-gray-400 line-through;
+  }
+
+  .price-badge {
+    @apply bg-red-500 text-white text-xs font-bold px-2 py-1 rounded;
   }
 
   /* Card hover effects */
@@ -149,44 +183,70 @@
     }
   }
 
-  /* Modern grid layouts */
-  .grid-auto-fit {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  /* Responsive grid layouts */
+  .grid-responsive-2 {
+    @apply grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6;
   }
 
-  .grid-auto-fill {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  .grid-responsive-3 {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6;
+  }
+
+  .grid-responsive-4 {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6;
+  }
+
+  /* Container responsive padding */
+  .container-padding {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Section spacing */
+  .section-padding {
+    @apply py-12 sm:py-16 lg:py-20;
   }
 }
 
-/* Mobile-first responsive design */
+/* Enhanced Mobile-first responsive design */
 @media (max-width: 640px) {
   .container {
     @apply px-4;
   }
   
-  h1 {
-    @apply text-2xl leading-tight;
+  /* Mobile navigation adjustments */
+  .mobile-nav {
+    @apply flex flex-col space-y-2;
   }
   
-  h2 {
-    @apply text-xl leading-tight;
+  /* Mobile card adjustments */
+  .mobile-card {
+    @apply p-4;
   }
   
-  .hero-text {
-    @apply text-3xl;
+  /* Mobile button adjustments */
+  .mobile-btn {
+    @apply w-full py-3 px-4 text-sm;
   }
 }
 
 @media (min-width: 641px) and (max-width: 768px) {
-  .hero-text {
-    @apply text-4xl;
+  /* Tablet specific styles */
+  .tablet-grid {
+    @apply grid-cols-2;
   }
 }
 
-@media (min-width: 769px) {
-  .hero-text {
-    @apply text-5xl lg:text-7xl;
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Large tablet/small desktop styles */
+  .desktop-small-grid {
+    @apply grid-cols-3;
+  }
+}
+
+@media (min-width: 1025px) {
+  /* Desktop styles */
+  .desktop-grid {
+    @apply grid-cols-4;
   }
 }
 
@@ -211,9 +271,9 @@
   }
 }
 
-/* Form enhancements */
+/* Enhanced form styles */
 .form-field {
-  @apply relative;
+  @apply relative mb-4;
 }
 
 .form-field input:focus + label,
@@ -229,5 +289,22 @@
 @media print {
   .no-print {
     @apply hidden;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .btn-primary {
+    @apply border border-white;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-slide-up,
+  .card-hover,
+  .image-hover {
+    @apply transition-none;
   }
 }
