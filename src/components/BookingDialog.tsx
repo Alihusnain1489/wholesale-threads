@@ -1,259 +1,305 @@
-
 import React, { useState } from 'react';
-import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { CartItem } from "@/pages/Index";
-import { toast } from "@/hooks/use-toast";
-import { Mail, Phone, User, MapPin } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { CartItem } from "@/types";
 
 interface BookingDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  cartItems: CartItem[];
-  totalPrice: number;
+  cartItems?: CartItem[];
+  totalPrice?: number;
 }
 
-const BookingDialog = ({ isOpen, onOpenChange, cartItems, totalPrice }: BookingDialogProps) => {
+const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0 }: BookingDialogProps) => {
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
     phone: '',
-    address: '',
-    notes: ''
+    email: '',
+    service: '',
+    fabricType: '',
+    quantity: 1,
+    measurements: {
+      shirtLength: '',
+      chest: '',
+      waist: '',
+      hip: '',
+      shoulder: '',
+      sleeve: ''
+    },
+    specialInstructions: ''
   });
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    if (name.startsWith('measurements.')) {
+      const measurementKey = name.split('.')[1];
+      setFormData(prev => ({
+        ...prev,
+        measurements: {
+          ...prev.measurements,
+          [measurementKey]: value
+        }
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
     }
-
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
-    }
-
-    if (!formData.phone.trim()) {
-      newErrors.phone = 'Phone number is required';
-    } else if (!/^(\+92|0)?[0-9]{10}$/.test(formData.phone.replace(/\s/g, ''))) {
-      newErrors.phone = 'Please enter a valid Pakistani phone number';
-    }
-
-    if (!formData.address.trim()) {
-      newErrors.address = 'Address is required';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!validateForm()) {
-      toast({
-        title: "Validation Error",
-        description: "Please fill in all required fields correctly",
-        variant: "destructive"
-      });
-      return;
-    }
+    // Generate cart items section for WhatsApp message
+    const cartItemsText = cartItems.length > 0 
+      ? `\n🛍️ Cart Items:\n${cartItems.map(item => 
+          `• ${item.name} - Qty: ${item.quantity} - ₨${item.price.toLocaleString()}`
+        ).join('\n')}\n💰 Total Amount: ₨${totalPrice.toLocaleString()}\n`
+      : '';
 
-    // Create order summary
-    const orderDetails = cartItems.map(item => 
-      `${item.name} - Qty: ${item.quantity} - ₨${(item.price * item.quantity).toLocaleString()}`
-    ).join('\n');
+    // Auto-send WhatsApp message
+    const phoneNumber = "923261052244";
+    const message = `🧵 STITCHING ORDER BOOKING
 
-    const emailBody = `
-New Order from Wholesale Threads
-
-Customer Details:
+👤 Customer Details:
 Name: ${formData.name}
-Email: ${formData.email}
 Phone: ${formData.phone}
-Address: ${formData.address}
+Email: ${formData.email}
+${cartItemsText}
+📦 Service Details:
+Service: ${formData.service}
+Fabric Type: ${formData.fabricType}
+Quantity: ${formData.quantity} pieces
 
-Order Details:
-${orderDetails}
+📏 Measurements:
+Shirt Length: ${formData.measurements.shirtLength}"
+Chest: ${formData.measurements.chest}"
+Waist: ${formData.measurements.waist}"
+Hip: ${formData.measurements.hip}"
+Shoulder: ${formData.measurements.shoulder}"
+Sleeve: ${formData.measurements.sleeve}"
 
-Total Amount: ₨${totalPrice.toLocaleString()}
+📝 Special Instructions:
+${formData.specialInstructions || 'None'}
 
-Additional Notes: ${formData.notes}
-    `;
-
-    // Send WhatsApp message
-    const whatsappMessage = `*New Order - Wholesale Threads*\n\n*Customer:* ${formData.name}\n*Phone:* ${formData.phone}\n*Total:* ₨${totalPrice.toLocaleString()}\n\n*Items:*\n${orderDetails}\n\n*Address:* ${formData.address}`;
-    const whatsappUrl = `https://wa.me/923261052244?text=${encodeURIComponent(whatsappMessage)}`;
-
-    // Send email (using mailto)
-    const mailtoUrl = `mailto:mr.alihusnain11@gmail.com?subject=New Order - Wholesale Threads&body=${encodeURIComponent(emailBody)}`;
-
-    try {
-      // Open WhatsApp and email
-      window.open(whatsappUrl, '_blank');
-      window.open(mailtoUrl, '_blank');
-
-      toast({
-        title: "Order Placed Successfully!",
-        description: "Your order has been sent via WhatsApp and email. We'll contact you soon.",
-      });
-
-      // Reset form and close dialog
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        address: '',
-        notes: ''
-      });
-      onOpenChange(false);
-
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "There was an error processing your order. Please try again.",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
-    }
+Thank you for choosing Wholesale Threads! 🌟`;
+    
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+    
+    // Open WhatsApp
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+    
+    // Show success message
+    toast({
+      title: "Order Sent Successfully!",
+      description: "Your stitching order has been sent via WhatsApp. We'll contact you soon!",
+    });
+    
+    // Reset form and close dialog
+    setFormData({
+      name: '',
+      phone: '',
+      email: '',
+      service: '',
+      fabricType: '',
+      quantity: 1,
+      measurements: {
+        shirtLength: '',
+        chest: '',
+        waist: '',
+        hip: '',
+        shoulder: '',
+        sleeve: ''
+      },
+      specialInstructions: ''
+    });
+    
+    onOpenChange(false);
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-center bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
-            Complete Your Order
-          </DialogTitle>
+          <DialogTitle className="text-xl font-bold text-black">Stitching Order Booking</DialogTitle>
         </DialogHeader>
-
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 gap-4">
-            <div>
-              <Label htmlFor="name" className="flex items-center">
-                <User className="h-4 w-4 mr-2" />
-                Full Name *
-              </Label>
-              <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) => handleInputChange('name', e.target.value)}
-                placeholder="Enter your full name"
-                className={errors.name ? 'border-red-500' : ''}
-              />
-              {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
-            </div>
-
-            <div>
-              <Label htmlFor="email" className="flex items-center">
-                <Mail className="h-4 w-4 mr-2" />
-                Email Address *
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => handleInputChange('email', e.target.value)}
-                placeholder="Enter your email"
-                className={errors.email ? 'border-red-500' : ''}
-              />
-              {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
-            </div>
-
-            <div>
-              <Label htmlFor="phone" className="flex items-center">
-                <Phone className="h-4 w-4 mr-2" />
-                Phone Number *
-              </Label>
-              <Input
-                id="phone"
-                value={formData.phone}
-                onChange={(e) => handleInputChange('phone', e.target.value)}
-                placeholder="03XX XXXXXXX"
-                className={errors.phone ? 'border-red-500' : ''}
-              />
-              {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
-            </div>
-
-            <div>
-              <Label htmlFor="address" className="flex items-center">
-                <MapPin className="h-4 w-4 mr-2" />
-                Delivery Address *
-              </Label>
-              <Textarea
-                id="address"
-                value={formData.address}
-                onChange={(e) => handleInputChange('address', e.target.value)}
-                placeholder="Enter your complete address"
-                className={errors.address ? 'border-red-500' : ''}
-                rows={3}
-              />
-              {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
-            </div>
-
-            <div>
-              <Label htmlFor="notes">Additional Notes</Label>
-              <Textarea
-                id="notes"
-                value={formData.notes}
-                onChange={(e) => handleInputChange('notes', e.target.value)}
-                placeholder="Any special instructions or requirements"
-                rows={2}
-              />
+          <div>
+            <Label htmlFor="name" className="text-black font-medium">Full Name</Label>
+            <Input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              placeholder="Enter your full name"
+              required
+              className="w-full border-gray-300 focus:border-black focus:ring-black"
+            />
+          </div>
+          <div>
+            <Label htmlFor="phone" className="text-black font-medium">Phone Number</Label>
+            <Input
+              type="tel"
+              id="phone"
+              name="phone"
+              value={formData.phone}
+              onChange={handleInputChange}
+              placeholder="+92 300 0000000"
+              className="w-full border-gray-300 focus:border-black focus:ring-black"
+            />
+          </div>
+          <div>
+            <Label htmlFor="email" className="text-black font-medium">Email Address</Label>
+            <Input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              placeholder="Enter your email"
+              className="w-full border-gray-300 focus:border-black focus:ring-black"
+            />
+          </div>
+          <div>
+            <Label htmlFor="service" className="text-black font-medium">Service Type</Label>
+            <Select onValueChange={(value) => setFormData(prev => ({ ...prev, service: value }))}>
+              <SelectTrigger className="w-full border-gray-300 focus:border-black focus:ring-black">
+                <SelectValue placeholder="Select a service" />
+              </SelectTrigger>
+              <SelectContent className="bg-white">
+                <SelectItem value="basic">Basic Stitching</SelectItem>
+                <SelectItem value="premium">Premium Stitching</SelectItem>
+                <SelectItem value="designer">Designer Stitching</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label htmlFor="fabricType" className="text-black font-medium">Fabric Type</Label>
+            <Input
+              type="text"
+              id="fabricType"
+              name="fabricType"
+              value={formData.fabricType}
+              onChange={handleInputChange}
+              placeholder="Enter fabric type"
+              className="w-full border-gray-300 focus:border-black focus:ring-black"
+            />
+          </div>
+          <div>
+            <Label htmlFor="quantity" className="text-black font-medium">Quantity (Pieces)</Label>
+            <Input
+              type="number"
+              id="quantity"
+              name="quantity"
+              value={formData.quantity}
+              onChange={handleInputChange}
+              min="1"
+              className="w-full border-gray-300 focus:border-black focus:ring-black"
+            />
+          </div>
+          <div>
+            <Label className="text-black font-medium">Measurements (inches)</Label>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <Label htmlFor="shirtLength" className="text-sm text-gray-600">Shirt Length</Label>
+                <Input
+                  type="number"
+                  id="shirtLength"
+                  name="measurements.shirtLength"
+                  value={formData.measurements.shirtLength}
+                  onChange={handleInputChange}
+                  placeholder="e.g., 38"
+                  className="w-full border-gray-300 focus:border-black focus:ring-black"
+                />
+              </div>
+              <div>
+                <Label htmlFor="chest" className="text-sm text-gray-600">Chest</Label>
+                <Input
+                  type="number"
+                  id="chest"
+                  name="measurements.chest"
+                  value={formData.measurements.chest}
+                  onChange={handleInputChange}
+                  placeholder="e.g., 36"
+                  className="w-full border-gray-300 focus:border-black focus:ring-black"
+                />
+              </div>
+              <div>
+                <Label htmlFor="waist" className="text-sm text-gray-600">Waist</Label>
+                <Input
+                  type="number"
+                  id="waist"
+                  name="measurements.waist"
+                  value={formData.measurements.waist}
+                  onChange={handleInputChange}
+                  placeholder="e.g., 34"
+                  className="w-full border-gray-300 focus:border-black focus:ring-black"
+                />
+              </div>
+              <div>
+                <Label htmlFor="hip" className="text-sm text-gray-600">Hip</Label>
+                <Input
+                  type="number"
+                  id="hip"
+                  name="measurements.hip"
+                  value={formData.measurements.hip}
+                  onChange={handleInputChange}
+                  placeholder="e.g., 40"
+                  className="w-full border-gray-300 focus:border-black focus:ring-black"
+                />
+              </div>
+              <div>
+                <Label htmlFor="shoulder" className="text-sm text-gray-600">Shoulder</Label>
+                <Input
+                  type="number"
+                  id="shoulder"
+                  name="measurements.shoulder"
+                  value={formData.measurements.shoulder}
+                  onChange={handleInputChange}
+                  placeholder="e.g., 15"
+                  className="w-full border-gray-300 focus:border-black focus:ring-black"
+                />
+              </div>
+              <div>
+                <Label htmlFor="sleeve" className="text-sm text-gray-600">Sleeve Length</Label>
+                <Input
+                  type="number"
+                  id="sleeve"
+                  name="measurements.sleeve"
+                  value={formData.measurements.sleeve}
+                  onChange={handleInputChange}
+                  placeholder="e.g., 22"
+                  className="w-full border-gray-300 focus:border-black focus:ring-black"
+                />
+              </div>
             </div>
           </div>
-
-          {/* Order Summary */}
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <h4 className="font-semibold mb-2">Order Summary</h4>
-            <div className="space-y-1 text-sm">
-              {cartItems.map(item => (
-                <div key={item.id} className="flex justify-between">
-                  <span>{item.name} (x{item.quantity})</span>
-                  <span>₨{(item.price * item.quantity).toLocaleString()}</span>
-                </div>
-              ))}
-            </div>
-            <div className="flex justify-between font-bold text-lg mt-2 pt-2 border-t">
-              <span>Total:</span>
-              <span className="text-pink-600">₨{totalPrice.toLocaleString()}</span>
-            </div>
+          <div>
+            <Label htmlFor="specialInstructions" className="text-black font-medium">Special Instructions</Label>
+            <Textarea
+              id="specialInstructions"
+              name="specialInstructions"
+              value={formData.specialInstructions}
+              onChange={handleInputChange}
+              placeholder="Enter any special instructions"
+              className="w-full border-gray-300 focus:border-black focus:ring-black"
+            />
           </div>
-
-          <div className="flex gap-3 pt-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              className="flex-1"
-            >
-              Cancel
-            </Button>
-            <Button 
-              type="submit"
-              className="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
-            >
-              Place Order
-            </Button>
-          </div>
-
-          <p className="text-xs text-gray-500 text-center">
-            By placing this order, you agree to our terms and conditions. 
-            We'll contact you via WhatsApp and email to confirm your order.
-          </p>
+          <Button 
+            type="submit" 
+            className="w-full bg-black text-white hover:bg-gray-800 transition-colors duration-200"
+          >
+            Book Now
+          </Button>
         </form>
       </DialogContent>
     </Dialog>

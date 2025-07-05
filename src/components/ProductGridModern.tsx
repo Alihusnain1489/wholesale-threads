@@ -1,12 +1,11 @@
-
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import { Heart, Eye, Filter, Grid3X3, Grid2X2, LayoutGrid } from "lucide-react";
-import { Product } from "@/pages/Index";
+import { Heart, Eye, Filter, Grid3X3, Grid2X2, LayoutGrid, Percent, Clock, ChevronDown } from "lucide-react";
+import { Product } from "@/types";
 
 interface ProductGridModernProps {
   products: Product[];
@@ -36,21 +35,25 @@ const ProductGridModern = ({
   const [viewMode, setViewMode] = useState<'2' | '3' | '4'>('4');
 
   const categories = [
-    { name: 'All', label: 'All Products' },
-    { name: 'Chikankari', label: 'CHIKANKARI' },
-    { name: 'Chunri', label: 'CHUNRI' },
-    { name: 'Dhoop Kinaray', label: 'DHOOP KINARAY' },
-    { name: 'The Floral World', label: 'THE FLORAL WORLD' },
-    { name: 'Tribute to Mothers', label: 'TRIBUTE TO MOTHERS' },
-    { name: 'Premium Luxury', label: 'PREMIUM LUXURY' }
+    { name: 'All', label: 'All Products', count: products.length },
+    { name: 'Sale', label: 'Summer Sale', icon: <Percent className="h-4 w-4" />, badge: 'HOT', count: products.filter(p => p.originalPrice).length },
+    { name: 'Chikankari', label: 'Chikankari', count: products.filter(p => p.category === 'Chikankari').length },
+    { name: 'Chunri', label: 'Chunri', count: products.filter(p => p.category === 'Chunri').length },
+    { name: 'Dhoop Kinaray', label: 'Dhoop Kinaray', count: products.filter(p => p.category === 'Dhoop Kinaray').length },
+    { name: 'The Floral World', label: 'The Floral World', count: products.filter(p => p.category === 'The Floral World').length },
+    { name: 'Tribute to Mothers', label: 'Tribute to Mothers', count: products.filter(p => p.category === 'Tribute to Mothers').length },
+    { name: 'Premium Luxury', label: 'Premium Luxury', count: products.filter(p => p.category === 'Premium Luxury').length }
   ];
 
   const filteredAndSortedProducts = useMemo(() => {
-    let filtered = selectedCategory === 'All' 
-      ? products 
-      : products.filter(product => product.category === selectedCategory);
+    let filtered = products;
 
-    // Apply search filter
+    if (selectedCategory === 'Sale') {
+      filtered = products.filter(product => product.originalPrice);
+    } else if (selectedCategory !== 'All') {
+      filtered = products.filter(product => product.category === selectedCategory);
+    }
+
     if (searchQuery.trim()) {
       filtered = filtered.filter(product =>
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -60,7 +63,6 @@ const ProductGridModern = ({
       );
     }
 
-    // Apply sorting
     switch (sortBy) {
       case 'price-low':
         filtered.sort((a, b) => a.price - b.price);
@@ -80,7 +82,6 @@ const ProductGridModern = ({
     return filtered;
   }, [products, selectedCategory, searchQuery, sortBy]);
 
-  // Pagination calculations
   const totalPages = Math.ceil(filteredAndSortedProducts.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -97,176 +98,202 @@ const ProductGridModern = ({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const getSavingsPercentage = (price: number, originalPrice: number) => {
+    return Math.round(((originalPrice - price) / originalPrice) * 100);
+  };
+
   return (
-    <section className="py-8 md:py-16 bg-white">
-      <div className="container mx-auto px-4">
+    <section className="section-padding bg-white">
+      <div className="container mx-auto container-padding">
         {/* Header */}
-        <div className="text-center mb-8 md:mb-12">
-          <h2 className="text-2xl md:text-3xl font-bold text-black mb-4">
-            UNSTITCHED WOMEN'S COLLECTION
+        <div className="text-center mb-8 md:mb-12 animate-fade-in">
+          <h2 className="section-heading mb-4">
+            Unstitched Women's Collection
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto text-sm md:text-base">
-            Discover our exquisite range of unstitched fabrics with beautiful designs and premium quality
+          <p className="body-text max-w-3xl mx-auto">
+            Discover our exquisite range of premium unstitched fabrics featuring beautiful Pakistani designs, 
+            perfect for creating your dream outfit with traditional elegance and modern style.
           </p>
         </div>
 
-        {/* Category Filters */}
-        <div className="flex flex-wrap justify-center gap-2 md:gap-4 mb-6 md:mb-8">
-          {categories.map(category => (
-            <div
-              key={category.name}
-              className={`relative cursor-pointer px-2 py-1 ${selectedCategory === category.name ? 'text-black' : 'text-gray-500'}`}
-              onClick={() => onCategoryChange(category.name)}
-            >
-              <span className="text-xs md:text-sm font-medium hover:text-black transition-colors">
-                {category.label}
-              </span>
-              {selectedCategory === category.name && (
-                <div className="absolute -bottom-2 left-0 right-0 h-0.5 bg-black"></div>
-              )}
+        {/* Summer Sale Banner */}
+        {selectedCategory === 'Sale' && (
+          <div className="bg-gradient-to-r from-red-50 to-pink-50 rounded-lg p-6 md:p-8 mb-8 text-center relative overflow-hidden">
+            <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+              LIMITED TIME
             </div>
-          ))}
-        </div>
+            <div className="flex items-center justify-center mb-4">
+              <Clock className="h-6 w-6 mr-2 text-red-600" />
+              <span className="text-red-600 font-semibold">Summer Sale - Up to 50% Off</span>
+            </div>
+            <h3 className="text-2xl md:text-3xl font-bold text-red-700 mb-2">
+              Beat The Heat With Style
+            </h3>
+            <p className="text-red-600">Refresh your wardrobe with our premium summer collection</p>
+          </div>
+        )}
 
-        {/* Filters and Display Options */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 md:mb-8 gap-4">
-          <div className="flex items-center space-x-4">
-            <Button variant="outline" size="sm" className="border-gray-300 text-xs md:text-sm">
-              <Filter className="h-4 w-4 mr-2" />
-              Filters
-            </Button>
-            <span className="text-xs md:text-sm text-gray-600">
-              {filteredAndSortedProducts.length} items
-            </span>
+        {/* Category Navigation */}
+        <div className="mb-8">
+          <div className="flex overflow-x-auto scrollbar-hide pb-4 mb-6 border-b border-gray-200">
+            <div className="flex space-x-4 sm:space-x-8 min-w-max px-2">
+              {categories.map(category => (
+                <button
+                  key={category.name}
+                  onClick={() => onCategoryChange(category.name)}
+                  className={`flex items-center space-x-2 pb-4 border-b-2 transition-all duration-200 whitespace-nowrap ${
+                    selectedCategory === category.name 
+                      ? 'border-black text-black font-medium' 
+                      : 'border-transparent text-gray-600 hover:text-black hover:border-gray-300'
+                  }`}
+                >
+                  {category.icon && category.icon}
+                  <span className="text-sm uppercase tracking-wide">{category.label}</span>
+                  {category.badge && (
+                    <Badge className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full ml-2">
+                      {category.badge}
+                    </Badge>
+                  )}
+                  <span className="text-xs text-gray-400">({category.count})</span>
+                </button>
+              ))}
+            </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
-            <div className="flex items-center space-x-2">
-              <span className="text-xs md:text-sm text-gray-600">Display:</span>
-              <div className="flex space-x-1">
-                <Button
-                  variant={viewMode === '2' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setViewMode('2')}
-                  className="p-2"
-                >
-                  <Grid2X2 className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant={viewMode === '3' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setViewMode('3')}
-                  className="p-2"
-                >
-                  <Grid3X3 className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant={viewMode === '4' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setViewMode('4')}
-                  className="p-2"
-                >
-                  <LayoutGrid className="h-4 w-4" />
-                </Button>
-              </div>
+          {/* Filter and Sort Controls */}
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 mb-6">
+            <div className="flex items-center space-x-4">
+              <span className="small-text">
+                {filteredAndSortedProducts.length} items
+              </span>
             </div>
 
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-full sm:w-48">
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="newest">New Arrivals</SelectItem>
-                <SelectItem value="price-low">Price: Low to High</SelectItem>
-                <SelectItem value="price-high">Price: High to Low</SelectItem>
-                <SelectItem value="popular">Most Popular</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6 w-full lg:w-auto">
+              <div className="flex flex-wrap items-center gap-3">
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="w-40 h-10 border-gray-300 bg-white">
+                    <SelectValue placeholder="Sort" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border shadow-lg">
+                    <SelectItem value="newest">New Arrivals</SelectItem>
+                    <SelectItem value="price-low">Price: Low to High</SelectItem>
+                    <SelectItem value="price-high">Price: High to Low</SelectItem>
+                    <SelectItem value="popular">Most Popular</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <div className="flex space-x-1">
+                  <Button
+                    variant={viewMode === '2' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setViewMode('2')}
+                    className="p-2 h-10 w-10"
+                  >
+                    <Grid2X2 className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant={viewMode === '3' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setViewMode('3')}
+                    className="p-2 h-10 w-10"
+                  >
+                    <Grid3X3 className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant={viewMode === '4' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setViewMode('4')}
+                    className="p-2 h-10 w-10"
+                  >
+                    <LayoutGrid className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Product Grid */}
-        <div className={`grid ${gridCols[viewMode]} gap-4 md:gap-6 mb-8`}>
+        <div className={`grid ${gridCols[viewMode]} gap-4 sm:gap-6 md:gap-8 mb-12`}>
           {currentProducts.map(product => (
             <Card 
               key={product.id} 
-              className="group border-0 shadow-none cursor-pointer"
+              className="card-hover group cursor-pointer bg-white border border-gray-200 rounded-lg overflow-hidden"
               onMouseEnter={() => setHoveredProduct(product.id)}
               onMouseLeave={() => setHoveredProduct(null)}
               onClick={() => onProductClick(product)}
             >
-              <div className="relative overflow-hidden bg-gray-50 aspect-[3/4] mb-3 md:mb-4">
+              <div className="relative overflow-hidden bg-gray-50 aspect-[3/4]">
                 <img 
                   src={product.imageUrl} 
                   alt={product.name}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="w-full h-full object-cover image-hover"
                 />
-                {product.hoverImageUrl && (
-                  <img 
-                    src={product.hoverImageUrl}
-                    alt={product.name}
-                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
-                      hoveredProduct === product.id ? 'opacity-100' : 'opacity-0'
-                    }`}
-                  />
-                )}
                 
                 {/* Overlay Actions */}
-                <div className={`absolute inset-0 bg-black/20 flex items-center justify-center space-x-2 transition-opacity duration-300 ${
+                <div className={`absolute inset-0 bg-black/20 flex items-center justify-center space-x-3 transition-opacity duration-300 ${
                   hoveredProduct === product.id ? 'opacity-100' : 'opacity-0'
                 }`}>
-                  <Button size="sm" variant="secondary" className="bg-white/90 hover:bg-white">
+                  <Button size="sm" variant="secondary" className="bg-white/95 hover:bg-white text-black h-10 w-10 p-0">
                     <Eye className="h-4 w-4" />
                   </Button>
-                  <Button size="sm" variant="secondary" className="bg-white/90 hover:bg-white">
+                  <Button size="sm" variant="secondary" className="bg-white/95 hover:bg-white text-black h-10 w-10 p-0">
                     <Heart className="h-4 w-4" />
                   </Button>
                 </div>
 
                 {/* Badges */}
-                {product.originalPrice && (
-                  <Badge className="absolute top-2 left-2 bg-red-500 text-white text-xs">
-                    SALE
-                  </Badge>
-                )}
-                {!product.inStock && (
-                  <Badge className="absolute top-2 right-2 bg-gray-500 text-white text-xs">
-                    SOLD OUT
-                  </Badge>
-                )}
+                <div className="absolute top-3 left-3 flex flex-col space-y-2">
+                  {product.originalPrice && (
+                    <Badge className="price-badge">
+                      -{getSavingsPercentage(product.price, product.originalPrice)}%
+                    </Badge>
+                  )}
+                  {!product.inStock && (
+                    <Badge className="bg-gray-500 text-white text-xs font-bold px-2 py-1">
+                      Sold Out
+                    </Badge>
+                  )}
+                </div>
               </div>
               
-              <CardContent className="p-0">
-                <h3 className="font-medium text-black mb-2 line-clamp-2 text-xs md:text-sm">
+              <CardContent className="p-4">
+                <h3 className="card-heading mb-2 line-clamp-2 text-sm leading-relaxed">
                   {product.name}
                 </h3>
-                <div className="flex items-center space-x-2">
-                  <span className="font-bold text-black text-sm md:text-base">
+                
+                <div className="flex items-center space-x-2 mb-2">
+                  <span className="price-primary">
                     PKR {product.price.toLocaleString()}
                   </span>
                   {product.originalPrice && (
-                    <span className="text-xs md:text-sm text-gray-400 line-through">
+                    <span className="price-secondary">
                       PKR {product.originalPrice.toLocaleString()}
                     </span>
                   )}
                 </div>
                 
                 {product.pieces && (
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-500 mb-2 uppercase tracking-wide">
                     {product.pieces} Piece Unstitched
                   </p>
                 )}
+
+                {product.color && (
+                  <p className="text-xs text-gray-500 mb-3">
+                    Color: {product.color}
+                  </p>
+                )}
                 
-                {/* Quick Add to Cart */}
                 <Button 
                   onClick={(e) => {
                     e.stopPropagation();
                     onAddToCart(product);
                   }}
                   disabled={!product.inStock}
-                  className={`w-full mt-3 text-xs uppercase tracking-wide transition-opacity duration-300 ${
-                    hoveredProduct === product.id ? 'opacity-100' : 'opacity-0'
-                  } ${product.inStock ? 'bg-black text-white hover:bg-gray-800' : 'bg-gray-300 text-gray-500'}`}
+                  className={`w-full mt-2 bg-black hover:bg-gray-800 text-white font-medium py-2 px-4 transition-all duration-300 uppercase tracking-wide text-xs ${
+                    hoveredProduct === product.id ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+                  } ${!product.inStock ? 'opacity-50 cursor-not-allowed' : ''}`}
                   size="sm"
                 >
                   {product.inStock ? 'Add to Cart' : 'Sold Out'}
@@ -284,7 +311,7 @@ const ProductGridModern = ({
                 <PaginationItem>
                   <PaginationPrevious 
                     onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
-                    className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                    className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer hover:bg-gray-50'}
                   />
                 </PaginationItem>
                 
@@ -293,7 +320,7 @@ const ProductGridModern = ({
                     <PaginationLink
                       onClick={() => handlePageChange(index + 1)}
                       isActive={currentPage === index + 1}
-                      className="cursor-pointer"
+                      className="cursor-pointer hover:bg-gray-50"
                     >
                       {index + 1}
                     </PaginationLink>
@@ -303,7 +330,7 @@ const ProductGridModern = ({
                 <PaginationItem>
                   <PaginationNext 
                     onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
-                    className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                    className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer hover:bg-gray-50'}
                   />
                 </PaginationItem>
               </PaginationContent>

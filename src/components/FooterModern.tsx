@@ -1,11 +1,25 @@
 
 import React from 'react';
 import { Facebook, Instagram, Twitter, Youtube, MapPin, Phone, Mail, CreditCard } from "lucide-react";
+import { useNavigate } from 'react-router-dom';
 
 const FooterModern = () => {
+  const navigate = useNavigate();
+
   const handleLinkClick = (section: string) => {
-    // You can implement actual navigation or modal opening here
-    console.log(`Navigating to ${section}`);
+    switch(section) {
+      case 'contact':
+        navigate('/contact');
+        break;
+      case 'about':
+        navigate('/about');
+        break;
+      case 'customer-services':
+        navigate('/customer-services');
+        break;
+      default:
+        console.log(`Navigating to ${section}`);
+    }
   };
 
   return (
@@ -39,6 +53,7 @@ const FooterModern = () => {
             <h4 className="font-semibold mb-4 text-black">Customer Service</h4>
             <ul className="space-y-2 text-sm text-gray-600">
               <li><button onClick={() => handleLinkClick('contact')} className="hover:text-black transition-colors text-left">Contact Us</button></li>
+              <li><button onClick={() => handleLinkClick('customer-services')} className="hover:text-black transition-colors text-left">Customer Services</button></li>
               <li><button onClick={() => handleLinkClick('faq')} className="hover:text-black transition-colors text-left">Frequently Asked Questions</button></li>
               <li><button onClick={() => handleLinkClick('size-guide')} className="hover:text-black transition-colors text-left">Size Guide & Measurements</button></li>
               <li><button onClick={() => handleLinkClick('shipping')} className="hover:text-black transition-colors text-left">Shipping Information</button></li>
