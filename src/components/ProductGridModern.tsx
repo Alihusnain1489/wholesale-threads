@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -32,7 +33,7 @@ const ProductGridModern = ({
 }: ProductGridModernProps) => {
   const [sortBy, setSortBy] = useState('newest');
   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
-  const [viewMode, setViewMode: React.Dispatch<React.SetStateAction<'2' | '3' | '4'>> = useState('4');
+  const [viewMode, setViewMode] = useState<'2' | '3' | '4'>('4');
   const [showFilters, setShowFilters] = useState(false);
 
   const categories = [
