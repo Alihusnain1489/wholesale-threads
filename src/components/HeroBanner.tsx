@@ -6,7 +6,7 @@ const HeroBanner = () => {
   return (
     <section
       className="relative bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: "url('public/bg-web.webp')" }}
+      style={{ backgroundImage: "url('public/bg-3.webp')" }}
     >
       <div className="hero-overlay absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30"></div>
       <div className="relative z-10 container mx-auto px-4 h-full flex items-center">

@@ -10,7 +10,7 @@ const ModernHero = () => {
       {/* Background Image */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
-        style={{ backgroundImage: "url('/bg-web.webp')" }}
+        style={{ backgroundImage: "url('/bg-3.webp')" }}
       />
       
       <div className="relative z-10 container mx-auto px-4 py-20 lg:py-32">
