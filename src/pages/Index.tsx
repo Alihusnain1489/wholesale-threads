@@ -1,16 +1,12 @@
+
 import React, { useState } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import ModernNavbar from "@/components/ModernNavbar";
 import ModernHero from "@/components/ModernHero";
-import FeaturedProducts from "@/components/FeaturedProducts";
-import CollectionGrid from "@/components/CollectionGrid";
-import FeaturesSection from "@/components/FeaturesSection";
-import TestimonialsSection from "@/components/TestimonialsSection";
-import ModernNewsletter from "@/components/ModernNewsletter";
 import ProductGridModern from "@/components/ProductGridModern";
 import ProductDetailModal from "@/components/ProductDetailModal";
 import CartSidebar from "@/components/CartSidebar";
-import StitchingSection from "@/components/StitchingSection";
+import FooterModern from "@/components/FooterModern";
 import { Product, CartItem } from "@/types";
 import { toast } from "@/hooks/use-toast";
 
@@ -24,79 +20,78 @@ const Index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
-  // Sample products data with PKR pricing
+  // Sample products data with PKR pricing for women's clothing store
   const products: Product[] = [
     {
       id: 1,
-      name: "Elegant Chikankari Collection",
-      price: 2850,
-      originalPrice: 3200,
+      name: "LambEdge Shearling-Lined Lambskin Jacket",
+      price: 82113,
       imageUrl: "/lovable-uploads/169fe697-18b5-4551-babf-b05ff42d17cc.png",
-      category: "Chikankari",
+      category: "Jackets",
       inStock: true,
-      description: "Beautiful hand-embroidered chikankari work on premium fabric",
-      color: "White",
-      fabric: "Cotton",
-      pieces: "3 Piece"
+      description: "Premium lambskin jacket with shearling lining",
+      color: "Black",
+      fabric: "Lambskin",
+      pieces: "1 Piece"
     },
     {
       id: 2,
-      name: "Traditional Chunri Design",
-      price: 1950,
+      name: "Lawn womens special",
+      price: 2500,
+      originalPrice: 3000,
       imageUrl: "/lovable-uploads/3c1fc8db-6e9b-402d-827e-4072da43bc6c.png",
-      category: "Chunri",
+      category: "Lawn",
       inStock: true,
-      description: "Classic chunri pattern with vibrant colors",
+      description: "Special lawn collection for women",
       color: "Multi",
-      fabric: "Chiffon",
-      pieces: "2 Piece"
-    },
-    {
-      id: 3,
-      name: "Dhoop Kinaray Premium",
-      price: 3450,
-      originalPrice: 4000,
-      imageUrl: "/lovable-uploads/4a031324-00d1-4c00-95b9-3c959bd9a70c.png",
-      category: "Dhoop Kinaray",
-      inStock: true,
-      description: "Premium collection with intricate golden work",
-      color: "Golden",
-      fabric: "Silk",
-      pieces: "3 Piece"
-    },
-    {
-      id: 4,
-      name: "Floral Paradise",
-      price: 2200,
-      imageUrl: "/lovable-uploads/515e1bb2-b7a9-4126-8e72-203817453fb8.png",
-      category: "The Floral World",
-      inStock: true,
-      description: "Delicate floral prints on soft fabric",
-      color: "Pink",
       fabric: "Lawn",
       pieces: "3 Piece"
     },
     {
-      id: 5,
-      name: "Mother's Love Collection",
-      price: 2750,
-      imageUrl: "/lovable-uploads/5544a434-4a1f-46cc-b113-10304bbc10aa.png",
-      category: "Tribute to Mothers",
+      id: 3,
+      name: "MEN ANTIQUE BROWN LEATHER JACKET BALLSTON",
+      price: 79637,
+      imageUrl: "/lovable-uploads/4a031324-00d1-4c00-95b9-3c959bd9a70c.png",
+      category: "Jackets",
       inStock: true,
-      description: "Special collection dedicated to mothers",
+      description: "Antique brown leather jacket",
+      color: "Brown",
+      fabric: "Leather",
+      pieces: "1 Piece"
+    },
+    {
+      id: 4,
+      name: "Reaper Skull Graphic Biker Jacket",
+      price: 84661,
+      imageUrl: "/lovable-uploads/515e1bb2-b7a9-4126-8e72-203817453fb8.png",
+      category: "Jackets",
+      inStock: true,
+      description: "Stylish biker jacket with skull graphic",
+      color: "Black",
+      fabric: "Leather",
+      pieces: "1 Piece"
+    },
+    {
+      id: 5,
+      name: "Elegant Chiffon Suit",
+      price: 3500,
+      imageUrl: "/lovable-uploads/5544a434-4a1f-46cc-b113-10304bbc10aa.png",
+      category: "Suits",
+      inStock: true,
+      description: "Elegant chiffon suit for special occasions",
       color: "Cream",
-      fabric: "Cotton",
+      fabric: "Chiffon",
       pieces: "3 Piece"
     },
     {
       id: 6,
-      name: "Luxury Premium Suite",
+      name: "Premium Embroidered Collection",
       price: 4500,
       originalPrice: 5200,
       imageUrl: "/lovable-uploads/558c5917-b7c4-4092-9c5e-63316f2d53d6.png",
-      category: "Premium Luxury",
-      inStock: true,
-      description: "Ultimate luxury collection with premium finishing",
+      category: "Suits",
+      inStock: false,
+      description: "Premium embroidered suit collection",
       color: "Royal Blue",
       fabric: "Premium Silk",
       pieces: "3 Piece"
@@ -160,7 +155,6 @@ const Index = () => {
         onSearchChange={setSearchQuery}
       />
       <ModernHero />
-      <FeaturedProducts />
       <ProductGridModern
         products={products}
         onAddToCart={handleAddToCart}
@@ -172,11 +166,7 @@ const Index = () => {
         onPageChange={setCurrentPage}
         itemsPerPage={itemsPerPage}
       />
-      <StitchingSection />
-      <CollectionGrid />
-      <FeaturesSection />
-      <TestimonialsSection />
-      <ModernNewsletter />
+      <FooterModern />
       
       <ProductDetailModal
         product={selectedProduct}

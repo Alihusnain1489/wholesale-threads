@@ -1,10 +1,11 @@
+
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import { Heart, Eye, Filter, Grid3X3, Grid2X2, LayoutGrid, Percent, Clock, ChevronDown } from "lucide-react";
+import { Heart, Eye, Grid3X3, Grid2X2, LayoutGrid } from "lucide-react";
 import { Product } from "@/types";
 
 interface ProductGridModernProps {
@@ -36,13 +37,10 @@ const ProductGridModern = ({
 
   const categories = [
     { name: 'All', label: 'All Products', count: products.length },
-    { name: 'Sale', label: 'Summer Sale', icon: <Percent className="h-4 w-4" />, badge: 'HOT', count: products.filter(p => p.originalPrice).length },
-    { name: 'Chikankari', label: 'Chikankari', count: products.filter(p => p.category === 'Chikankari').length },
-    { name: 'Chunri', label: 'Chunri', count: products.filter(p => p.category === 'Chunri').length },
-    { name: 'Dhoop Kinaray', label: 'Dhoop Kinaray', count: products.filter(p => p.category === 'Dhoop Kinaray').length },
-    { name: 'The Floral World', label: 'The Floral World', count: products.filter(p => p.category === 'The Floral World').length },
-    { name: 'Tribute to Mothers', label: 'Tribute to Mothers', count: products.filter(p => p.category === 'Tribute to Mothers').length },
-    { name: 'Premium Luxury', label: 'Premium Luxury', count: products.filter(p => p.category === 'Premium Luxury').length }
+    { name: 'Sale', label: 'Sale', count: products.filter(p => p.originalPrice).length },
+    { name: 'Jackets', label: 'Jackets', count: products.filter(p => p.category?.includes('Jacket')).length },
+    { name: 'Suits', label: 'Suits', count: products.filter(p => p.category?.includes('Suit')).length },
+    { name: 'Lawn', label: 'Lawn', count: products.filter(p => p.category?.includes('Lawn')).length }
   ];
 
   const filteredAndSortedProducts = useMemo(() => {
@@ -51,15 +49,17 @@ const ProductGridModern = ({
     if (selectedCategory === 'Sale') {
       filtered = products.filter(product => product.originalPrice);
     } else if (selectedCategory !== 'All') {
-      filtered = products.filter(product => product.category === selectedCategory);
+      filtered = products.filter(product => 
+        product.category?.toLowerCase().includes(selectedCategory.toLowerCase()) ||
+        product.name.toLowerCase().includes(selectedCategory.toLowerCase())
+      );
     }
 
     if (searchQuery.trim()) {
       filtered = filtered.filter(product =>
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.color?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.fabric?.toLowerCase().includes(searchQuery.toLowerCase())
+        product.category?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.color?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
@@ -103,122 +103,94 @@ const ProductGridModern = ({
   };
 
   return (
-    <section className="section-padding bg-white">
-      <div className="container mx-auto container-padding">
+    <section className="py-16 bg-white" id="products">
+      <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-8 md:mb-12 animate-fade-in">
-          <h2 className="section-heading mb-4">
-            Unstitched Women's Collection
+        <div className="text-center mb-12">
+          <h2 className="text-3xl lg:text-4xl font-light text-gray-900 mb-4">
+            Women's Collection
           </h2>
-          <p className="body-text max-w-3xl mx-auto">
-            Discover our exquisite range of premium unstitched fabrics featuring beautiful Pakistani designs, 
-            perfect for creating your dream outfit with traditional elegance and modern style.
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Discover our curated selection of premium women's clothing
           </p>
         </div>
 
-        {/* Summer Sale Banner */}
-        {selectedCategory === 'Sale' && (
-          <div className="bg-gradient-to-r from-red-50 to-pink-50 rounded-lg p-6 md:p-8 mb-8 text-center relative overflow-hidden">
-            <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-              LIMITED TIME
-            </div>
-            <div className="flex items-center justify-center mb-4">
-              <Clock className="h-6 w-6 mr-2 text-red-600" />
-              <span className="text-red-600 font-semibold">Summer Sale - Up to 50% Off</span>
-            </div>
-            <h3 className="text-2xl md:text-3xl font-bold text-red-700 mb-2">
-              Beat The Heat With Style
-            </h3>
-            <p className="text-red-600">Refresh your wardrobe with our premium summer collection</p>
-          </div>
-        )}
-
         {/* Category Navigation */}
         <div className="mb-8">
-          <div className="flex overflow-x-auto scrollbar-hide pb-4 mb-6 border-b border-gray-200">
-            <div className="flex space-x-4 sm:space-x-8 min-w-max px-2">
+          <div className="flex overflow-x-auto scrollbar-hide pb-4 mb-6">
+            <div className="flex space-x-6 min-w-max px-2">
               {categories.map(category => (
                 <button
                   key={category.name}
                   onClick={() => onCategoryChange(category.name)}
-                  className={`flex items-center space-x-2 pb-4 border-b-2 transition-all duration-200 whitespace-nowrap ${
+                  className={`pb-2 border-b-2 transition-all duration-200 whitespace-nowrap ${
                     selectedCategory === category.name 
-                      ? 'border-black text-black font-medium' 
-                      : 'border-transparent text-gray-600 hover:text-black hover:border-gray-300'
+                      ? 'border-gray-900 text-gray-900 font-medium' 
+                      : 'border-transparent text-gray-600 hover:text-gray-900'
                   }`}
                 >
-                  {category.icon && category.icon}
-                  <span className="text-sm uppercase tracking-wide">{category.label}</span>
-                  {category.badge && (
-                    <Badge className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full ml-2">
-                      {category.badge}
-                    </Badge>
-                  )}
-                  <span className="text-xs text-gray-400">({category.count})</span>
+                  <span>{category.label}</span>
+                  <span className="text-xs text-gray-400 ml-1">({category.count})</span>
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Filter and Sort Controls */}
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 mb-6">
-            <div className="flex items-center space-x-4">
-              <span className="small-text">
-                {filteredAndSortedProducts.length} items
-              </span>
+          {/* Filter Controls */}
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+            <div className="text-sm text-gray-600">
+              {filteredAndSortedProducts.length} items
             </div>
 
-            <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6 w-full lg:w-auto">
-              <div className="flex flex-wrap items-center gap-3">
-                <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="w-40 h-10 border-gray-300 bg-white">
-                    <SelectValue placeholder="Sort" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white border shadow-lg">
-                    <SelectItem value="newest">New Arrivals</SelectItem>
-                    <SelectItem value="price-low">Price: Low to High</SelectItem>
-                    <SelectItem value="price-high">Price: High to Low</SelectItem>
-                    <SelectItem value="popular">Most Popular</SelectItem>
-                  </SelectContent>
-                </Select>
+            <div className="flex items-center space-x-4">
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="w-40 h-10 border-gray-300 bg-white">
+                  <SelectValue placeholder="Sort" />
+                </SelectTrigger>
+                <SelectContent className="bg-white border shadow-lg">
+                  <SelectItem value="newest">New Arrivals</SelectItem>
+                  <SelectItem value="price-low">Price: Low to High</SelectItem>
+                  <SelectItem value="price-high">Price: High to Low</SelectItem>
+                  <SelectItem value="popular">Most Popular</SelectItem>
+                </SelectContent>
+              </Select>
 
-                <div className="flex space-x-1">
-                  <Button
-                    variant={viewMode === '2' ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setViewMode('2')}
-                    className="p-2 h-10 w-10"
-                  >
-                    <Grid2X2 className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant={viewMode === '3' ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setViewMode('3')}
-                    className="p-2 h-10 w-10"
-                  >
-                    <Grid3X3 className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant={viewMode === '4' ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setViewMode('4')}
-                    className="p-2 h-10 w-10"
-                  >
-                    <LayoutGrid className="h-4 w-4" />
-                  </Button>
-                </div>
+              <div className="flex space-x-1">
+                <Button
+                  variant={viewMode === '2' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setViewMode('2')}
+                  className="p-2 h-10 w-10"
+                >
+                  <Grid2X2 className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant={viewMode === '3' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setViewMode('3')}
+                  className="p-2 h-10 w-10"
+                >
+                  <Grid3X3 className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant={viewMode === '4' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setViewMode('4')}
+                  className="p-2 h-10 w-10"
+                >
+                  <LayoutGrid className="h-4 w-4" />
+                </Button>
               </div>
             </div>
           </div>
         </div>
 
         {/* Product Grid */}
-        <div className={`grid ${gridCols[viewMode]} gap-4 sm:gap-6 md:gap-8 mb-12`}>
+        <div className={`grid ${gridCols[viewMode]} gap-6 mb-12`}>
           {currentProducts.map(product => (
             <Card 
               key={product.id} 
-              className="card-hover group cursor-pointer bg-white border border-gray-200 rounded-lg overflow-hidden"
+              className="group cursor-pointer bg-white border border-gray-200 hover:shadow-lg transition-all duration-300"
               onMouseEnter={() => setHoveredProduct(product.id)}
               onMouseLeave={() => setHoveredProduct(null)}
               onClick={() => onProductClick(product)}
@@ -227,77 +199,51 @@ const ProductGridModern = ({
                 <img 
                   src={product.imageUrl} 
                   alt={product.name}
-                  className="w-full h-full object-cover image-hover"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 
-                {/* Overlay Actions */}
-                <div className={`absolute inset-0 bg-black/20 flex items-center justify-center space-x-3 transition-opacity duration-300 ${
+                {/* Sale Badge */}
+                {product.originalPrice && (
+                  <Badge className="absolute top-3 left-3 bg-white text-gray-900 hover:bg-gray-100">
+                    Sale
+                  </Badge>
+                )}
+
+                {/* Sold Out Badge */}
+                {!product.inStock && (
+                  <Badge className="absolute top-3 left-3 bg-gray-500 text-white">
+                    Sold out
+                  </Badge>
+                )}
+
+                {/* Action Buttons */}
+                <div className={`absolute top-3 right-3 flex flex-col space-y-2 transition-opacity duration-300 ${
                   hoveredProduct === product.id ? 'opacity-100' : 'opacity-0'
                 }`}>
-                  <Button size="sm" variant="secondary" className="bg-white/95 hover:bg-white text-black h-10 w-10 p-0">
+                  <Button size="sm" variant="secondary" className="bg-white/90 hover:bg-white text-gray-900 h-8 w-8 p-0">
                     <Eye className="h-4 w-4" />
                   </Button>
-                  <Button size="sm" variant="secondary" className="bg-white/95 hover:bg-white text-black h-10 w-10 p-0">
+                  <Button size="sm" variant="secondary" className="bg-white/90 hover:bg-white text-gray-900 h-8 w-8 p-0">
                     <Heart className="h-4 w-4" />
                   </Button>
-                </div>
-
-                {/* Badges */}
-                <div className="absolute top-3 left-3 flex flex-col space-y-2">
-                  {product.originalPrice && (
-                    <Badge className="price-badge">
-                      -{getSavingsPercentage(product.price, product.originalPrice)}%
-                    </Badge>
-                  )}
-                  {!product.inStock && (
-                    <Badge className="bg-gray-500 text-white text-xs font-bold px-2 py-1">
-                      Sold Out
-                    </Badge>
-                  )}
                 </div>
               </div>
               
               <CardContent className="p-4">
-                <h3 className="card-heading mb-2 line-clamp-2 text-sm leading-relaxed">
+                <h3 className="font-medium text-gray-900 mb-2 line-clamp-2">
                   {product.name}
                 </h3>
                 
-                <div className="flex items-center space-x-2 mb-2">
-                  <span className="price-primary">
-                    PKR {product.price.toLocaleString()}
+                <div className="flex items-center space-x-2">
+                  <span className="text-lg font-semibold text-gray-900">
+                    Rs.{product.price.toLocaleString()}
                   </span>
                   {product.originalPrice && (
-                    <span className="price-secondary">
-                      PKR {product.originalPrice.toLocaleString()}
+                    <span className="text-sm text-gray-400 line-through">
+                      Rs.{product.originalPrice.toLocaleString()}
                     </span>
                   )}
                 </div>
-                
-                {product.pieces && (
-                  <p className="text-xs text-gray-500 mb-2 uppercase tracking-wide">
-                    {product.pieces} Piece Unstitched
-                  </p>
-                )}
-
-                {product.color && (
-                  <p className="text-xs text-gray-500 mb-3">
-                    Color: {product.color}
-                  </p>
-                )}
-                
-                <Button 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onAddToCart(product);
-                  }}
-                  disabled={!product.inStock}
-                  className={`w-full mt-2 bg-black hover:bg-gray-800 text-white font-medium py-2 px-4 transition-all duration-300 uppercase tracking-wide text-xs ${
-                    hoveredProduct === product.id ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
-                  } ${!product.inStock ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  size="sm"
-                >
-                  {product.inStock ? 'Add to Cart' : 'Sold Out'}
-                </Button>
               </CardContent>
             </Card>
           ))}
@@ -337,6 +283,28 @@ const ProductGridModern = ({
             </Pagination>
           </div>
         )}
+      </div>
+
+      {/* Newsletter Section */}
+      <div className="bg-gray-50 py-16 mt-16">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl font-light text-gray-900 mb-4">
+            Join the club
+          </h2>
+          <p className="text-gray-600 mb-8 max-w-md mx-auto">
+            Get exclusive deals and early access to new products.
+          </p>
+          <div className="flex flex-col sm:flex-row max-w-md mx-auto gap-4">
+            <input
+              type="email"
+              placeholder="Email address"
+              className="flex-1 px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+            />
+            <Button className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-3">
+              Subscribe
+            </Button>
+          </div>
+        </div>
       </div>
     </section>
   );
