@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import ModernNavbar from "@/components/ModernNavbar";
@@ -7,6 +6,8 @@ import ProductGridModern from "@/components/ProductGridModern";
 import ProductDetailModal from "@/components/ProductDetailModal";
 import CartSidebar from "@/components/CartSidebar";
 import FooterModern from "@/components/FooterModern";
+import WhatsAppFloat from "@/components/WhatsAppFloat";
+import LoginModal from "@/components/LoginModal";
 import { Product, CartItem } from "@/types";
 import { toast } from "@/hooks/use-toast";
 
@@ -14,6 +15,8 @@ const Index = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -99,6 +102,12 @@ const Index = () => {
   ];
 
   const handleAddToCart = (product: Product) => {
+    // Check if user is logged in for booking/ordering
+    if (!isLoggedIn) {
+      setIsLoginModalOpen(true);
+      return;
+    }
+
     setCartItems(prev => {
       const existingItem = prev.find(item => item.id === product.id);
       if (existingItem) {
@@ -146,6 +155,14 @@ const Index = () => {
 
   const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
+  const handleLoginSuccess = () => {
+    setIsLoggedIn(true);
+    toast({
+      title: "Login Successful",
+      description: "You can now place orders!",
+    });
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <ModernNavbar 
@@ -183,6 +200,14 @@ const Index = () => {
         onRemoveFromCart={handleRemoveFromCart}
         totalPrice={totalPrice}
       />
+
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onOpenChange={setIsLoginModalOpen}
+        onSuccess={handleLoginSuccess}
+      />
+
+      <WhatsAppFloat />
       
       <Toaster />
     </div>
