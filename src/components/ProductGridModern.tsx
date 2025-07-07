@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -17,6 +16,8 @@ interface ProductGridModernProps {
   currentPage: number;
   onPageChange: (page: number) => void;
   itemsPerPage: number;
+  onLikeClick: () => void;
+  isLoggedIn: boolean;
 }
 
 const ProductGridModern = ({ 
@@ -28,7 +29,9 @@ const ProductGridModern = ({
   searchQuery,
   currentPage,
   onPageChange,
-  itemsPerPage
+  itemsPerPage,
+  onLikeClick,
+  isLoggedIn
 }: ProductGridModernProps) => {
   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
 
@@ -148,7 +151,15 @@ const ProductGridModern = ({
                   <Button size="sm" variant="secondary" className="bg-white/90 hover:bg-white text-gray-900 h-8 w-8 p-0 rounded-full">
                     <Eye className="h-4 w-4" />
                   </Button>
-                  <Button size="sm" variant="secondary" className="bg-white/90 hover:bg-white text-gray-900 h-8 w-8 p-0 rounded-full">
+                  <Button 
+                    size="sm" 
+                    variant="secondary" 
+                    className="bg-white/90 hover:bg-white text-gray-900 h-8 w-8 p-0 rounded-full"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onLikeClick();
+                    }}
+                  >
                     <Heart className="h-4 w-4" />
                   </Button>
                 </div>
