@@ -3,7 +3,17 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, Menu, X, ShoppingBag, User, Heart } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { 
+  Search, 
+  User, 
+  Heart, 
+  ShoppingBag, 
+  Menu, 
+  MapPin,
+  Phone,
+  Mail
+} from "lucide-react";
 
 interface ModernNavbarProps {
   cartItemsCount?: number;
@@ -18,114 +28,130 @@ const ModernNavbar = ({
   searchQuery = '', 
   onSearchChange 
 }: ModernNavbarProps) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-
-  const navItems = [
-    { name: 'Home', href: '#' },
-    { name: 'Catalog', href: '#products' },
-    { name: 'Contact', href: '#contact' },
-    { name: 'Sale', href: '#sale' }
-  ];
-
   return (
-    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <div className="flex items-center">
-            <h1 className="text-xl font-bold text-gray-900">
-              Alif Threads
+    <header className="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
+      {/* Top Bar - Hidden on mobile */}
+      <div className="bg-slate-900 text-white py-2 hidden lg:block">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center text-sm">
+            <div className="flex items-center space-x-6">
+              <div className="flex items-center space-x-2">
+                <Phone className="h-3 w-3" />
+                <span>+92 326 1052244</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Mail className="h-3 w-3" />
+                <span>info@alifthreads.com</span>
+              </div>
+            </div>
+            <div className="flex items-center space-x-6">
+              <span>Free shipping on orders over PKR 5,000</span>
+              <div className="flex items-center space-x-2">
+                <MapPin className="h-3 w-3" />
+                <span>Store Locator</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Navigation */}
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex items-center justify-between">
+          {/* Mobile Menu Button */}
+          <div className="lg:hidden">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="sm" className="hover:bg-gray-50">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-80 sm:w-96">
+                <div className="mt-8 space-y-6">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input
+                      type="text"
+                      placeholder="Search for products..."
+                      value={searchQuery}
+                      onChange={(e) => onSearchChange?.(e.target.value)}
+                      className="pl-10 w-full"
+                    />
+                  </div>
+                  
+                  <div className="flex flex-col space-y-4 pt-6 border-t">
+                    <Button variant="ghost" className="justify-start text-left">
+                      <User className="h-4 w-4 mr-3" />
+                      Login / Register
+                    </Button>
+                    <Button variant="ghost" className="justify-start text-left">
+                      <Heart className="h-4 w-4 mr-3" />
+                      Wishlist
+                    </Button>
+                  </div>
+                  
+                  <div className="pt-6 border-t text-sm text-gray-600 space-y-3">
+                    <div className="flex items-center space-x-2">
+                      <Phone className="h-3 w-3" />
+                      <span>+92 326 1052244</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Mail className="h-3 w-3" />
+                      <span>info@alifthreads.com</span>
+                    </div>
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+
+          {/* Logo - Centered on mobile, left on desktop */}
+          <div className="flex items-center lg:mr-auto">
+            <h1 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-light text-slate-900 tracking-tight">
+              <span className="font-bold">ALIF</span>
+              <span className="font-light ml-2">THREADS</span>
             </h1>
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            {navItems.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className="text-gray-700 hover:text-gray-900 transition-colors font-medium"
-              >
-                {item.name}
-              </a>
-            ))}
+          {/* Search Bar - Desktop only */}
+          <div className="hidden lg:flex flex-1 max-w-2xl mx-8">
+            <div className="relative w-full">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input
+                type="text"
+                placeholder="Search for products, categories, colors..."
+                value={searchQuery}
+                onChange={(e) => onSearchChange?.(e.target.value)}
+                className="pl-12 pr-4 py-3 w-full text-base"
+              />
+            </div>
           </div>
 
-          {/* Right Section */}
-          <div className="flex items-center space-x-3">
-            {/* Search */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-gray-700 hover:bg-gray-100"
-              onClick={() => setIsSearchOpen(!isSearchOpen)}
-            >
-              <Search className="h-5 w-5" />
-            </Button>
-
-            {/* User Account */}
-            <Button variant="ghost" size="icon" className="hidden sm:flex text-gray-700 hover:bg-gray-100">
-              <User className="h-5 w-5" />
-            </Button>
-
-            {/* Cart */}
-            <Button variant="ghost" size="icon" className="relative text-gray-700 hover:bg-gray-100" onClick={onCartClick}>
-              <ShoppingBag className="h-5 w-5" />
+          {/* Right Actions */}
+          <div className="flex items-center space-x-3 lg:space-x-4">
+            {/* Desktop Icons */}
+            <div className="hidden sm:flex items-center space-x-3">
+              <Button variant="ghost" size="sm" className="hover:bg-gray-50 p-2">
+                <User className="h-5 w-5 text-slate-700" />
+              </Button>
+              <Button variant="ghost" size="sm" className="hover:bg-gray-50 p-2">
+                <Heart className="h-5 w-5 text-slate-700" />
+              </Button>
+            </div>
+            
+            {/* Cart Button */}
+            <Button variant="ghost" size="sm" onClick={onCartClick} className="relative hover:bg-gray-50 p-2">
+              <ShoppingBag className="h-5 w-5 text-slate-700" />
               {cartItemsCount > 0 && (
-                <Badge className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-black text-white hover:bg-gray-800 text-xs flex items-center justify-center p-0">
+                <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-slate-900 text-white rounded-full">
                   {cartItemsCount}
                 </Badge>
               )}
             </Button>
-
-            {/* Mobile Menu Toggle */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden text-gray-700 hover:bg-gray-100"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </Button>
           </div>
         </div>
-
-        {/* Mobile Search Bar */}
-        {isSearchOpen && (
-          <div className="py-3 border-t border-gray-200">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input
-                type="text"
-                placeholder="Search products..."
-                value={searchQuery}
-                onChange={(e) => onSearchChange?.(e.target.value)}
-                className="pl-10 pr-4 py-2 w-full border-gray-300 focus:border-gray-500 focus:ring-gray-500"
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200">
-            <div className="flex flex-col space-y-3">
-              {navItems.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="text-gray-700 hover:text-gray-900 transition-colors font-medium py-2 px-3 rounded-lg hover:bg-gray-100"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.name}
-                </a>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
-    </nav>
+    </header>
   );
 };
 

@@ -3,9 +3,8 @@ import React, { useState, useMemo } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import { Heart, Eye, Grid3X3, Grid2X2, LayoutGrid } from "lucide-react";
+import { Heart, Eye } from "lucide-react";
 import { Product } from "@/types";
 
 interface ProductGridModernProps {
@@ -31,9 +30,7 @@ const ProductGridModern = ({
   onPageChange,
   itemsPerPage
 }: ProductGridModernProps) => {
-  const [sortBy, setSortBy] = useState('newest');
   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
-  const [viewMode, setViewMode] = useState<'2' | '3' | '4'>('4');
 
   const categories = [
     { name: 'All', label: 'All Products', count: products.length },
@@ -43,7 +40,7 @@ const ProductGridModern = ({
     { name: 'Lawn', label: 'Lawn', count: products.filter(p => p.category?.includes('Lawn')).length }
   ];
 
-  const filteredAndSortedProducts = useMemo(() => {
+  const filteredProducts = useMemo(() => {
     let filtered = products;
 
     if (selectedCategory === 'Sale') {
@@ -63,43 +60,17 @@ const ProductGridModern = ({
       );
     }
 
-    switch (sortBy) {
-      case 'price-low':
-        filtered.sort((a, b) => a.price - b.price);
-        break;
-      case 'price-high':
-        filtered.sort((a, b) => b.price - a.price);
-        break;
-      case 'popular':
-        filtered.sort((a, b) => (b.stockLeft || 0) - (a.stockLeft || 0));
-        break;
-      case 'newest':
-      default:
-        filtered.sort((a, b) => b.id - a.id);
-        break;
-    }
+    return filtered.sort((a, b) => b.id - a.id);
+  }, [products, selectedCategory, searchQuery]);
 
-    return filtered;
-  }, [products, selectedCategory, searchQuery, sortBy]);
-
-  const totalPages = Math.ceil(filteredAndSortedProducts.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentProducts = filteredAndSortedProducts.slice(startIndex, endIndex);
-
-  const gridCols = {
-    '2': 'grid-cols-1 sm:grid-cols-2',
-    '3': 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
-    '4': 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-  };
+  const currentProducts = filteredProducts.slice(startIndex, endIndex);
 
   const handlePageChange = (page: number) => {
     onPageChange(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const getSavingsPercentage = (price: number, originalPrice: number) => {
-    return Math.round(((originalPrice - price) / originalPrice) * 100);
   };
 
   return (
@@ -117,80 +88,34 @@ const ProductGridModern = ({
 
         {/* Category Navigation */}
         <div className="mb-8">
-          <div className="flex overflow-x-auto scrollbar-hide pb-4 mb-6">
-            <div className="flex space-x-6 min-w-max px-2">
-              {categories.map(category => (
-                <button
-                  key={category.name}
-                  onClick={() => onCategoryChange(category.name)}
-                  className={`pb-2 border-b-2 transition-all duration-200 whitespace-nowrap ${
-                    selectedCategory === category.name 
-                      ? 'border-gray-900 text-gray-900 font-medium' 
-                      : 'border-transparent text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  <span>{category.label}</span>
-                  <span className="text-xs text-gray-400 ml-1">({category.count})</span>
-                </button>
-              ))}
-            </div>
+          <div className="flex flex-wrap justify-center gap-3 mb-6">
+            {categories.map(category => (
+              <button
+                key={category.name}
+                onClick={() => onCategoryChange(category.name)}
+                className={`px-6 py-3 rounded-full transition-all duration-200 ${
+                  selectedCategory === category.name 
+                    ? 'bg-gray-900 text-white' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <span>{category.label}</span>
+                <span className="text-xs ml-1 opacity-75">({category.count})</span>
+              </button>
+            ))}
           </div>
 
-          {/* Filter Controls */}
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-            <div className="text-sm text-gray-600">
-              {filteredAndSortedProducts.length} items
-            </div>
-
-            <div className="flex items-center space-x-4">
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-40 h-10 border-gray-300 bg-white">
-                  <SelectValue placeholder="Sort" />
-                </SelectTrigger>
-                <SelectContent className="bg-white border shadow-lg">
-                  <SelectItem value="newest">New Arrivals</SelectItem>
-                  <SelectItem value="price-low">Price: Low to High</SelectItem>
-                  <SelectItem value="price-high">Price: High to Low</SelectItem>
-                  <SelectItem value="popular">Most Popular</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <div className="flex space-x-1">
-                <Button
-                  variant={viewMode === '2' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setViewMode('2')}
-                  className="p-2 h-10 w-10"
-                >
-                  <Grid2X2 className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant={viewMode === '3' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setViewMode('3')}
-                  className="p-2 h-10 w-10"
-                >
-                  <Grid3X3 className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant={viewMode === '4' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setViewMode('4')}
-                  className="p-2 h-10 w-10"
-                >
-                  <LayoutGrid className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
+          <div className="text-center text-sm text-gray-600">
+            {filteredProducts.length} items
           </div>
         </div>
 
         {/* Product Grid */}
-        <div className={`grid ${gridCols[viewMode]} gap-6 mb-12`}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
           {currentProducts.map(product => (
             <Card 
               key={product.id} 
-              className="group cursor-pointer bg-white border border-gray-200 hover:shadow-lg transition-all duration-300"
+              className="group cursor-pointer bg-white border border-gray-200 hover:shadow-lg transition-all duration-300 rounded-xl overflow-hidden"
               onMouseEnter={() => setHoveredProduct(product.id)}
               onMouseLeave={() => setHoveredProduct(null)}
               onClick={() => onProductClick(product)}
@@ -204,14 +129,14 @@ const ProductGridModern = ({
                 
                 {/* Sale Badge */}
                 {product.originalPrice && (
-                  <Badge className="absolute top-3 left-3 bg-white text-gray-900 hover:bg-gray-100">
+                  <Badge className="absolute top-3 left-3 bg-white text-gray-900 hover:bg-gray-100 rounded-full">
                     Sale
                   </Badge>
                 )}
 
                 {/* Sold Out Badge */}
                 {!product.inStock && (
-                  <Badge className="absolute top-3 left-3 bg-gray-500 text-white">
+                  <Badge className="absolute top-3 left-3 bg-gray-500 text-white rounded-full">
                     Sold out
                   </Badge>
                 )}
@@ -220,10 +145,10 @@ const ProductGridModern = ({
                 <div className={`absolute top-3 right-3 flex flex-col space-y-2 transition-opacity duration-300 ${
                   hoveredProduct === product.id ? 'opacity-100' : 'opacity-0'
                 }`}>
-                  <Button size="sm" variant="secondary" className="bg-white/90 hover:bg-white text-gray-900 h-8 w-8 p-0">
+                  <Button size="sm" variant="secondary" className="bg-white/90 hover:bg-white text-gray-900 h-8 w-8 p-0 rounded-full">
                     <Eye className="h-4 w-4" />
                   </Button>
-                  <Button size="sm" variant="secondary" className="bg-white/90 hover:bg-white text-gray-900 h-8 w-8 p-0">
+                  <Button size="sm" variant="secondary" className="bg-white/90 hover:bg-white text-gray-900 h-8 w-8 p-0 rounded-full">
                     <Heart className="h-4 w-4" />
                   </Button>
                 </div>
@@ -298,9 +223,9 @@ const ProductGridModern = ({
             <input
               type="email"
               placeholder="Email address"
-              className="flex-1 px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+              className="flex-1 px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
             />
-            <Button className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-3">
+            <Button className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-3 rounded-full">
               Subscribe
             </Button>
           </div>
