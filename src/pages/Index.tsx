@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import ModernNavbar from "@/components/ModernNavbar";
@@ -163,6 +164,24 @@ const Index = () => {
     });
   };
 
+  const handleLoginClick = () => {
+    setIsLoginModalOpen(true);
+  };
+
+  const handleLikeClick = () => {
+    if (!isLoggedIn) {
+      setIsLoginModalOpen(true);
+      return;
+    }
+    toast({
+      title: "Added to Wishlist",
+      description: "Item has been added to your wishlist!",
+    });
+  };
+
+  // Check if search is active
+  const isSearchActive = searchQuery.trim().length > 0;
+
   return (
     <div className="min-h-screen bg-white">
       <ModernNavbar 
@@ -170,8 +189,13 @@ const Index = () => {
         onCartClick={() => setIsCartOpen(true)}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
+        onLoginClick={handleLoginClick}
+        isLoggedIn={isLoggedIn}
       />
-      <ModernHero />
+      
+      {/* Hide hero section when searching */}
+      {!isSearchActive && <ModernHero />}
+      
       <ProductGridModern
         products={products}
         onAddToCart={handleAddToCart}
@@ -182,6 +206,8 @@ const Index = () => {
         currentPage={currentPage}
         onPageChange={setCurrentPage}
         itemsPerPage={itemsPerPage}
+        onLikeClick={handleLikeClick}
+        isLoggedIn={isLoggedIn}
       />
       <FooterModern />
       

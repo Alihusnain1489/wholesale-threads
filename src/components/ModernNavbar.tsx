@@ -12,7 +12,8 @@ import {
   Menu, 
   MapPin,
   Phone,
-  Mail
+  Mail,
+  LogOut
 } from "lucide-react";
 
 interface ModernNavbarProps {
@@ -20,13 +21,17 @@ interface ModernNavbarProps {
   onCartClick?: () => void;
   searchQuery?: string;
   onSearchChange?: (query: string) => void;
+  onLoginClick?: () => void;
+  isLoggedIn?: boolean;
 }
 
 const ModernNavbar = ({ 
   cartItemsCount = 0, 
   onCartClick, 
   searchQuery = '', 
-  onSearchChange 
+  onSearchChange,
+  onLoginClick,
+  isLoggedIn = false
 }: ModernNavbarProps) => {
   return (
     <header className="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
@@ -80,9 +85,9 @@ const ModernNavbar = ({
                   </div>
                   
                   <div className="flex flex-col space-y-4 pt-6 border-t">
-                    <Button variant="ghost" className="justify-start text-left">
+                    <Button variant="ghost" onClick={onLoginClick} className="justify-start text-left">
                       <User className="h-4 w-4 mr-3" />
-                      Login / Register
+                      {isLoggedIn ? 'Account' : 'Login / Register'}
                     </Button>
                     <Button variant="ghost" className="justify-start text-left">
                       <Heart className="h-4 w-4 mr-3" />
@@ -131,8 +136,15 @@ const ModernNavbar = ({
           <div className="flex items-center space-x-3 lg:space-x-4">
             {/* Desktop Icons */}
             <div className="hidden sm:flex items-center space-x-3">
-              <Button variant="ghost" size="sm" className="hover:bg-gray-50 p-2">
-                <User className="h-5 w-5 text-slate-700" />
+              <Button variant="ghost" size="sm" onClick={onLoginClick} className="hover:bg-gray-50 p-2">
+                {isLoggedIn ? (
+                  <div className="flex items-center space-x-1">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <User className="h-5 w-5 text-slate-700" />
+                  </div>
+                ) : (
+                  <User className="h-5 w-5 text-slate-700" />
+                )}
               </Button>
               <Button variant="ghost" size="sm" className="hover:bg-gray-50 p-2">
                 <Heart className="h-5 w-5 text-slate-700" />

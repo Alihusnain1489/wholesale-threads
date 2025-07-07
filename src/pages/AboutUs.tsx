@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,25 +9,26 @@ import {
   Star,
   Heart,
   Scissors,
-  Globe
+  Globe,
+  Home
 } from "lucide-react";
 import { Link } from 'react-router-dom';
 
 const AboutUs = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 animate-fade-in">
       {/* Header */}
       <div className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <Link to="/">
-                <Button variant="ghost" size="sm">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
+                <Button variant="ghost" size="sm" className="hover:bg-gray-50 animate-scale-in">
+                  <Home className="h-4 w-4 mr-2" />
                   Back to Home
                 </Button>
               </Link>
-              <h1 className="text-3xl font-bold text-gray-900">About Wholesale Threads</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">About Alif Threads</h1>
             </div>
           </div>
         </div>
@@ -36,13 +36,13 @@ const AboutUs = () => {
 
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 animate-fade-in">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">
-              Crafting Excellence in Women's Fashion Since 2010
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
+              Crafting Excellence in Women's Fashion Since 2020
             </h2>
-            <p className="text-xl text-gray-600 leading-relaxed">
-              At Wholesale Threads, we believe that every woman deserves to feel beautiful and confident. 
+            <p className="text-lg sm:text-xl text-gray-600 leading-relaxed">
+              At Alif Threads, we believe that every woman deserves to feel beautiful and confident. 
               Our journey began with a simple mission: to provide high-quality, affordable unstitched fabrics 
               that celebrate the rich heritage of Pakistani textile craftsmanship.
             </p>
@@ -50,29 +50,29 @@ const AboutUs = () => {
         </div>
 
         {/* Stats Section */}
-        <div className="grid md:grid-cols-4 gap-6 mb-12">
-          <Card className="text-center">
-            <CardContent className="p-6">
-              <div className="text-3xl font-bold text-blue-600 mb-2">13+</div>
-              <p className="text-gray-600">Years of Experience</p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-12">
+          <Card className="text-center hover:shadow-lg transition-all duration-300 hover:scale-105">
+            <CardContent className="p-4 sm:p-6">
+              <div className="text-2xl sm:text-3xl font-bold text-blue-600 mb-2">4+</div>
+              <p className="text-sm sm:text-base text-gray-600">Years of Experience</p>
             </CardContent>
           </Card>
-          <Card className="text-center">
-            <CardContent className="p-6">
-              <div className="text-3xl font-bold text-green-600 mb-2">50K+</div>
-              <p className="text-gray-600">Happy Customers</p>
+          <Card className="text-center hover:shadow-lg transition-all duration-300 hover:scale-105">
+            <CardContent className="p-4 sm:p-6">
+              <div className="text-2xl sm:text-3xl font-bold text-green-600 mb-2">10K+</div>
+              <p className="text-sm sm:text-base text-gray-600">Happy Customers</p>
             </CardContent>
           </Card>
-          <Card className="text-center">
-            <CardContent className="p-6">
-              <div className="text-3xl font-bold text-purple-600 mb-2">1000+</div>
-              <p className="text-gray-600">Unique Designs</p>
+          <Card className="text-center hover:shadow-lg transition-all duration-300 hover:scale-105">
+            <CardContent className="p-4 sm:p-6">
+              <div className="text-2xl sm:text-3xl font-bold text-purple-600 mb-2">500+</div>
+              <p className="text-sm sm:text-base text-gray-600">Unique Designs</p>
             </CardContent>
           </Card>
-          <Card className="text-center">
-            <CardContent className="p-6">
-              <div className="text-3xl font-bold text-orange-600 mb-2">100+</div>
-              <p className="text-gray-600">Cities Served</p>
+          <Card className="text-center hover:shadow-lg transition-all duration-300 hover:scale-105">
+            <CardContent className="p-4 sm:p-6">
+              <div className="text-2xl sm:text-3xl font-bold text-orange-600 mb-2">50+</div>
+              <p className="text-sm sm:text-base text-gray-600">Cities Served</p>
             </CardContent>
           </Card>
         </div>
@@ -86,7 +86,7 @@ const AboutUs = () => {
             <div className="grid md:grid-cols-2 gap-8">
               <div>
                 <p className="text-gray-600 mb-4">
-                  Founded in 2010 by a passionate team of textile enthusiasts, Wholesale Threads started 
+                  Founded in 2020 by a passionate team of textile enthusiasts, Alif Threads started 
                   as a small family business with a big dream. We recognized the gap between traditional 
                   craftsmanship and modern fashion needs, and set out to bridge that divide.
                 </p>
@@ -118,41 +118,41 @@ const AboutUs = () => {
 
         {/* What Sets Us Apart */}
         <div className="mb-12">
-          <h2 className="text-3xl font-bold text-center mb-8">What Sets Us Apart</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8">What Sets Us Apart</h2>
           <div className="grid md:grid-cols-3 gap-6">
-            <Card>
+            <Card className="hover:shadow-lg transition-all duration-300 hover:scale-105">
               <CardHeader className="text-center">
-                <Award className="h-12 w-12 mx-auto text-yellow-600 mb-4" />
-                <CardTitle>Premium Quality</CardTitle>
+                <Award className="h-10 w-10 sm:h-12 sm:w-12 mx-auto text-yellow-600 mb-4" />
+                <CardTitle className="text-lg sm:text-xl">Premium Quality</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 text-center">
+                <p className="text-gray-600 text-center text-sm sm:text-base">
                   We source the finest fabrics and work with skilled artisans to ensure every piece 
                   meets our high standards of quality and craftsmanship.
                 </p>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="hover:shadow-lg transition-all duration-300 hover:scale-105">
               <CardHeader className="text-center">
-                <Scissors className="h-12 w-12 mx-auto text-pink-600 mb-4" />
-                <CardTitle>Expert Craftsmanship</CardTitle>
+                <Scissors className="h-10 w-10 sm:h-12 sm:w-12 mx-auto text-pink-600 mb-4" />
+                <CardTitle className="text-lg sm:text-xl">Expert Craftsmanship</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 text-center">
+                <p className="text-gray-600 text-center text-sm sm:text-base">
                   Our team includes master craftsmen who specialize in traditional techniques like 
                   Chikankari, block printing, and intricate embroidery work.
                 </p>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="hover:shadow-lg transition-all duration-300 hover:scale-105">
               <CardHeader className="text-center">
-                <Heart className="h-12 w-12 mx-auto text-red-600 mb-4" />
-                <CardTitle>Customer-Centric</CardTitle>
+                <Heart className="h-10 w-10 sm:h-12 sm:w-12 mx-auto text-red-600 mb-4" />
+                <CardTitle className="text-lg sm:text-xl">Customer-Centric</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 text-center">
+                <p className="text-gray-600 text-center text-sm sm:text-base">
                   We listen to our customers and continuously evolve our collections based on their 
                   feedback and changing fashion preferences.
                 </p>
