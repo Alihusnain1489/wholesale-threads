@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import ModernNavbar from "@/components/ModernNavbar";
@@ -194,7 +193,12 @@ const Index = () => {
       />
       
       {/* Hide hero section when searching */}
-      {!isSearchActive && <ModernHero />}
+      {!isSearchActive && (
+        <ModernHero 
+          onLoginClick={handleLoginClick}
+          isLoggedIn={isLoggedIn}
+        />
+      )}
       
       <ProductGridModern
         products={products}

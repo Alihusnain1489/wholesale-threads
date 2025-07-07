@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -5,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import { CartItem } from "@/types";
 
@@ -19,39 +21,34 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0 }:
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
-    phone: '',
     email: '',
-    service: '',
-    fabricType: '',
-    quantity: 1,
-    measurements: {
-      shirtLength: '',
-      chest: '',
-      waist: '',
-      hip: '',
-      shoulder: '',
-      sleeve: ''
-    },
-    specialInstructions: ''
+    mobile: '',
+    shippingAddress: '',
+    paymentType: '',
+    city: '',
+    additionalDetails: ''
   });
+
+  const pakistaniCities = [
+    'Karachi', 'Lahore', 'Islamabad', 'Rawalpindi', 'Faisalabad', 'Multan', 'Peshawar', 'Quetta',
+    'Gujranwala', 'Sialkot', 'Bahawalpur', 'Sargodha', 'Sukkur', 'Larkana', 'Hyderabad', 'Mardan',
+    'Mingora', 'Gujrat', 'Kasur', 'Rahim Yar Khan', 'Sahiwal', 'Okara', 'Wah Cantonment', 'Dera Ghazi Khan',
+    'Mirpur Khas', 'Nawabshah', 'Kohat', 'Turbat', 'Other'
+  ];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    if (name.startsWith('measurements.')) {
-      const measurementKey = name.split('.')[1];
-      setFormData(prev => ({
-        ...prev,
-        measurements: {
-          ...prev.measurements,
-          [measurementKey]: value
-        }
-      }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        [name]: value
-      }));
-    }
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -66,30 +63,22 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0 }:
 
     // Auto-send WhatsApp message
     const phoneNumber = "923261052244";
-    const message = `🧵 STITCHING ORDER BOOKING
+    const message = `🛒 NEW ORDER BOOKING
 
 👤 Customer Details:
 Name: ${formData.name}
-Phone: ${formData.phone}
 Email: ${formData.email}
+Mobile: ${formData.mobile}
 ${cartItemsText}
-📦 Service Details:
-Service: ${formData.service}
-Fabric Type: ${formData.fabricType}
-Quantity: ${formData.quantity} pieces
+📦 Shipping Details:
+Address: ${formData.shippingAddress}
+City: ${formData.city}
+Payment Type: ${formData.paymentType}
 
-📏 Measurements:
-Shirt Length: ${formData.measurements.shirtLength}"
-Chest: ${formData.measurements.chest}"
-Waist: ${formData.measurements.waist}"
-Hip: ${formData.measurements.hip}"
-Shoulder: ${formData.measurements.shoulder}"
-Sleeve: ${formData.measurements.sleeve}"
+📝 Additional Details:
+${formData.additionalDetails || 'None'}
 
-📝 Special Instructions:
-${formData.specialInstructions || 'None'}
-
-Thank you for choosing Wholesale Threads! 🌟`;
+Thank you for choosing Alif Threads! 🌟`;
     
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
@@ -100,26 +89,18 @@ Thank you for choosing Wholesale Threads! 🌟`;
     // Show success message
     toast({
       title: "Order Sent Successfully!",
-      description: "Your stitching order has been sent via WhatsApp. We'll contact you soon!",
+      description: "Your order has been sent via WhatsApp. We'll contact you soon!",
     });
     
     // Reset form and close dialog
     setFormData({
       name: '',
-      phone: '',
       email: '',
-      service: '',
-      fabricType: '',
-      quantity: 1,
-      measurements: {
-        shirtLength: '',
-        chest: '',
-        waist: '',
-        hip: '',
-        shoulder: '',
-        sleeve: ''
-      },
-      specialInstructions: ''
+      mobile: '',
+      shippingAddress: '',
+      paymentType: '',
+      city: '',
+      additionalDetails: ''
     });
     
     onOpenChange(false);
@@ -129,11 +110,11 @@ Thank you for choosing Wholesale Threads! 🌟`;
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-black">Stitching Order Booking</DialogTitle>
+          <DialogTitle className="text-xl font-bold text-black">Order Booking</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="name" className="text-black font-medium">Full Name</Label>
+            <Label htmlFor="name" className="text-black font-medium">Full Name *</Label>
             <Input
               type="text"
               id="name"
@@ -145,20 +126,9 @@ Thank you for choosing Wholesale Threads! 🌟`;
               className="w-full border-gray-300 focus:border-black focus:ring-black"
             />
           </div>
+          
           <div>
-            <Label htmlFor="phone" className="text-black font-medium">Phone Number</Label>
-            <Input
-              type="tel"
-              id="phone"
-              name="phone"
-              value={formData.phone}
-              onChange={handleInputChange}
-              placeholder="+92 300 0000000"
-              className="w-full border-gray-300 focus:border-black focus:ring-black"
-            />
-          </div>
-          <div>
-            <Label htmlFor="email" className="text-black font-medium">Email Address</Label>
+            <Label htmlFor="email" className="text-black font-medium">Email Address *</Label>
             <Input
               type="email"
               id="email"
@@ -166,139 +136,89 @@ Thank you for choosing Wholesale Threads! 🌟`;
               value={formData.email}
               onChange={handleInputChange}
               placeholder="Enter your email"
+              required
               className="w-full border-gray-300 focus:border-black focus:ring-black"
             />
           </div>
+          
           <div>
-            <Label htmlFor="service" className="text-black font-medium">Service Type</Label>
-            <Select onValueChange={(value) => setFormData(prev => ({ ...prev, service: value }))}>
+            <Label htmlFor="mobile" className="text-black font-medium">Mobile Number *</Label>
+            <Input
+              type="tel"
+              id="mobile"
+              name="mobile"
+              value={formData.mobile}
+              onChange={handleInputChange}
+              placeholder="+92 300 0000000"
+              required
+              className="w-full border-gray-300 focus:border-black focus:ring-black"
+            />
+          </div>
+          
+          <div>
+            <Label htmlFor="shippingAddress" className="text-black font-medium">Shipping Address *</Label>
+            <Textarea
+              id="shippingAddress"
+              name="shippingAddress"
+              value={formData.shippingAddress}
+              onChange={handleInputChange}
+              placeholder="Enter your complete shipping address"
+              required
+              className="w-full border-gray-300 focus:border-black focus:ring-black"
+            />
+          </div>
+          
+          <div>
+            <Label className="text-black font-medium">Payment Type *</Label>
+            <RadioGroup 
+              value={formData.paymentType} 
+              onValueChange={(value) => handleSelectChange('paymentType', value)}
+              className="mt-2"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="online" id="online" />
+                <Label htmlFor="online">Online Payment</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="cod" id="cod" />
+                <Label htmlFor="cod">Cash on Delivery</Label>
+              </div>
+            </RadioGroup>
+          </div>
+          
+          <div>
+            <Label htmlFor="city" className="text-black font-medium">City *</Label>
+            <Select onValueChange={(value) => handleSelectChange('city', value)} required>
               <SelectTrigger className="w-full border-gray-300 focus:border-black focus:ring-black">
-                <SelectValue placeholder="Select a service" />
+                <SelectValue placeholder="Select your city" />
               </SelectTrigger>
-              <SelectContent className="bg-white">
-                <SelectItem value="basic">Basic Stitching</SelectItem>
-                <SelectItem value="premium">Premium Stitching</SelectItem>
-                <SelectItem value="designer">Designer Stitching</SelectItem>
+              <SelectContent className="bg-white max-h-60">
+                {pakistaniCities.map((city) => (
+                  <SelectItem key={city} value={city}>
+                    {city}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
+          
           <div>
-            <Label htmlFor="fabricType" className="text-black font-medium">Fabric Type</Label>
-            <Input
-              type="text"
-              id="fabricType"
-              name="fabricType"
-              value={formData.fabricType}
-              onChange={handleInputChange}
-              placeholder="Enter fabric type"
-              className="w-full border-gray-300 focus:border-black focus:ring-black"
-            />
-          </div>
-          <div>
-            <Label htmlFor="quantity" className="text-black font-medium">Quantity (Pieces)</Label>
-            <Input
-              type="number"
-              id="quantity"
-              name="quantity"
-              value={formData.quantity}
-              onChange={handleInputChange}
-              min="1"
-              className="w-full border-gray-300 focus:border-black focus:ring-black"
-            />
-          </div>
-          <div>
-            <Label className="text-black font-medium">Measurements (inches)</Label>
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <Label htmlFor="shirtLength" className="text-sm text-gray-600">Shirt Length</Label>
-                <Input
-                  type="number"
-                  id="shirtLength"
-                  name="measurements.shirtLength"
-                  value={formData.measurements.shirtLength}
-                  onChange={handleInputChange}
-                  placeholder="e.g., 38"
-                  className="w-full border-gray-300 focus:border-black focus:ring-black"
-                />
-              </div>
-              <div>
-                <Label htmlFor="chest" className="text-sm text-gray-600">Chest</Label>
-                <Input
-                  type="number"
-                  id="chest"
-                  name="measurements.chest"
-                  value={formData.measurements.chest}
-                  onChange={handleInputChange}
-                  placeholder="e.g., 36"
-                  className="w-full border-gray-300 focus:border-black focus:ring-black"
-                />
-              </div>
-              <div>
-                <Label htmlFor="waist" className="text-sm text-gray-600">Waist</Label>
-                <Input
-                  type="number"
-                  id="waist"
-                  name="measurements.waist"
-                  value={formData.measurements.waist}
-                  onChange={handleInputChange}
-                  placeholder="e.g., 34"
-                  className="w-full border-gray-300 focus:border-black focus:ring-black"
-                />
-              </div>
-              <div>
-                <Label htmlFor="hip" className="text-sm text-gray-600">Hip</Label>
-                <Input
-                  type="number"
-                  id="hip"
-                  name="measurements.hip"
-                  value={formData.measurements.hip}
-                  onChange={handleInputChange}
-                  placeholder="e.g., 40"
-                  className="w-full border-gray-300 focus:border-black focus:ring-black"
-                />
-              </div>
-              <div>
-                <Label htmlFor="shoulder" className="text-sm text-gray-600">Shoulder</Label>
-                <Input
-                  type="number"
-                  id="shoulder"
-                  name="measurements.shoulder"
-                  value={formData.measurements.shoulder}
-                  onChange={handleInputChange}
-                  placeholder="e.g., 15"
-                  className="w-full border-gray-300 focus:border-black focus:ring-black"
-                />
-              </div>
-              <div>
-                <Label htmlFor="sleeve" className="text-sm text-gray-600">Sleeve Length</Label>
-                <Input
-                  type="number"
-                  id="sleeve"
-                  name="measurements.sleeve"
-                  value={formData.measurements.sleeve}
-                  onChange={handleInputChange}
-                  placeholder="e.g., 22"
-                  className="w-full border-gray-300 focus:border-black focus:ring-black"
-                />
-              </div>
-            </div>
-          </div>
-          <div>
-            <Label htmlFor="specialInstructions" className="text-black font-medium">Special Instructions</Label>
+            <Label htmlFor="additionalDetails" className="text-black font-medium">Additional Details (Optional)</Label>
             <Textarea
-              id="specialInstructions"
-              name="specialInstructions"
-              value={formData.specialInstructions}
+              id="additionalDetails"
+              name="additionalDetails"
+              value={formData.additionalDetails}
               onChange={handleInputChange}
-              placeholder="Enter any special instructions"
+              placeholder="Any special instructions or requirements"
               className="w-full border-gray-300 focus:border-black focus:ring-black"
             />
           </div>
+          
           <Button 
             type="submit" 
             className="w-full bg-black text-white hover:bg-gray-800 transition-colors duration-200"
           >
-            Book Now
+            Place Order
           </Button>
         </form>
       </DialogContent>

@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -33,32 +33,44 @@ const ModernNavbar = ({
   onLoginClick,
   isLoggedIn = false
 }: ModernNavbarProps) => {
+  const [showTopBar, setShowTopBar] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowTopBar(false);
+    }, 10000); // Hide after 10 seconds
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <header className="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
-      {/* Top Bar - Hidden on mobile */}
-      <div className="bg-slate-900 text-white py-2 hidden lg:block">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center text-sm">
-            <div className="flex items-center space-x-6">
-              <div className="flex items-center space-x-2">
-                <Phone className="h-3 w-3" />
-                <span>+92 326 1052244</span>
+      {/* Top Bar - Hidden on mobile, auto-hide after 10 seconds */}
+      {showTopBar && (
+        <div className="bg-slate-900 text-white py-2 hidden lg:block transition-all duration-300">
+          <div className="container mx-auto px-4">
+            <div className="flex justify-between items-center text-sm">
+              <div className="flex items-center space-x-6">
+                <div className="flex items-center space-x-2">
+                  <Phone className="h-3 w-3" />
+                  <span>+92 326 1052244</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Mail className="h-3 w-3" />
+                  <span>info@alifthreads.com</span>
+                </div>
               </div>
-              <div className="flex items-center space-x-2">
-                <Mail className="h-3 w-3" />
-                <span>info@alifthreads.com</span>
-              </div>
-            </div>
-            <div className="flex items-center space-x-6">
-              <span>Free shipping on orders over PKR 5,000</span>
-              <div className="flex items-center space-x-2">
-                <MapPin className="h-3 w-3" />
-                <span>Store Locator</span>
+              <div className="flex items-center space-x-6">
+                <span>Free shipping on orders over PKR 5,000</span>
+                <div className="flex items-center space-x-2">
+                  <MapPin className="h-3 w-3" />
+                  <span>Store Locator</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Main Navigation */}
       <div className="container mx-auto px-4 py-4">
