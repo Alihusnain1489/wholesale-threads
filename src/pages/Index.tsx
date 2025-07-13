@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import ModernNavbar from "@/components/ModernNavbar";
@@ -8,6 +9,7 @@ import CartSidebar from "@/components/CartSidebar";
 import FooterModern from "@/components/FooterModern";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import LoginModal from "@/components/LoginModal";
+import BookingDialog from "@/components/BookingDialog";
 import { Product, CartItem } from "@/types";
 import { toast } from "@/hooks/use-toast";
 
@@ -16,6 +18,7 @@ const Index = () => {
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isBookingDialogOpen, setIsBookingDialogOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -23,7 +26,7 @@ const Index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
-  // Sample products data with PKR pricing for women's clothing store
+  // Sample products data with updated quantities to reflect suit minimums
   const products: Product[] = [
     {
       id: 1,
@@ -35,7 +38,8 @@ const Index = () => {
       description: "Premium lambskin jacket with shearling lining",
       color: "Black",
       fabric: "Lambskin",
-      pieces: "1 Piece"
+      pieces: "1 Piece",
+      stockLeft: 75
     },
     {
       id: 2,
@@ -48,7 +52,8 @@ const Index = () => {
       description: "Special lawn collection for women",
       color: "Multi",
       fabric: "Lawn",
-      pieces: "3 Piece"
+      pieces: "3 Piece",
+      stockLeft: 120
     },
     {
       id: 3,
@@ -60,7 +65,8 @@ const Index = () => {
       description: "Antique brown leather jacket",
       color: "Brown",
       fabric: "Leather",
-      pieces: "1 Piece"
+      pieces: "1 Piece",
+      stockLeft: 60
     },
     {
       id: 4,
@@ -72,7 +78,8 @@ const Index = () => {
       description: "Stylish biker jacket with skull graphic",
       color: "Black",
       fabric: "Leather",
-      pieces: "1 Piece"
+      pieces: "1 Piece",
+      stockLeft: 80
     },
     {
       id: 5,
@@ -84,7 +91,8 @@ const Index = () => {
       description: "Elegant chiffon suit for special occasions",
       color: "Cream",
       fabric: "Chiffon",
-      pieces: "3 Piece"
+      pieces: "3 Piece",
+      stockLeft: 95
     },
     {
       id: 6,
@@ -97,7 +105,8 @@ const Index = () => {
       description: "Premium embroidered suit collection",
       color: "Royal Blue",
       fabric: "Premium Silk",
-      pieces: "3 Piece"
+      pieces: "3 Piece",
+      stockLeft: 0
     }
   ];
 
@@ -113,21 +122,30 @@ const Index = () => {
       if (existingItem) {
         return prev.map(item =>
           item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
+            ? { ...item, quantity: item.quantity + 50 } // Minimum bulk quantity
             : item
         );
       } else {
-        return [...prev, { ...product, quantity: 1 }];
+        return [...prev, { ...product, quantity: 50 }]; // Start with minimum bulk quantity
       }
     });
     
     toast({
       title: "Added to Cart",
-      description: `${product.name} has been added to your cart.`,
+      description: `${product.name} (50 suits) has been added to your cart.`,
     });
   };
 
   const handleUpdateQuantity = (productId: number, quantity: number) => {
+    if (quantity < 50) {
+      toast({
+        title: "Minimum Quantity Required",
+        description: "Minimum order quantity is 50 suits per item.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     if (quantity <= 0) {
       handleRemoveFromCart(productId);
       return;
@@ -176,6 +194,14 @@ const Index = () => {
       title: "Added to Wishlist",
       description: "Item has been added to your wishlist!",
     });
+  };
+
+  const handleBookNow = () => {
+    if (!isLoggedIn) {
+      setIsLoginModalOpen(true);
+      return;
+    }
+    setIsBookingDialogOpen(true);
   };
 
   // Check if search is active
@@ -229,12 +255,20 @@ const Index = () => {
         onUpdateQuantity={handleUpdateQuantity}
         onRemoveFromCart={handleRemoveFromCart}
         totalPrice={totalPrice}
+        onBookNow={handleBookNow}
       />
 
       <LoginModal
         isOpen={isLoginModalOpen}
         onOpenChange={setIsLoginModalOpen}
         onSuccess={handleLoginSuccess}
+      />
+
+      <BookingDialog
+        isOpen={isBookingDialogOpen}
+        onOpenChange={setIsBookingDialogOpen}
+        cartItems={cartItems}
+        totalPrice={totalPrice}
       />
 
       <WhatsAppFloat />
