@@ -39,6 +39,21 @@ const CartSidebar = ({
   const discountAmount = isEligibleForBulkDiscount ? totalPrice * discountRate : 0;
   const discountedTotalPrice = totalPrice - discountAmount;
 
+  // Default cart settings
+  const getStepSize = (item: CartItem) => {
+    if (item.isPrintingOrder) {
+      return item.suitsPerArticle || 100; // Step by articles worth of suits
+    }
+    return 50; // Regular orders step by 50
+  };
+
+  const getMinQuantity = (item: CartItem) => {
+    if (item.isPrintingOrder) {
+      return (item.minArticles || 5) * (item.suitsPerArticle || 100);
+    }
+    return 50;
+  };
+
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent className="w-full sm:max-w-lg">
@@ -49,59 +64,77 @@ const CartSidebar = ({
         {hasItems ? (
           <ScrollArea className="my-4 h-[calc(100vh-200px)]">
             <div className="divide-y divide-border-default">
-              {cartItems.map((item) => (
-                <div key={item.id} className="flex py-6">
-                  <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-muted">
-                    <img
-                      src={item.imageUrl}
-                      alt={item.name}
-                      className="h-full w-full object-cover object-center"
-                    />
-                  </div>
-
-                  <div className="ml-4 flex flex-1 flex-col">
-                    <div>
-                      <div className="flex justify-between text-base font-medium text-gray-900">
-                        <h3>{item.name}</h3>
-                        <p className="ml-4">Rs.{item.price.toLocaleString()}</p>
-                      </div>
-                      <p className="mt-1 text-sm text-gray-500">{item.color}</p>
+              {cartItems.map((item) => {
+                const stepSize = getStepSize(item);
+                const minQty = getMinQuantity(item);
+                
+                return (
+                  <div key={item.id} className="flex py-6">
+                    <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-muted">
+                      <img
+                        src={item.imageUrl}
+                        alt={item.name}
+                        className="h-full w-full object-cover object-center"
+                      />
                     </div>
-                    <div className="flex flex-1 items-end justify-between text-sm">
-                      <div className="flex gap-4">
-                        <Button 
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => onUpdateQuantity(item.id, item.quantity - 50)}
-                          disabled={item.quantity <= 50}
-                        >
-                          -50
-                        </Button>
-                        <span className="text-gray-500">Qty: {item.quantity}</span>
-                        <Button 
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => onUpdateQuantity(item.id, item.quantity + 50)}
-                        >
-                          +50
-                        </Button>
-                      </div>
 
-                      <div className="flex">
-                        <Button 
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          className="font-medium text-gray-500 hover:text-gray-800"
-                          onClick={() => onRemoveFromCart(item.id)}
-                        >
-                          Remove
-                        </Button>
+                    <div className="ml-4 flex flex-1 flex-col">
+                      <div>
+                        <div className="flex justify-between text-base font-medium text-gray-900">
+                          <h3>{item.name}</h3>
+                          <p className="ml-4">Rs.{item.price.toLocaleString()}{item.isPrintingOrder ? '/article' : ''}</p>
+                        </div>
+                        <p className="mt-1 text-sm text-gray-500">{item.color}</p>
+                        {item.isPrintingOrder && (
+                          <div className="mt-1 text-xs text-blue-600">
+                            <p>Printing Order: {item.articles || 5} articles × {item.suitsPerArticle || 100} suits</p>
+                            <p>Minimum: {item.minArticles || 5} articles</p>
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex flex-1 items-end justify-between text-sm">
+                        <div className="flex gap-4">
+                          <Button 
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => onUpdateQuantity(item.id, Math.max(minQty, item.quantity - stepSize))}
+                            disabled={item.quantity <= minQty}
+                          >
+                            -{item.isPrintingOrder ? '1 article' : '50'}
+                          </Button>
+                          <div className="text-center">
+                            <span className="text-gray-500">
+                              {item.isPrintingOrder ? `${item.articles || 5} articles` : `Qty: ${item.quantity}`}
+                            </span>
+                            {item.isPrintingOrder && (
+                              <div className="text-xs text-gray-400">({item.quantity} suits)</div>
+                            )}
+                          </div>
+                          <Button 
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => onUpdateQuantity(item.id, item.quantity + stepSize)}
+                          >
+                            +{item.isPrintingOrder ? '1 article' : '50'}
+                          </Button>
+                        </div>
+
+                        <div className="flex">
+                          <Button 
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="font-medium text-gray-500 hover:text-gray-800"
+                            onClick={() => onRemoveFromCart(item.id)}
+                          >
+                            Remove
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </ScrollArea>
         ) : (
