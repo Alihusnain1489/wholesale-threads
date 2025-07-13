@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -35,6 +34,7 @@ const ProductGridModern = ({
   isLoggedIn
 }: ProductGridModernProps) => {
   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
+  const [hoverTimer, setHoverTimer] = useState<NodeJS.Timeout | null>(null);
 
   // Check if search is active
   const isSearchActive = searchQuery.trim().length > 0;
@@ -70,7 +70,6 @@ const ProductGridModern = ({
     return filtered.sort((a, b) => b.id - a.id);
   }, [products, selectedCategory, searchQuery]);
 
-  // Generate search-relevant tags when searching
   const searchTags = useMemo(() => {
     if (!isSearchActive) return [];
     
@@ -81,7 +80,7 @@ const ProductGridModern = ({
       if (product.fabric) tags.add(product.fabric);
     });
     
-    return Array.from(tags).slice(0, 8); // Limit to 8 tags
+    return Array.from(tags).slice(0, 8);
   }, [filteredProducts, isSearchActive]);
 
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
@@ -94,31 +93,57 @@ const ProductGridModern = ({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleMouseEnter = (productId: number) => {
+    if (hoverTimer) {
+      clearTimeout(hoverTimer);
+    }
+    
+    setHoveredProduct(productId);
+    
+    const timer = setTimeout(() => {
+      setHoveredProduct(null);
+    }, 3000);
+    
+    setHoverTimer(timer);
+  };
+
+  const handleMouseLeave = () => {
+    if (hoverTimer) {
+      clearTimeout(hoverTimer);
+      setHoverTimer(null);
+    }
+    setHoveredProduct(null);
+  };
+
   return (
     <section className="py-16 bg-white" id="products">
       <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl lg:text-4xl font-light text-gray-900 mb-4">
-            Women's Collection
-          </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Discover our curated selection of premium women's clothing. Each item represents 50-80 suits minimum.
-          </p>
-        </div>
-
-        {/* Bulk Order Notice */}
-        <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-4 mb-8">
-          <div className="text-center">
-            <h3 className="font-semibold text-gray-900 mb-2">🎉 Bulk Order Special Offer</h3>
-            <p className="text-gray-700">
-              Order 50+ suits and get <span className="font-bold text-green-600">20% discount</span> on your entire purchase!
-            </p>
-            <p className="text-sm text-gray-600 mt-1">
-              Perfect for retailers, boutiques, and wholesale buyers
+        {/* Header - Hide during search */}
+        {!isSearchActive && (
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-light text-gray-900 mb-4">
+              Women's Collection
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Discover our curated selection of premium women's clothing. Each item represents 50-80 suits minimum.
             </p>
           </div>
-        </div>
+        )}
+
+        {/* Bulk Order Notice - Hide during search */}
+        {!isSearchActive && (
+          <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-4 mb-8">
+            <div className="text-center">
+              <h3 className="font-semibold text-gray-900 mb-2">🎉 Bulk Order Special Offer</h3>
+              <p className="text-gray-700">
+                Order 50+ suits and get <span className="font-bold text-green-600">20% discount</span> on your entire purchase!
+              </p>
+              <p className="text-sm text-gray-600 mt-1">
+                Perfect for retailers, boutiques, and wholesale buyers
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Category Navigation - Hide during search */}
         {!isSearchActive && (
@@ -173,15 +198,17 @@ const ProductGridModern = ({
             <Card 
               key={product.id} 
               className="group cursor-pointer bg-white border border-gray-200 hover:shadow-lg transition-all duration-300 rounded-xl overflow-hidden"
-              onMouseEnter={() => setHoveredProduct(product.id)}
-              onMouseLeave={() => setHoveredProduct(null)}
+              onMouseEnter={() => handleMouseEnter(product.id)}
+              onMouseLeave={handleMouseLeave}
               onClick={() => onProductClick(product)}
             >
               <div className="relative overflow-hidden bg-gray-50 aspect-[3/4]">
                 <img 
                   src={product.imageUrl} 
                   alt={product.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className={`w-full h-full object-cover transition-all duration-500 ${
+                    hoveredProduct === product.id ? 'scale-110 brightness-110' : 'group-hover:scale-105'
+                  }`}
                 />
                 
                 {/* Sale Badge */}
@@ -197,11 +224,6 @@ const ProductGridModern = ({
                     Sold out
                   </Badge>
                 )}
-
-                {/* Minimum Quantity Badge */}
-                <Badge className="absolute bottom-3 left-3 bg-blue-500 text-white rounded-full text-xs">
-                  Min: 50-80 suits
-                </Badge>
 
                 {/* Action Buttons */}
                 <div className={`absolute top-3 right-3 flex flex-col space-y-2 transition-opacity duration-300 ${
@@ -284,27 +306,29 @@ const ProductGridModern = ({
         )}
       </div>
 
-      {/* Newsletter Section */}
-      <div className="bg-gray-50 py-16 mt-16">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-light text-gray-900 mb-4">
-            Join the club
-          </h2>
-          <p className="text-gray-600 mb-8 max-w-md mx-auto">
-            Get exclusive deals and early access to new products.
-          </p>
-          <div className="flex flex-col sm:flex-row max-w-md mx-auto gap-4">
-            <input
-              type="email"
-              placeholder="Email address"
-              className="flex-1 px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-            />
-            <Button className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-3 rounded-full">
-              Subscribe
-            </Button>
+      {/* Newsletter Section - Hide during search */}
+      {!isSearchActive && (
+        <div className="bg-gray-50 py-16 mt-16">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-3xl font-light text-gray-900 mb-4">
+              Join the club
+            </h2>
+            <p className="text-gray-600 mb-8 max-w-md mx-auto">
+              Get exclusive deals and early access to new products.
+            </p>
+            <div className="flex flex-col sm:flex-row max-w-md mx-auto gap-4">
+              <input
+                type="email"
+                placeholder="Email address"
+                className="flex-1 px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+              />
+              <Button className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-3 rounded-full">
+                Subscribe
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </section>
   );
 };
