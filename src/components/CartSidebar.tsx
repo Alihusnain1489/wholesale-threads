@@ -1,17 +1,13 @@
-import React from 'react';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet"
+
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { X } from "lucide-react";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Plus, Minus, Trash2, ShoppingBag } from "lucide-react";
 import { CartItem } from "@/types";
+import { toast } from "@/hooks/use-toast";
+import BookingDialog from "@/components/BookingDialog";
 
 interface CartSidebarProps {
   isOpen: boolean;
@@ -20,7 +16,6 @@ interface CartSidebarProps {
   onUpdateQuantity: (productId: number, quantity: number) => void;
   onRemoveFromCart: (productId: number) => void;
   totalPrice: number;
-  onBookNow?: () => void;
 }
 
 const CartSidebar = ({ 
@@ -29,155 +24,119 @@ const CartSidebar = ({
   cartItems, 
   onUpdateQuantity, 
   onRemoveFromCart, 
-  totalPrice,
-  onBookNow 
+  totalPrice 
 }: CartSidebarProps) => {
-  const hasItems = cartItems.length > 0;
-  const bulkDiscountThreshold = 50;
-  const discountRate = 0.2;
-  const isEligibleForBulkDiscount = cartItems.reduce((sum, item) => sum + item.quantity, 0) >= bulkDiscountThreshold;
-  const discountAmount = isEligibleForBulkDiscount ? totalPrice * discountRate : 0;
-  const discountedTotalPrice = totalPrice - discountAmount;
+  const [isBookingDialogOpen, setIsBookingDialogOpen] = useState(false);
 
-  // Default cart settings
-  const getStepSize = (item: CartItem) => {
-    if (item.isPrintingOrder) {
-      return item.suitsPerArticle || 100; // Step by articles worth of suits
+  const handleCheckout = () => {
+    if (cartItems.length === 0) {
+      toast({
+        title: "Cart is Empty",
+        description: "Please add items to your cart before checkout",
+        variant: "destructive"
+      });
+      return;
     }
-    return 50; // Regular orders step by 50
-  };
-
-  const getMinQuantity = (item: CartItem) => {
-    if (item.isPrintingOrder) {
-      return (item.minArticles || 5) * (item.suitsPerArticle || 100);
-    }
-    return 50;
+    setIsBookingDialogOpen(true);
   };
 
   return (
-    <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-lg">
-        <SheetHeader>
-          <SheetTitle className="text-left">Shopping Cart ({cartItems.length})</SheetTitle>
-        </SheetHeader>
-        
-        {hasItems ? (
-          <ScrollArea className="my-4 h-[calc(100vh-200px)]">
-            <div className="divide-y divide-border-default">
-              {cartItems.map((item) => {
-                const stepSize = getStepSize(item);
-                const minQty = getMinQuantity(item);
-                
-                return (
-                  <div key={item.id} className="flex py-6">
-                    <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-muted">
-                      <img
-                        src={item.imageUrl}
+    <>
+      <Sheet open={isOpen} onOpenChange={onOpenChange}>
+        <SheetContent className="w-full sm:max-w-lg">
+          <SheetHeader>
+            <SheetTitle className="flex items-center">
+              <ShoppingBag className="h-5 w-5 mr-2" />
+              Shopping Cart ({cartItems.reduce((sum, item) => sum + item.quantity, 0)} items)
+            </SheetTitle>
+          </SheetHeader>
+          
+          <div className="flex flex-col h-full">
+            <div className="flex-1 overflow-y-auto py-4">
+              {cartItems.length === 0 ? (
+                <div className="text-center py-12">
+                  <ShoppingBag className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                  <p className="text-gray-500">Your cart is empty</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {cartItems.map(item => (
+                    <div key={item.id} className="flex items-center space-x-3 p-3 border rounded-lg">
+                      <img 
+                        src={item.imageUrl} 
                         alt={item.name}
-                        className="h-full w-full object-cover object-center"
+                        className="w-16 h-16 object-cover rounded"
                       />
-                    </div>
-
-                    <div className="ml-4 flex flex-1 flex-col">
-                      <div>
-                        <div className="flex justify-between text-base font-medium text-gray-900">
-                          <h3>{item.name}</h3>
-                          <p className="ml-4">Rs.{item.price.toLocaleString()}{item.isPrintingOrder ? '/article' : ''}</p>
-                        </div>
-                        <p className="mt-1 text-sm text-gray-500">{item.color}</p>
-                        {item.isPrintingOrder && (
-                          <div className="mt-1 text-xs text-blue-600">
-                            <p>Printing Order: {item.articles || 5} articles × {item.suitsPerArticle || 100} suits</p>
-                            <p>Minimum: {item.minArticles || 5} articles</p>
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex flex-1 items-end justify-between text-sm">
-                        <div className="flex gap-4">
-                          <Button 
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => onUpdateQuantity(item.id, Math.max(minQty, item.quantity - stepSize))}
-                            disabled={item.quantity <= minQty}
+                      
+                      <div className="flex-1">
+                        <h4 className="font-medium text-sm">{item.name}</h4>
+                        <p className="text-pink-600 font-semibold">₨ {item.price.toLocaleString()}</p>
+                        <div className="flex items-center space-x-2 mt-2">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
                           >
-                            -{item.isPrintingOrder ? '1 article' : '50'}
+                            <Minus className="h-3 w-3" />
                           </Button>
-                          <div className="text-center">
-                            <span className="text-gray-500">
-                              {item.isPrintingOrder ? `${item.articles || 5} articles` : `Qty: ${item.quantity}`}
-                            </span>
-                            {item.isPrintingOrder && (
-                              <div className="text-xs text-gray-400">({item.quantity} suits)</div>
-                            )}
-                          </div>
-                          <Button 
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => onUpdateQuantity(item.id, item.quantity + stepSize)}
+                          <span className="w-8 text-center">{item.quantity}</span>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
                           >
-                            +{item.isPrintingOrder ? '1 article' : '50'}
+                            <Plus className="h-3 w-3" />
                           </Button>
-                        </div>
-
-                        <div className="flex">
-                          <Button 
-                            type="button"
+                          <Button
                             variant="ghost"
-                            size="sm"
-                            className="font-medium text-gray-500 hover:text-gray-800"
+                            size="icon"
+                            className="h-8 w-8 text-red-500 hover:text-red-700"
                             onClick={() => onRemoveFromCart(item.id)}
                           >
-                            Remove
+                            <Trash2 className="h-3 w-3" />
                           </Button>
                         </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  ))}
+                </div>
+              )}
             </div>
-          </ScrollArea>
-        ) : (
-          <div className="text-center py-10">
-            <h3 className="text-2xl font-semibold text-gray-900">Your cart is empty</h3>
-            <p className="mt-4 text-gray-500">Looks like you haven't added anything to your cart yet.</p>
-          </div>
-        )}
-        
-        {cartItems.length > 0 && (
-          <div className="border-t pt-4 space-y-4">
-            {isEligibleForBulkDiscount && (
-              <Badge variant="secondary">
-                🎉 You qualify for a 20% discount on bulk orders!
-              </Badge>
-            )}
             
-            <div className="space-y-3">
-              <Button 
-                className="w-full bg-gray-900 hover:bg-gray-800"
-                onClick={onBookNow}
-              >
-                Book Order via WhatsApp
-              </Button>
-              <Button 
-                variant="outline" 
-                className="w-full"
-                onClick={() => onOpenChange(false)}
-              >
-                Continue Shopping
-              </Button>
-            </div>
+            {cartItems.length > 0 && (
+              <div className="border-t pt-4 space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-lg font-semibold">Total:</span>
+                  <span className="text-2xl font-bold text-pink-600">
+                    ₨ {totalPrice.toLocaleString()}
+                  </span>
+                </div>
+                
+                <Button 
+                  onClick={handleCheckout}
+                  className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-lg py-3"
+                >
+                  Proceed to Booking
+                </Button>
+                
+                <p className="text-xs text-gray-500 text-center">
+                  Free shipping on orders above ₨ 5,000
+                </p>
+              </div>
+            )}
           </div>
-        )}
-        
-        {!hasItems && (
-          <div className="text-center py-10">
-            <h3 className="text-2xl font-semibold text-gray-900">Your cart is empty</h3>
-            <p className="mt-4 text-gray-500">Looks like you haven't added anything to your cart yet.</p>
-          </div>
-        )}
-      </SheetContent>
-    </Sheet>
+        </SheetContent>
+      </Sheet>
+
+      <BookingDialog 
+        isOpen={isBookingDialogOpen}
+        onOpenChange={setIsBookingDialogOpen}
+        cartItems={cartItems}
+        totalPrice={totalPrice}
+      />
+    </>
   );
 };
 
