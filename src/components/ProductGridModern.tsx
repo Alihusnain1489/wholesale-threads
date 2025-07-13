@@ -1,10 +1,9 @@
-
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import { Heart, Eye, Tag } from "lucide-react";
+import { Heart, Eye } from "lucide-react";
 import { Product } from "@/types";
 
 interface ProductGridModernProps {
@@ -35,9 +34,6 @@ const ProductGridModern = ({
   isLoggedIn
 }: ProductGridModernProps) => {
   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
-
-  // Check if search is active
-  const isSearchActive = searchQuery.trim().length > 0;
 
   const categories = [
     { name: 'All', label: 'All Products', count: products.length },
@@ -70,20 +66,6 @@ const ProductGridModern = ({
     return filtered.sort((a, b) => b.id - a.id);
   }, [products, selectedCategory, searchQuery]);
 
-  // Generate search-relevant tags when searching
-  const searchTags = useMemo(() => {
-    if (!isSearchActive) return [];
-    
-    const tags = new Set<string>();
-    filteredProducts.forEach(product => {
-      if (product.category) tags.add(product.category);
-      if (product.color) tags.add(product.color);
-      if (product.fabric) tags.add(product.fabric);
-    });
-    
-    return Array.from(tags).slice(0, 8); // Limit to 8 tags
-  }, [filteredProducts, isSearchActive]);
-
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -103,68 +85,32 @@ const ProductGridModern = ({
             Women's Collection
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Discover our curated selection of premium women's clothing. Each item represents 50-80 suits minimum.
+            Discover our curated selection of premium women's clothing
           </p>
         </div>
 
-        {/* Bulk Order Notice */}
-        <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-4 mb-8">
-          <div className="text-center">
-            <h3 className="font-semibold text-gray-900 mb-2">🎉 Bulk Order Special Offer</h3>
-            <p className="text-gray-700">
-              Order 50+ suits and get <span className="font-bold text-green-600">20% discount</span> on your entire purchase!
-            </p>
-            <p className="text-sm text-gray-600 mt-1">
-              Perfect for retailers, boutiques, and wholesale buyers
-            </p>
+        {/* Category Navigation */}
+        <div className="mb-8">
+          <div className="flex flex-wrap justify-center gap-3 mb-6">
+            {categories.map(category => (
+              <button
+                key={category.name}
+                onClick={() => onCategoryChange(category.name)}
+                className={`px-6 py-3 rounded-full transition-all duration-200 ${
+                  selectedCategory === category.name 
+                    ? 'bg-gray-900 text-white' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <span>{category.label}</span>
+                <span className="text-xs ml-1 opacity-75">({category.count})</span>
+              </button>
+            ))}
           </div>
-        </div>
 
-        {/* Category Navigation - Hide during search */}
-        {!isSearchActive && (
-          <div className="mb-8">
-            <div className="flex flex-wrap justify-center gap-3 mb-6">
-              {categories.map(category => (
-                <button
-                  key={category.name}
-                  onClick={() => onCategoryChange(category.name)}
-                  className={`px-6 py-3 rounded-full transition-all duration-200 ${
-                    selectedCategory === category.name 
-                      ? 'bg-gray-900 text-white' 
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  <span>{category.label}</span>
-                  <span className="text-xs ml-1 opacity-75">({category.count})</span>
-                </button>
-              ))}
-            </div>
+          <div className="text-center text-sm text-gray-600">
+            {filteredProducts.length} items
           </div>
-        )}
-
-        {/* Search Tags - Show only during search */}
-        {isSearchActive && searchTags.length > 0 && (
-          <div className="mb-8">
-            <div className="flex items-center gap-2 mb-4">
-              <Tag className="h-4 w-4 text-gray-600" />
-              <span className="text-sm font-medium text-gray-700">Related Tags:</span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {searchTags.map(tag => (
-                <Badge key={tag} variant="secondary" className="bg-gray-100 text-gray-700 hover:bg-gray-200">
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Results count */}
-        <div className="text-center text-sm text-gray-600 mb-8">
-          {isSearchActive && (
-            <p className="mb-2">Search results for "{searchQuery}"</p>
-          )}
-          {filteredProducts.length} items found
         </div>
 
         {/* Product Grid */}
@@ -198,11 +144,6 @@ const ProductGridModern = ({
                   </Badge>
                 )}
 
-                {/* Minimum Quantity Badge */}
-                <Badge className="absolute bottom-3 left-3 bg-blue-500 text-white rounded-full text-xs">
-                  Min: 50-80 suits
-                </Badge>
-
                 {/* Action Buttons */}
                 <div className={`absolute top-3 right-3 flex flex-col space-y-2 transition-opacity duration-300 ${
                   hoveredProduct === product.id ? 'opacity-100' : 'opacity-0'
@@ -229,7 +170,7 @@ const ProductGridModern = ({
                   {product.name}
                 </h3>
                 
-                <div className="flex items-center space-x-2 mb-2">
+                <div className="flex items-center space-x-2">
                   <span className="text-lg font-semibold text-gray-900">
                     Rs.{product.price.toLocaleString()}
                   </span>
@@ -238,10 +179,6 @@ const ProductGridModern = ({
                       Rs.{product.originalPrice.toLocaleString()}
                     </span>
                   )}
-                </div>
-
-                <div className="text-xs text-gray-500">
-                  {product.pieces} • {product.fabric}
                 </div>
               </CardContent>
             </Card>

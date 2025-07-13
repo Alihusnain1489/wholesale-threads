@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { CartItem } from "@/types";
 
@@ -37,12 +36,6 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0 }:
     'Mirpur Khas', 'Nawabshah', 'Kohat', 'Turbat', 'Other'
   ];
 
-  // Calculate bulk discount (20% off for orders with total quantity >= 50)
-  const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  const isBulkOrder = totalQuantity >= 50;
-  const discountAmount = isBulkOrder ? totalPrice * 0.2 : 0;
-  const finalTotal = totalPrice - discountAmount;
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -64,15 +57,11 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0 }:
     // Generate cart items section for WhatsApp message
     const cartItemsText = cartItems.length > 0 
       ? `\n🛍️ Cart Items:\n${cartItems.map(item => 
-          `• ${item.name} - Qty: ${item.quantity} suits - ₨${item.price.toLocaleString()}`
-        ).join('\n')}\n\n💰 Subtotal: ₨${totalPrice.toLocaleString()}`
+          `• ${item.name} - Qty: ${item.quantity} - ₨${item.price.toLocaleString()}`
+        ).join('\n')}\n💰 Total Amount: ₨${totalPrice.toLocaleString()}\n`
       : '';
 
-    const bulkDiscountText = isBulkOrder 
-      ? `\n🎉 Bulk Discount (20%): -₨${discountAmount.toLocaleString()}\n💵 Final Total: ₨${finalTotal.toLocaleString()}`
-      : `\n💵 Total Amount: ₨${totalPrice.toLocaleString()}`;
-
-    // Auto-send WhatsApp message to 0326-1052244
+    // Auto-send WhatsApp message
     const phoneNumber = "923261052244";
     const message = `🛒 NEW ORDER BOOKING
 
@@ -80,8 +69,7 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0 }:
 Name: ${formData.name}
 Email: ${formData.email}
 Mobile: ${formData.mobile}
-${cartItemsText}${bulkDiscountText}
-
+${cartItemsText}
 📦 Shipping Details:
 Address: ${formData.shippingAddress}
 City: ${formData.city}
@@ -90,14 +78,12 @@ Payment Type: ${formData.paymentType}
 📝 Additional Details:
 ${formData.additionalDetails || 'None'}
 
-${isBulkOrder ? '🎊 BULK ORDER - 20% DISCOUNT APPLIED!' : ''}
-
 Thank you for choosing Alif Threads! 🌟`;
     
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
     
-    // Open WhatsApp automatically
+    // Open WhatsApp
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
     
     // Show success message
@@ -126,20 +112,6 @@ Thank you for choosing Alif Threads! 🌟`;
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-black">Order Booking</DialogTitle>
         </DialogHeader>
-
-        {/* Bulk Order Notice */}
-        {isBulkOrder && (
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
-            <div className="flex items-center space-x-2">
-              <Badge className="bg-green-500 text-white">Bulk Order</Badge>
-              <span className="text-green-700 font-semibold">20% Discount Applied!</span>
-            </div>
-            <p className="text-sm text-green-600 mt-1">
-              You're ordering {totalQuantity} suits - Save ₨{discountAmount.toLocaleString()}!
-            </p>
-          </div>
-        )}
-
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <Label htmlFor="name" className="text-black font-medium">Full Name *</Label>
@@ -241,29 +213,12 @@ Thank you for choosing Alif Threads! 🌟`;
               className="w-full border-gray-300 focus:border-black focus:ring-black"
             />
           </div>
-
-          {/* Order Summary */}
-          {cartItems.length > 0 && (
-            <div className="bg-gray-50 rounded-lg p-4 space-y-2">
-              <h3 className="font-medium text-gray-900">Order Summary</h3>
-              <div className="text-sm text-gray-600">
-                <p>Total Items: {totalQuantity} suits</p>
-                <p>Subtotal: ₨{totalPrice.toLocaleString()}</p>
-                {isBulkOrder && (
-                  <>
-                    <p className="text-green-600">Bulk Discount (20%): -₨{discountAmount.toLocaleString()}</p>
-                    <p className="font-semibold text-gray-900">Final Total: ₨{finalTotal.toLocaleString()}</p>
-                  </>
-                )}
-              </div>
-            </div>
-          )}
           
           <Button 
             type="submit" 
             className="w-full bg-black text-white hover:bg-gray-800 transition-colors duration-200"
           >
-            Send Order via WhatsApp
+            Place Order
           </Button>
         </form>
       </DialogContent>
