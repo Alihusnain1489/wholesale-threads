@@ -1,35 +1,27 @@
 
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Toaster } from "@/components/ui/toaster";
-import ScrollToTop from './components/ScrollToTop';
-import Index from './pages/Index';
-import AboutUs from './pages/AboutUs';
-import ContactUs from './pages/ContactUs';
-import CustomerServices from './pages/CustomerServices';
-import SizeGuide from './pages/SizeGuide';
-import ShippingInfo from './pages/ShippingInfo';
-import Returns from './pages/Returns';
-import NotFound from './pages/NotFound';
+import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { navItems } from "./nav-items";
+import AdminDashboard from "./components/AdminDashboard";
 
-function App() {
-  return (
-    <Router>
-      <ScrollToTop />
-      <div className="App">
+const queryClient = new QueryClient();
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <Toaster />
+      <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/about" element={<AboutUs />} />
-          <Route path="/contact" element={<ContactUs />} />
-          <Route path="/customer-services" element={<CustomerServices />} />
-          <Route path="/size-guide" element={<SizeGuide />} />
-          <Route path="/shipping" element={<ShippingInfo />} />
-          <Route path="/returns" element={<Returns />} />
-          <Route path="*" element={<NotFound />} />
+          {navItems.map(({ to, page }) => (
+            <Route key={to} path={to} element={page} />
+          ))}
+          <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
-        <Toaster />
-      </div>
-    </Router>
-  );
-}
+      </BrowserRouter>
+    </TooltipProvider>
+  </QueryClientProvider>
+);
 
 export default App;
