@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -28,7 +29,6 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0 }:
     city: '',
     additionalDetails: ''
   });
-  const [bookingMethod, setBookingMethod] = useState<'whatsapp' | 'email'>('whatsapp');
 
   const pakistaniCities = [
     'Karachi', 'Lahore', 'Islamabad', 'Rawalpindi', 'Faisalabad', 'Multan', 'Peshawar', 'Quetta',
@@ -61,21 +61,20 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0 }:
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Generate order details
+    // Generate cart items section for WhatsApp message
     const cartItemsText = cartItems.length > 0 
-      ? `\n🛍️ Cart Items:\n${cartItems.map(item => {
-          if (item.isPrintingOrder) {
-            return `• ${item.name} - ${item.articles || 5} articles (${item.quantity} suits) - ₨${item.price.toLocaleString()}/article`;
-          }
-          return `• ${item.name} - Qty: ${item.quantity} suits - ₨${item.price.toLocaleString()}`;
-        }).join('\n')}\n\n💰 Subtotal: ₨${totalPrice.toLocaleString()}`
+      ? `\n🛍️ Cart Items:\n${cartItems.map(item => 
+          `• ${item.name} - Qty: ${item.quantity} suits - ₨${item.price.toLocaleString()}`
+        ).join('\n')}\n\n💰 Subtotal: ₨${totalPrice.toLocaleString()}`
       : '';
 
     const bulkDiscountText = isBulkOrder 
       ? `\n🎉 Bulk Discount (20%): -₨${discountAmount.toLocaleString()}\n💵 Final Total: ₨${finalTotal.toLocaleString()}`
       : `\n💵 Total Amount: ₨${totalPrice.toLocaleString()}`;
 
-    const orderDetails = `🛒 NEW ORDER BOOKING
+    // Auto-send WhatsApp message to 0326-1052244
+    const phoneNumber = "923261052244";
+    const message = `🛒 NEW ORDER BOOKING
 
 👤 Customer Details:
 Name: ${formData.name}
@@ -94,32 +93,18 @@ ${formData.additionalDetails || 'None'}
 ${isBulkOrder ? '🎊 BULK ORDER - 20% DISCOUNT APPLIED!' : ''}
 
 Thank you for choosing Alif Threads! 🌟`;
-
-    if (bookingMethod === 'whatsapp') {
-      // Send via WhatsApp
-      const phoneNumber = "923261052244";
-      const encodedMessage = encodeURIComponent(orderDetails);
-      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-      
-      window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
-      
-      toast({
-        title: "Order Sent via WhatsApp!",
-        description: "Your order has been sent via WhatsApp. We'll contact you soon!",
-      });
-    } else {
-      // Send via Email
-      const subject = encodeURIComponent("New Order Booking - Alif Threads");
-      const body = encodeURIComponent(orderDetails);
-      const emailUrl = `mailto:orders@alifthreads.com?subject=${subject}&body=${body}`;
-      
-      window.open(emailUrl, '_blank');
-      
-      toast({
-        title: "Email Order Created!",
-        description: "Your email client has opened with the order details. Please send the email to complete your order.",
-      });
-    }
+    
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+    
+    // Open WhatsApp automatically
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+    
+    // Show success message
+    toast({
+      title: "Order Sent Successfully!",
+      description: "Your order has been sent via WhatsApp. We'll contact you soon!",
+    });
     
     // Reset form and close dialog
     setFormData({
@@ -141,41 +126,6 @@ Thank you for choosing Alif Threads! 🌟`;
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-black">Order Booking</DialogTitle>
         </DialogHeader>
-
-        {/* Booking Method Selection */}
-        <div className="space-y-3">
-          <Label className="text-black font-medium">Choose Booking Method *</Label>
-          <div className="flex gap-4">
-            <button
-              type="button"
-              onClick={() => setBookingMethod('whatsapp')}
-              className={`flex-1 p-3 rounded-lg border-2 transition-colors ${
-                bookingMethod === 'whatsapp' 
-                  ? 'border-green-500 bg-green-50 text-green-700' 
-                  : 'border-gray-200 hover:border-gray-300'
-              }`}
-            >
-              <div className="text-center">
-                <div className="font-medium">📱 WhatsApp</div>
-                <div className="text-xs text-gray-600">Instant messaging</div>
-              </div>
-            </button>
-            <button
-              type="button"
-              onClick={() => setBookingMethod('email')}
-              className={`flex-1 p-3 rounded-lg border-2 transition-colors ${
-                bookingMethod === 'email' 
-                  ? 'border-blue-500 bg-blue-50 text-blue-700' 
-                  : 'border-gray-200 hover:border-gray-300'
-              }`}
-            >
-              <div className="text-center">
-                <div className="font-medium">📧 Email</div>
-                <div className="text-xs text-gray-600">Professional order</div>
-              </div>
-            </button>
-          </div>
-        </div>
 
         {/* Bulk Order Notice */}
         {isBulkOrder && (
@@ -313,7 +263,7 @@ Thank you for choosing Alif Threads! 🌟`;
             type="submit" 
             className="w-full bg-black text-white hover:bg-gray-800 transition-colors duration-200"
           >
-            {bookingMethod === 'whatsapp' ? 'Send Order via WhatsApp' : 'Send Order via Email'}
+            Send Order via WhatsApp
           </Button>
         </form>
       </DialogContent>

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import ModernNavbar from "@/components/ModernNavbar";
@@ -106,38 +107,6 @@ const Index = () => {
       fabric: "Premium Silk",
       pieces: "3 Piece",
       stockLeft: 0
-    },
-    {
-      id: 7,
-      name: "Custom Printing Service",
-      price: 500,
-      imageUrl: "/lovable-uploads/7643d24b-e132-4d60-9ac7-e98aee4f05ec.png",
-      category: "Printing",
-      inStock: true,
-      description: "Professional printing service for custom designs",
-      color: "Various",
-      fabric: "Cotton/Polyester",
-      pieces: "Custom",
-      stockLeft: 1000,
-      isPrintingOrder: true,
-      minArticles: 5,
-      suitsPerArticle: 100
-    },
-    {
-      id: 8,
-      name: "Bulk T-Shirt Printing",
-      price: 350,
-      imageUrl: "/lovable-uploads/a83a0091-d12d-4f2b-b8c9-f03315dc5666.png",
-      category: "Printing",
-      inStock: true,
-      description: "High-quality bulk t-shirt printing service",
-      color: "Various",
-      fabric: "Cotton",
-      pieces: "Custom",
-      stockLeft: 2000,
-      isPrintingOrder: true,
-      minArticles: 5,
-      suitsPerArticle: 100
     }
   ];
 
@@ -150,58 +119,28 @@ const Index = () => {
 
     setCartItems(prev => {
       const existingItem = prev.find(item => item.id === product.id);
-      
-      if (product.isPrintingOrder) {
-        // For printing orders: minimum 5 articles with 100 suits each
-        const minQuantity = (product.minArticles || 5) * (product.suitsPerArticle || 100);
-        
-        if (existingItem) {
-          return prev.map(item =>
-            item.id === product.id
-              ? { ...item, quantity: item.quantity + minQuantity, articles: (item.articles || 5) + 5 }
-              : item
-          );
-        } else {
-          return [...prev, { ...product, quantity: minQuantity, articles: product.minArticles || 5 }];
-        }
+      if (existingItem) {
+        return prev.map(item =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 50 } // Minimum bulk quantity
+            : item
+        );
       } else {
-        // Regular orders: minimum 50 suits
-        if (existingItem) {
-          return prev.map(item =>
-            item.id === product.id
-              ? { ...item, quantity: item.quantity + 50 }
-              : item
-          );
-        } else {
-          return [...prev, { ...product, quantity: 50 }];
-        }
+        return [...prev, { ...product, quantity: 50 }]; // Start with minimum bulk quantity
       }
     });
     
-    const orderType = product.isPrintingOrder ? 'printing order' : 'regular order';
-    const minQty = product.isPrintingOrder ? `${product.minArticles} articles (${(product.minArticles || 5) * (product.suitsPerArticle || 100)} suits)` : '50 suits';
-    
     toast({
       title: "Added to Cart",
-      description: `${product.name} (${minQty}) has been added to your cart as a ${orderType}.`,
+      description: `${product.name} (50 suits) has been added to your cart.`,
     });
   };
 
   const handleUpdateQuantity = (productId: number, quantity: number) => {
-    const product = products.find(p => p.id === productId);
-    const minQuantity = product?.isPrintingOrder 
-      ? (product.minArticles || 5) * (product.suitsPerArticle || 100)
-      : 50;
-    
-    if (quantity < minQuantity) {
-      const orderType = product?.isPrintingOrder ? 'printing order' : 'regular order';
-      const minDescription = product?.isPrintingOrder 
-        ? `${product.minArticles} articles with ${product.suitsPerArticle} suits each (${minQuantity} total suits)`
-        : `${minQuantity} suits`;
-        
+    if (quantity < 50) {
       toast({
         title: "Minimum Quantity Required",
-        description: `Minimum order quantity for ${orderType} is ${minDescription}.`,
+        description: "Minimum order quantity is 50 suits per item.",
         variant: "destructive"
       });
       return;
@@ -213,16 +152,9 @@ const Index = () => {
     }
     
     setCartItems(prev =>
-      prev.map(item => {
-        if (item.id === productId) {
-          if (item.isPrintingOrder) {
-            const articles = Math.ceil(quantity / (item.suitsPerArticle || 100));
-            return { ...item, quantity, articles };
-          }
-          return { ...item, quantity };
-        }
-        return item;
-      })
+      prev.map(item =>
+        item.id === productId ? { ...item, quantity } : item
+      )
     );
   };
 
