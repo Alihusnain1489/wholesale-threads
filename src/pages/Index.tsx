@@ -8,6 +8,7 @@ import CartSidebar from "@/components/CartSidebar";
 import FooterModern from "@/components/FooterModern";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import LoginModal from "@/components/LoginModal";
+import BookingDialog from "@/components/BookingDialog";
 import { Product, CartItem } from "@/types";
 import { toast } from "@/hooks/use-toast";
 
@@ -16,6 +17,7 @@ const Index = () => {
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isBookingDialogOpen, setIsBookingDialogOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -23,7 +25,7 @@ const Index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
-  // Sample products data with PKR pricing for women's clothing store
+  // Sample products data with updated quantities to reflect suit minimums
   const products: Product[] = [
     {
       id: 1,
@@ -35,7 +37,8 @@ const Index = () => {
       description: "Premium lambskin jacket with shearling lining",
       color: "Black",
       fabric: "Lambskin",
-      pieces: "1 Piece"
+      pieces: "1 Piece",
+      stockLeft: 75
     },
     {
       id: 2,
@@ -48,7 +51,8 @@ const Index = () => {
       description: "Special lawn collection for women",
       color: "Multi",
       fabric: "Lawn",
-      pieces: "3 Piece"
+      pieces: "3 Piece",
+      stockLeft: 120
     },
     {
       id: 3,
@@ -60,7 +64,8 @@ const Index = () => {
       description: "Antique brown leather jacket",
       color: "Brown",
       fabric: "Leather",
-      pieces: "1 Piece"
+      pieces: "1 Piece",
+      stockLeft: 60
     },
     {
       id: 4,
@@ -72,7 +77,8 @@ const Index = () => {
       description: "Stylish biker jacket with skull graphic",
       color: "Black",
       fabric: "Leather",
-      pieces: "1 Piece"
+      pieces: "1 Piece",
+      stockLeft: 80
     },
     {
       id: 5,
@@ -84,7 +90,8 @@ const Index = () => {
       description: "Elegant chiffon suit for special occasions",
       color: "Cream",
       fabric: "Chiffon",
-      pieces: "3 Piece"
+      pieces: "3 Piece",
+      stockLeft: 95
     },
     {
       id: 6,
@@ -97,7 +104,40 @@ const Index = () => {
       description: "Premium embroidered suit collection",
       color: "Royal Blue",
       fabric: "Premium Silk",
-      pieces: "3 Piece"
+      pieces: "3 Piece",
+      stockLeft: 0
+    },
+    {
+      id: 7,
+      name: "Custom Printing Service",
+      price: 500,
+      imageUrl: "/lovable-uploads/7643d24b-e132-4d60-9ac7-e98aee4f05ec.png",
+      category: "Printing",
+      inStock: true,
+      description: "Professional printing service for custom designs",
+      color: "Various",
+      fabric: "Cotton/Polyester",
+      pieces: "Custom",
+      stockLeft: 1000,
+      isPrintingOrder: true,
+      minArticles: 5,
+      suitsPerArticle: 100
+    },
+    {
+      id: 8,
+      name: "Bulk T-Shirt Printing",
+      price: 350,
+      imageUrl: "/lovable-uploads/a83a0091-d12d-4f2b-b8c9-f03315dc5666.png",
+      category: "Printing",
+      inStock: true,
+      description: "High-quality bulk t-shirt printing service",
+      color: "Various",
+      fabric: "Cotton",
+      pieces: "Custom",
+      stockLeft: 2000,
+      isPrintingOrder: true,
+      minArticles: 5,
+      suitsPerArticle: 100
     }
   ];
 
@@ -110,33 +150,79 @@ const Index = () => {
 
     setCartItems(prev => {
       const existingItem = prev.find(item => item.id === product.id);
-      if (existingItem) {
-        return prev.map(item =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
+      
+      if (product.isPrintingOrder) {
+        // For printing orders: minimum 5 articles with 100 suits each
+        const minQuantity = (product.minArticles || 5) * (product.suitsPerArticle || 100);
+        
+        if (existingItem) {
+          return prev.map(item =>
+            item.id === product.id
+              ? { ...item, quantity: item.quantity + minQuantity, articles: (item.articles || 5) + 5 }
+              : item
+          );
+        } else {
+          return [...prev, { ...product, quantity: minQuantity, articles: product.minArticles || 5 }];
+        }
       } else {
-        return [...prev, { ...product, quantity: 1 }];
+        // Regular orders: minimum 50 suits
+        if (existingItem) {
+          return prev.map(item =>
+            item.id === product.id
+              ? { ...item, quantity: item.quantity + 50 }
+              : item
+          );
+        } else {
+          return [...prev, { ...product, quantity: 50 }];
+        }
       }
     });
     
+    const orderType = product.isPrintingOrder ? 'printing order' : 'regular order';
+    const minQty = product.isPrintingOrder ? `${product.minArticles} articles (${(product.minArticles || 5) * (product.suitsPerArticle || 100)} suits)` : '50 suits';
+    
     toast({
       title: "Added to Cart",
-      description: `${product.name} has been added to your cart.`,
+      description: `${product.name} (${minQty}) has been added to your cart as a ${orderType}.`,
     });
   };
 
   const handleUpdateQuantity = (productId: number, quantity: number) => {
+    const product = products.find(p => p.id === productId);
+    const minQuantity = product?.isPrintingOrder 
+      ? (product.minArticles || 5) * (product.suitsPerArticle || 100)
+      : 50;
+    
+    if (quantity < minQuantity) {
+      const orderType = product?.isPrintingOrder ? 'printing order' : 'regular order';
+      const minDescription = product?.isPrintingOrder 
+        ? `${product.minArticles} articles with ${product.suitsPerArticle} suits each (${minQuantity} total suits)`
+        : `${minQuantity} suits`;
+        
+      toast({
+        title: "Minimum Quantity Required",
+        description: `Minimum order quantity for ${orderType} is ${minDescription}.`,
+        variant: "destructive"
+      });
+      return;
+    }
+    
     if (quantity <= 0) {
       handleRemoveFromCart(productId);
       return;
     }
     
     setCartItems(prev =>
-      prev.map(item =>
-        item.id === productId ? { ...item, quantity } : item
-      )
+      prev.map(item => {
+        if (item.id === productId) {
+          if (item.isPrintingOrder) {
+            const articles = Math.ceil(quantity / (item.suitsPerArticle || 100));
+            return { ...item, quantity, articles };
+          }
+          return { ...item, quantity };
+        }
+        return item;
+      })
     );
   };
 
@@ -176,6 +262,14 @@ const Index = () => {
       title: "Added to Wishlist",
       description: "Item has been added to your wishlist!",
     });
+  };
+
+  const handleBookNow = () => {
+    if (!isLoggedIn) {
+      setIsLoginModalOpen(true);
+      return;
+    }
+    setIsBookingDialogOpen(true);
   };
 
   // Check if search is active
@@ -229,12 +323,20 @@ const Index = () => {
         onUpdateQuantity={handleUpdateQuantity}
         onRemoveFromCart={handleRemoveFromCart}
         totalPrice={totalPrice}
+        onBookNow={handleBookNow}
       />
 
       <LoginModal
         isOpen={isLoginModalOpen}
         onOpenChange={setIsLoginModalOpen}
         onSuccess={handleLoginSuccess}
+      />
+
+      <BookingDialog
+        isOpen={isBookingDialogOpen}
+        onOpenChange={setIsBookingDialogOpen}
+        cartItems={cartItems}
+        totalPrice={totalPrice}
       />
 
       <WhatsAppFloat />
