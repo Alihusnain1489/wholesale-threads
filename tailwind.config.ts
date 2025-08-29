@@ -61,7 +61,12 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				'earth-sage': 'hsl(var(--earth-sage))',
+				'earth-sand': 'hsl(var(--earth-sand))',
+				'earth-stone': 'hsl(var(--earth-stone))',
+				'earth-charcoal': 'hsl(var(--earth-charcoal))',
+				'earth-cream': 'hsl(var(--earth-cream))'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

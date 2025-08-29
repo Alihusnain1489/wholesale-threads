@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Toaster } from "@/components/ui/toaster";
-import ModernNavbar from "@/components/ModernNavbar";
-import ModernHero from "@/components/ModernHero";
-import ProductGridModern from "@/components/ProductGridModern";
+import AllbirdsNavbar from "@/components/AllbirdsNavbar";
+import AllbirdsHero from "@/components/AllbirdsHero";
+import AllbirdsProductGrid from "@/components/AllbirdsProductGrid";
 import ProductDetailModal from "@/components/ProductDetailModal";
 import CartSidebar from "@/components/CartSidebar";
-import FooterModern from "@/components/FooterModern";
+import AllbirdsFooter from "@/components/AllbirdsFooter";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import LoginModal from "@/components/LoginModal";
 import { Product, CartItem } from "@/types";
@@ -164,26 +164,23 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      <ModernNavbar 
+    <div className="min-h-screen bg-background">
+      <AllbirdsNavbar 
         cartItemsCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)}
         onCartClick={() => setIsCartOpen(true)}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
       />
-      <ModernHero />
-      <ProductGridModern
+      <AllbirdsHero />
+      <AllbirdsProductGrid
         products={products}
         onAddToCart={handleAddToCart}
         selectedCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
         onProductClick={handleProductClick}
         searchQuery={searchQuery}
-        currentPage={currentPage}
-        onPageChange={setCurrentPage}
-        itemsPerPage={itemsPerPage}
       />
-      <FooterModern />
+      <AllbirdsFooter />
       
       <ProductDetailModal
         product={selectedProduct}
