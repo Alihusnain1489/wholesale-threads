@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -97,51 +98,47 @@ const LoginForm = ({ isLogin, onToggle, onClose }: LoginFormProps) => {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto shadow-2xl border-gray-200 bg-white">
-      <CardHeader className="text-center pb-6 bg-gradient-to-b from-gray-50 to-white">
-        <CardTitle className="text-2xl font-light text-gray-900 mb-2">
-          <span className="font-bold">ALIF</span>
-          <span className="font-light ml-2">THREADS</span>
+    <Card className="w-full max-w-md mx-auto shadow-xl border-0 bg-gradient-to-br from-white to-slate-50">
+      <CardHeader className="text-center pb-6">
+        <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-700 to-slate-900 bg-clip-text text-transparent">
+          {isLogin ? 'Welcome Back' : 'Create Account'}
         </CardTitle>
-        <p className="text-lg font-medium text-gray-800">
-          {isLogin ? 'Welcome Back' : 'Join Our Community'}
-        </p>
-        <p className="text-gray-600 text-sm">
-          {isLogin ? 'Sign in to your account' : 'Create your account to get started'}
+        <p className="text-slate-600 mt-2">
+          {isLogin ? 'Sign in to your account' : 'Join our fabric community'}
         </p>
       </CardHeader>
       
-      <CardContent className="space-y-4 p-6">
+      <CardContent className="space-y-4">
         <form onSubmit={handleSubmit} className="space-y-4">
           {!isLogin && (
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="firstName" className="text-gray-700 font-medium">First Name</Label>
+                <Label htmlFor="firstName" className="text-slate-700 font-medium">First Name</Label>
                 <div className="relative">
-                  <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <User className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                   <Input
                     id="firstName"
                     type="text"
                     placeholder="John"
                     value={formData.firstName}
                     onChange={(e) => handleInputChange('firstName', e.target.value)}
-                    className={`pl-10 border-gray-300 focus:border-gray-900 focus:ring-gray-900 ${errors.firstName ? 'border-red-400' : ''}`}
+                    className={`pl-10 border-slate-200 focus:border-emerald-400 focus:ring-emerald-400 ${errors.firstName ? 'border-red-400' : ''}`}
                   />
                 </div>
                 {errors.firstName && <p className="text-red-500 text-sm">{errors.firstName}</p>}
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="lastName" className="text-gray-700 font-medium">Last Name</Label>
+                <Label htmlFor="lastName" className="text-slate-700 font-medium">Last Name</Label>
                 <div className="relative">
-                  <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <User className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                   <Input
                     id="lastName"
                     type="text"
                     placeholder="Doe"
                     value={formData.lastName}
                     onChange={(e) => handleInputChange('lastName', e.target.value)}
-                    className={`pl-10 border-gray-300 focus:border-gray-900 focus:ring-gray-900 ${errors.lastName ? 'border-red-400' : ''}`}
+                    className={`pl-10 border-slate-200 focus:border-emerald-400 focus:ring-emerald-400 ${errors.lastName ? 'border-red-400' : ''}`}
                   />
                 </div>
                 {errors.lastName && <p className="text-red-500 text-sm">{errors.lastName}</p>}
@@ -150,32 +147,32 @@ const LoginForm = ({ isLogin, onToggle, onClose }: LoginFormProps) => {
           )}
           
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-gray-700 font-medium">Email</Label>
+            <Label htmlFor="email" className="text-slate-700 font-medium">Email</Label>
             <div className="relative">
-              <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
               <Input
                 id="email"
                 type="email"
                 placeholder="john@example.com"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
-                className={`pl-10 border-gray-300 focus:border-gray-900 focus:ring-gray-900 ${errors.email ? 'border-red-400' : ''}`}
+                className={`pl-10 border-slate-200 focus:border-emerald-400 focus:ring-emerald-400 ${errors.email ? 'border-red-400' : ''}`}
               />
             </div>
             {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="password" className="text-gray-700 font-medium">Password</Label>
+            <Label htmlFor="password" className="text-slate-700 font-medium">Password</Label>
             <div className="relative">
-              <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Lock className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
                 value={formData.password}
                 onChange={(e) => handleInputChange('password', e.target.value)}
-                className={`pl-10 pr-10 border-gray-300 focus:border-gray-900 focus:ring-gray-900 ${errors.password ? 'border-red-400' : ''}`}
+                className={`pl-10 pr-10 border-slate-200 focus:border-emerald-400 focus:ring-emerald-400 ${errors.password ? 'border-red-400' : ''}`}
               />
               <Button
                 type="button"
@@ -184,7 +181,7 @@ const LoginForm = ({ isLogin, onToggle, onClose }: LoginFormProps) => {
                 className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? <EyeOff className="h-4 w-4 text-gray-400" /> : <Eye className="h-4 w-4 text-gray-400" />}
+                {showPassword ? <EyeOff className="h-4 w-4 text-slate-400" /> : <Eye className="h-4 w-4 text-slate-400" />}
               </Button>
             </div>
             {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
@@ -192,16 +189,16 @@ const LoginForm = ({ isLogin, onToggle, onClose }: LoginFormProps) => {
           
           {!isLogin && (
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword" className="text-gray-700 font-medium">Confirm Password</Label>
+              <Label htmlFor="confirmPassword" className="text-slate-700 font-medium">Confirm Password</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Lock className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                 <Input
                   id="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="••••••••"
                   value={formData.confirmPassword}
                   onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                  className={`pl-10 pr-10 border-gray-300 focus:border-gray-900 focus:ring-gray-900 ${errors.confirmPassword ? 'border-red-400' : ''}`}
+                  className={`pl-10 pr-10 border-slate-200 focus:border-emerald-400 focus:ring-emerald-400 ${errors.confirmPassword ? 'border-red-400' : ''}`}
                 />
                 <Button
                   type="button"
@@ -210,7 +207,7 @@ const LoginForm = ({ isLogin, onToggle, onClose }: LoginFormProps) => {
                   className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
-                  {showConfirmPassword ? <EyeOff className="h-4 w-4 text-gray-400" /> : <Eye className="h-4 w-4 text-gray-400" />}
+                  {showConfirmPassword ? <EyeOff className="h-4 w-4 text-slate-400" /> : <Eye className="h-4 w-4 text-slate-400" />}
                 </Button>
               </div>
               {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword}</p>}
@@ -219,7 +216,7 @@ const LoginForm = ({ isLogin, onToggle, onClose }: LoginFormProps) => {
           
           <Button 
             type="submit" 
-            className="w-full bg-gray-900 hover:bg-gray-800 text-white font-semibold py-3 shadow-lg transition-all duration-300"
+            className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold py-2 shadow-lg hover:shadow-emerald-500/25 transition-all duration-300"
             disabled={isLoading}
           >
             {isLoading ? 'Processing...' : (isLogin ? 'Sign In' : 'Create Account')}
@@ -229,13 +226,13 @@ const LoginForm = ({ isLogin, onToggle, onClose }: LoginFormProps) => {
         <Separator className="my-6" />
         
         <div className="text-center">
-          <p className="text-gray-600">
+          <p className="text-slate-600">
             {isLogin ? "Don't have an account?" : "Already have an account?"}
           </p>
           <Button 
             variant="link" 
             onClick={onToggle}
-            className="text-gray-900 hover:text-gray-700 font-semibold p-0 h-auto"
+            className="text-emerald-600 hover:text-emerald-700 font-semibold p-0 h-auto"
           >
             {isLogin ? 'Create one here' : 'Sign in here'}
           </Button>

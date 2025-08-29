@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Scissors, Clock, Award, Ruler, Palette, CheckCircle, Star, ArrowRight } from "lucide-react";
 import BookingDialog from "./BookingDialog";
-import StitchingSizeChart from "./StitchingSizeChart";
 
 const StitchingSection = () => {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
@@ -38,7 +37,7 @@ const StitchingSection = () => {
   ];
 
   return (
-    <section id="stitching" className="py-12 sm:py-16 lg:py-20 bg-white">
+    <section className="py-12 sm:py-16 lg:py-20 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-8 sm:mb-12">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 text-black">
@@ -104,13 +103,8 @@ const StitchingSection = () => {
           ))}
         </div>
 
-        {/* Size Chart Section */}
-        <div className="mb-12 sm:mb-16">
-          <StitchingSizeChart />
-        </div>
-
         {/* Process Steps */}
-        <div className="bg-gray-50 rounded-2xl p-6 sm:p-8 lg:p-12 border border-gray-200 mb-12 sm:mb-16">
+        <div className="bg-gray-50 rounded-2xl p-6 sm:p-8 lg:p-12 border border-gray-200">
           <h3 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center text-black">
             Our Stitching Process
           </h3>
@@ -137,7 +131,7 @@ const StitchingSection = () => {
         </div>
 
         {/* Customer Reviews */}
-        <div className="mb-12 sm:mb-16">
+        <div className="mt-12 sm:mt-16">
           <h3 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center text-black">
             What Our Customers Say
           </h3>
@@ -164,7 +158,7 @@ const StitchingSection = () => {
         </div>
 
         {/* CTA Section */}
-        <div className="text-center">
+        <div className="text-center mt-12 sm:mt-16">
           <div className="bg-black text-white rounded-2xl p-6 sm:p-8 lg:p-12">
             <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4">
               Ready to Get Your Perfect Fit?

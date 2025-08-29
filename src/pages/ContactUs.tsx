@@ -1,12 +1,12 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Phone, Mail, Clock, MessageCircle, Send, User, Building, Globe, Shield, Award, Users, CheckCircle, Home } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, MessageCircle, Send, User, Building, Globe, Shield, Award, Users, CheckCircle } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { Link } from 'react-router-dom';
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -89,28 +89,18 @@ Submitted via Website Contact Form`;
   };
 
   return (
-    <div className="min-h-screen bg-white animate-fade-in">
-      {/* Header */}
-      <div className="bg-black text-white py-6 sm:py-8">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link to="/">
-                <Button variant="ghost" size="sm" className="text-white hover:bg-white/20 animate-scale-in">
-                  <Home className="h-4 w-4 mr-2" />
-                  Back to Home
-                </Button>
-              </Link>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">
-                Contact Alif Threads
-              </h1>
-            </div>
-          </div>
-          <p className="text-lg text-gray-300 max-w-3xl mt-4">
+    <div className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <section className="bg-black text-white py-12 sm:py-16 lg:py-20">
+        <div className="container mx-auto px-4 text-center">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
+            Contact Wholesale Threads
+          </h1>
+          <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto">
             Get in touch with us for any questions, support, or inquiries. We're here to help you with all your fabric needs.
           </p>
         </div>
-      </div>
+      </section>
 
       {/* Contact Cards */}
       <section className="py-12 sm:py-16 bg-gray-50">

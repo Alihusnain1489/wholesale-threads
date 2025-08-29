@@ -3,28 +3,45 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Roman.co.uk inspired design system */
 @layer base {
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
+
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
+
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
+
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
+
     --secondary: 210 40% 96%;
     --secondary-foreground: 222.2 84% 4.9%;
+
     --muted: 210 40% 96%;
     --muted-foreground: 215.4 16.3% 46.9%;
+
     --accent: 210 40% 96%;
     --accent-foreground: 222.2 84% 4.9%;
+
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
+
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
+
+    --radius: 0rem;
+
+    /* Roman inspired colors */
+    --roman-pink: 340 75% 95%;
+    --roman-coral: 15 100% 85%;
+    --roman-navy: 218 100% 17%;
+    --roman-gray: 220 14% 96%;
+    --roman-text: 222 84% 5%;
   }
 
   .dark {
@@ -66,9 +83,19 @@
     scroll-behavior: smooth;
   }
 
-  /* Custom scrollbar */
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Roman-inspired scrollbar */
   ::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
   }
 
   ::-webkit-scrollbar-track {
@@ -83,76 +110,7 @@
     @apply bg-gray-400;
   }
 
-  /* Hide scrollbar for horizontal scroll areas */
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-}
-
-@layer components {
-  /* Modern responsive typography */
-  .hero-heading {
-    @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-light leading-tight;
-  }
-
-  .section-heading {
-    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-gray-900;
-  }
-
-  .card-heading {
-    @apply text-lg sm:text-xl font-medium text-gray-900;
-  }
-
-  .body-text {
-    @apply text-base sm:text-lg text-gray-600 leading-relaxed;
-  }
-
-  .small-text {
-    @apply text-sm sm:text-base text-gray-500;
-  }
-
-  /* Modern button styles */
-  .btn-modern {
-    @apply inline-flex items-center justify-center px-6 py-3 text-sm font-medium rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
-  }
-
-  .btn-primary {
-    @apply bg-black text-white hover:bg-gray-800 focus:ring-gray-500;
-  }
-
-  .btn-secondary {
-    @apply bg-white text-gray-900 border border-gray-300 hover:bg-gray-50 focus:ring-gray-500;
-  }
-
-  /* Currency formatting for PKR */
-  .price-primary {
-    @apply text-lg sm:text-xl font-bold text-gray-900;
-  }
-
-  .price-secondary {
-    @apply text-sm sm:text-base text-gray-400 line-through;
-  }
-
-  .price-badge {
-    @apply bg-red-500 text-white text-xs font-bold px-2 py-1 rounded;
-  }
-
-  /* Card hover effects */
-  .card-hover {
-    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
-  }
-
-  /* Image hover effects */
-  .image-hover {
-    @apply transition-transform duration-500 group-hover:scale-105;
-  }
-
-  /* Text animations */
+  /* Enhanced animations */
   .animate-fade-in {
     animation: fadeIn 0.6s ease-out;
   }
@@ -164,7 +122,7 @@
   @keyframes fadeIn {
     from { 
       opacity: 0; 
-      transform: translateY(20px); 
+      transform: translateY(30px); 
     }
     to { 
       opacity: 1; 
@@ -175,7 +133,7 @@
   @keyframes slideUp {
     from {
       opacity: 0;
-      transform: translateY(30px);
+      transform: translateY(40px);
     }
     to {
       opacity: 1;
@@ -183,128 +141,136 @@
     }
   }
 
-  /* Responsive grid layouts */
-  .grid-responsive-2 {
-    @apply grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6;
+  /* Hover effects */
+  .hover-scale {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .grid-responsive-3 {
-    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6;
-  }
-
-  .grid-responsive-4 {
-    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6;
-  }
-
-  /* Container responsive padding */
-  .container-padding {
-    @apply px-4 sm:px-6 lg:px-8;
-  }
-
-  /* Section spacing */
-  .section-padding {
-    @apply py-12 sm:py-16 lg:py-20;
+  .hover-scale:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   }
 }
 
-/* Enhanced Mobile-first responsive design */
-@media (max-width: 640px) {
-  .container {
-    @apply px-4;
+/* Roman-inspired components */
+@layer components {
+  .roman-btn-primary {
+    @apply bg-black hover:bg-gray-800 text-white font-medium py-3 px-8 rounded-none transition-all duration-300 uppercase tracking-[0.1em] text-sm;
+  }
+
+  .roman-btn-secondary {
+    @apply bg-white border-2 border-black text-black hover:bg-black hover:text-white font-medium py-3 px-8 rounded-none transition-all duration-300 uppercase tracking-[0.1em] text-sm;
+  }
+
+  .roman-card {
+    @apply bg-white rounded-none shadow-sm hover:shadow-2xl transition-all duration-400 overflow-hidden border-0;
+  }
+
+  .roman-input {
+    @apply w-full px-4 py-3 border border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-200 rounded-none;
+  }
+
+  /* Typography */
+  .roman-heading-1 {
+    @apply text-4xl lg:text-7xl font-light text-gray-900 leading-[0.9] tracking-tight;
+  }
+
+  .roman-heading-2 {
+    @apply text-3xl lg:text-5xl font-light text-gray-900 leading-tight tracking-tight;
+  }
+
+  .roman-heading-3 {
+    @apply text-2xl lg:text-3xl font-medium text-gray-900 leading-tight;
+  }
+
+  .roman-body {
+    @apply text-gray-600 leading-relaxed text-base;
+  }
+
+  .roman-caption {
+    @apply text-sm text-gray-500 uppercase tracking-[0.1em] font-medium;
+  }
+
+  /* Sale badge */
+  .sale-badge {
+    @apply bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-none uppercase tracking-wide;
+  }
+
+  /* Category tabs */
+  .category-tab {
+    @apply relative text-sm font-medium text-gray-600 hover:text-gray-900 cursor-pointer transition-colors duration-200 uppercase tracking-[0.05em] pb-2;
+  }
+
+  .category-tab.active {
+    @apply text-gray-900 font-semibold;
+  }
+
+  .category-tab.active::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-full h-0.5 bg-black;
+  }
+}
+
+/* Product grid enhancements */
+.product-card {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.product-card:hover {
+  transform: translateY(-12px);
+}
+
+.product-image {
+  transition: transform 0.6s ease;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.05);
+}
+
+/* Roman-inspired hero section */
+.hero-overlay {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 100%);
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .roman-heading-1 {
+    @apply text-2xl;
   }
   
-  /* Mobile navigation adjustments */
-  .mobile-nav {
-    @apply flex flex-col space-y-2;
+  .roman-heading-2 {
+    @apply text-xl;
   }
   
-  /* Mobile card adjustments */
-  .mobile-card {
-    @apply p-4;
+  .roman-heading-3 {
+    @apply text-lg;
   }
-  
-  /* Mobile button adjustments */
-  .mobile-btn {
-    @apply w-full py-3 px-4 text-sm;
+
+  .product-card:hover {
+    transform: none;
   }
 }
 
-@media (min-width: 641px) and (max-width: 768px) {
-  /* Tablet specific styles */
-  .tablet-grid {
-    @apply grid-cols-2;
-  }
+/* Enhanced sale section */
+.sale-section {
+  background: linear-gradient(135deg, #fef7cd 0%, #fde68a 100%);
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
-  /* Large tablet/small desktop styles */
-  .desktop-small-grid {
-    @apply grid-cols-3;
-  }
+.sale-ribbon {
+  background: linear-gradient(45deg, #dc2626, #ef4444);
+  animation: pulse 2s infinite;
 }
 
-@media (min-width: 1025px) {
-  /* Desktop styles */
-  .desktop-grid {
-    @apply grid-cols-4;
-  }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
 }
 
-/* Focus styles for accessibility */
-.focus-visible:focus {
-  @apply outline-none ring-2 ring-gray-900 ring-offset-2;
-}
-
-/* Loading animations */
-.loading-shimmer {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 2s infinite;
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-/* Enhanced form styles */
-.form-field {
-  @apply relative mb-4;
-}
-
-.form-field input:focus + label,
-.form-field input:not(:placeholder-shown) + label {
-  @apply transform -translate-y-6 scale-75 text-gray-600;
-}
-
-.form-field label {
-  @apply absolute left-0 top-3 text-gray-500 transition-all duration-200 pointer-events-none;
-}
-
-/* Print styles */
-@media print {
-  .no-print {
-    @apply hidden;
-  }
-}
-
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-  .btn-primary {
-    @apply border border-white;
-  }
-}
-
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  .animate-fade-in,
-  .animate-slide-up,
-  .card-hover,
-  .image-hover {
-    @apply transition-none;
-  }
+/* Line clamp utility */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
