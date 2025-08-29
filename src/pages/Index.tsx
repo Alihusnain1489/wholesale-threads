@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Toaster } from "@/components/ui/toaster";
-import AllbirdsNavbar from "@/components/AllbirdsNavbar";
-import AllbirdsHero from "@/components/AllbirdsHero";
-import AllbirdsProductGrid from "@/components/AllbirdsProductGrid";
+import ModernNavbar from "@/components/ModernNavbar";
+import ModernHero from "@/components/ModernHero";
+import ProductGridModern from "@/components/ProductGridModern";
 import ProductDetailModal from "@/components/ProductDetailModal";
 import CartSidebar from "@/components/CartSidebar";
-import AllbirdsFooter from "@/components/AllbirdsFooter";
+import FooterModern from "@/components/FooterModern";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import LoginModal from "@/components/LoginModal";
 import { Product, CartItem } from "@/types";
@@ -23,165 +23,81 @@ const Index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
-  // Allbirds-inspired products with authentic designs and pricing
+  // Sample products data with PKR pricing for women's clothing store
   const products: Product[] = [
     {
       id: 1,
-      name: "Tree Runner",
-      price: 9800,
-      imageUrl: "/src/assets/tree-runner-white.jpg",
-      category: "Runners",
+      name: "LambEdge Shearling-Lined Lambskin Jacket",
+      price: 82113,
+      imageUrl: "/lovable-uploads/169fe697-18b5-4551-babf-b05ff42d17cc.png",
+      category: "Jackets",
       inStock: true,
-      description: "Our original Tree Runner. Made with eucalyptus tree fiber for unmatched comfort and breathability.",
-      color: "Natural White",
-      fabric: "Tree Fiber (Eucalyptus)",
-      pieces: "1 Pair"
+      description: "Premium lambskin jacket with shearling lining",
+      color: "Black",
+      fabric: "Lambskin",
+      pieces: "1 Piece"
     },
     {
       id: 2,
-      name: "Wool Runner",
-      price: 9800,
-      imageUrl: "/src/assets/wool-runner-grey.jpg",
-      category: "Runners",
+      name: "Lawn womens special",
+      price: 2500,
+      originalPrice: 3000,
+      imageUrl: "/lovable-uploads/3c1fc8db-6e9b-402d-827e-4072da43bc6c.png",
+      category: "Lawn",
       inStock: true,
-      description: "Cozy merino wool construction that naturally regulates temperature. Machine washable.",
-      color: "Natural Grey",
-      fabric: "Merino Wool",
-      pieces: "1 Pair"
+      description: "Special lawn collection for women",
+      color: "Multi",
+      fabric: "Lawn",
+      pieces: "3 Piece"
     },
     {
       id: 3,
-      name: "Tree Dasher 2",
-      price: 12500,
-      imageUrl: "/src/assets/tree-dasher-navy.jpg",
-      category: "Running",
+      name: "MEN ANTIQUE BROWN LEATHER JACKET BALLSTON",
+      price: 79637,
+      imageUrl: "/lovable-uploads/4a031324-00d1-4c00-95b9-3c959bd9a70c.png",
+      category: "Jackets",
       inStock: true,
-      description: "Performance running shoe engineered for maximum energy return and comfort.",
-      color: "Navy",
-      fabric: "Tree Fiber (Eucalyptus)",
-      pieces: "1 Pair"
+      description: "Antique brown leather jacket",
+      color: "Brown",
+      fabric: "Leather",
+      pieces: "1 Piece"
     },
     {
       id: 4,
-      name: "Tree Flyer",
-      price: 16000,
-      imageUrl: "/src/assets/tree-flyer-black.jpg",
-      category: "Running",
+      name: "Reaper Skull Graphic Biker Jacket",
+      price: 84661,
+      imageUrl: "/lovable-uploads/515e1bb2-b7a9-4126-8e72-203817453fb8.png",
+      category: "Jackets",
       inStock: true,
-      description: "Our most cushioned performance running shoe with superior energy return technology.",
+      description: "Stylish biker jacket with skull graphic",
       color: "Black",
-      fabric: "Tree Fiber (Eucalyptus)",
-      pieces: "1 Pair"
+      fabric: "Leather",
+      pieces: "1 Piece"
     },
     {
       id: 5,
-      name: "Wool Runner",
-      price: 9800,
-      originalPrice: 11000,
-      imageUrl: "/src/assets/wool-runner-beige.jpg",
-      category: "Runners",
+      name: "Elegant Chiffon Suit",
+      price: 3500,
+      imageUrl: "/lovable-uploads/5544a434-4a1f-46cc-b113-10304bbc10aa.png",
+      category: "Suits",
       inStock: true,
-      description: "Sustainable merino wool sneaker that's naturally odor-resistant and temperature regulating.",
-      color: "Natural Beige",
-      fabric: "Merino Wool",
-      pieces: "1 Pair"
+      description: "Elegant chiffon suit for special occasions",
+      color: "Cream",
+      fabric: "Chiffon",
+      pieces: "3 Piece"
     },
     {
       id: 6,
-      name: "Tree Skipper",
-      price: 7800,
-      imageUrl: "/src/assets/tree-skipper-olive.jpg",
-      category: "Slip-ons",
-      inStock: true,
-      description: "Casual slip-on shoe perfect for everyday wear. Made with breezy eucalyptus fiber.",
-      color: "Olive",
-      fabric: "Tree Fiber (Eucalyptus)",
-      pieces: "1 Pair"
-    },
-    {
-      id: 7,
-      name: "Tree Piper",
-      price: 7800,
-      imageUrl: "/src/assets/tree-piper-grey.jpg",
-      category: "Slip-ons",
-      inStock: true,
-      description: "Minimalist slip-on with a sleek design. Lightweight and breathable for all-day comfort.",
-      color: "Light Grey",
-      fabric: "Tree Fiber (Eucalyptus)",
-      pieces: "1 Pair"
-    },
-    {
-      id: 8,
-      name: "Tree Runner Go",
-      price: 11500,
-      imageUrl: "/src/assets/tree-runner-go-sage.jpg",
-      category: "Runners",
-      inStock: true,
-      description: "Elevated Tree Runner with enhanced durability and extra soft underfoot cushioning.",
-      color: "Sage",
-      fabric: "Tree Fiber (Eucalyptus)",
-      pieces: "1 Pair"
-    },
-    {
-      id: 9,
-      name: "Wool Lounger",
-      price: 9200,
-      imageUrl: "/src/assets/wool-lounger-charcoal.jpg",
-      category: "Slip-ons",
-      inStock: true,
-      description: "Ultra-soft merino wool slip-on that feels like wearing clouds on your feet.",
-      color: "Charcoal",
-      fabric: "Merino Wool",
-      pieces: "1 Pair"
-    },
-    {
-      id: 10,
-      name: "Tree Flyer",
-      price: 16000,
-      originalPrice: 18000,
-      imageUrl: "/src/assets/tree-flyer-blush.jpg",
-      category: "Running",
-      inStock: true,
-      description: "High-performance running shoe with maximum energy return. Women's exclusive colorway.",
-      color: "Blush",
-      fabric: "Tree Fiber (Eucalyptus)",
-      pieces: "1 Pair"
-    },
-    {
-      id: 11,
-      name: "Wool Runner",
-      price: 9800,
-      imageUrl: "/src/assets/wool-runner-lavender.jpg",
-      category: "Runners",
+      name: "Premium Embroidered Collection",
+      price: 4500,
+      originalPrice: 5200,
+      imageUrl: "/lovable-uploads/558c5917-b7c4-4092-9c5e-63316f2d53d6.png",
+      category: "Suits",
       inStock: false,
-      description: "Limited edition lavender colorway in soft merino wool. Naturally antimicrobial.",
-      color: "Lavender",
-      fabric: "Merino Wool",
-      pieces: "1 Pair"
-    },
-    {
-      id: 12,
-      name: "Tree Dasher 2",
-      price: 12500,
-      imageUrl: "/src/assets/tree-dasher-white.jpg",
-      category: "Running",
-      inStock: true,
-      description: "Clean white performance runner with dual-density midsole for superior comfort.",
-      color: "White",
-      fabric: "Tree Fiber (Eucalyptus)",
-      pieces: "1 Pair"
-    },
-    {
-      id: 13,
-      name: "Tree Breezer",
-      price: 8900,
-      imageUrl: "/src/assets/tree-breezer-blue.jpg",
-      category: "Casual",
-      inStock: true,
-      description: "Perforated design for maximum breathability. Perfect for warm weather.",
-      color: "Light Blue",
-      fabric: "Tree Fiber (Eucalyptus)",
-      pieces: "1 Pair"
+      description: "Premium embroidered suit collection",
+      color: "Royal Blue",
+      fabric: "Premium Silk",
+      pieces: "3 Piece"
     }
   ];
 
@@ -247,24 +163,57 @@ const Index = () => {
     });
   };
 
+  const handleLoginClick = () => {
+    setIsLoginModalOpen(true);
+  };
+
+  const handleLikeClick = () => {
+    if (!isLoggedIn) {
+      setIsLoginModalOpen(true);
+      return;
+    }
+    toast({
+      title: "Added to Wishlist",
+      description: "Item has been added to your wishlist!",
+    });
+  };
+
+  // Check if search is active
+  const isSearchActive = searchQuery.trim().length > 0;
+
   return (
-    <div className="min-h-screen bg-background">
-      <AllbirdsNavbar 
+    <div className="min-h-screen bg-white">
+      <ModernNavbar 
         cartItemsCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)}
         onCartClick={() => setIsCartOpen(true)}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
+        onLoginClick={handleLoginClick}
+        isLoggedIn={isLoggedIn}
       />
-      <AllbirdsHero />
-      <AllbirdsProductGrid
+      
+      {/* Hide hero section when searching */}
+      {!isSearchActive && (
+        <ModernHero 
+          onLoginClick={handleLoginClick}
+          isLoggedIn={isLoggedIn}
+        />
+      )}
+      
+      <ProductGridModern
         products={products}
         onAddToCart={handleAddToCart}
         selectedCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
         onProductClick={handleProductClick}
         searchQuery={searchQuery}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+        itemsPerPage={itemsPerPage}
+        onLikeClick={handleLikeClick}
+        isLoggedIn={isLoggedIn}
       />
-      <AllbirdsFooter />
+      <FooterModern />
       
       <ProductDetailModal
         product={selectedProduct}

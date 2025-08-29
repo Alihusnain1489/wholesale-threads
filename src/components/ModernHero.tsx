@@ -4,22 +4,52 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, X } from "lucide-react";
 
-const ModernHero = () => {
-  const [showNotice, setShowNotice] = useState(true);
+interface ModernHeroProps {
+  onLoginClick?: () => void;
+  isLoggedIn?: boolean;
+}
+
+const ModernHero = ({ onLoginClick, isLoggedIn = false }: ModernHeroProps) => {
+  const [showNotice, setShowNotice] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowNotice(false);
-    }, 15000); // Hide after 15 seconds
+    // Check if notice has been shown before
+    const noticeShown = localStorage.getItem('notice-shown');
+    if (!noticeShown) {
+      setShowNotice(true);
+      localStorage.setItem('notice-shown', 'true');
+      
+      const timer = setTimeout(() => {
+        setShowNotice(false);
+      }, 10000); // Hide after 10 seconds
 
-    return () => clearTimeout(timer);
+      return () => clearTimeout(timer);
+    }
   }, []);
+
+  const handleShopNowClick = () => {
+    if (!isLoggedIn) {
+      onLoginClick?.();
+      return;
+    }
+    // Scroll to products section
+    document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleExploreClick = () => {
+    if (!isLoggedIn) {
+      onLoginClick?.();
+      return;
+    }
+    // Scroll to products section
+    document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   return (
     <>
       {/* Notice Bar */}
       {showNotice && (
-        <div className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3 px-4 relative">
+        <div className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3 px-4 relative animate-fade-in">
           <div className="container mx-auto">
             <div className="flex items-center justify-center text-center">
               <div className="flex items-center space-x-2">
@@ -47,40 +77,49 @@ const ModernHero = () => {
       <section className="relative h-screen bg-gradient-to-br from-gray-50 to-white overflow-hidden">
         {/* Background Image */}
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30"
           style={{ backgroundImage: "url('/bg-3.webp')" }}
         />
         
         <div className="relative z-10 container mx-auto px-4 h-full">
           <div className="flex flex-col items-center justify-center text-center h-full">
             {/* Main Content */}
-            <Badge className="mb-6 bg-gray-100 text-gray-800 hover:bg-gray-200 rounded-full px-4 py-2">
+            <Badge className="mb-6 bg-gray-100 text-gray-800 hover:bg-gray-200 rounded-full px-4 py-2 animate-fade-in">
               <Plus className="h-3 w-3 mr-2" />
               Trending Fashion Chronicles
             </Badge>
             
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-light leading-tight mb-4 text-gray-900 max-w-5xl">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-light leading-tight mb-4 text-gray-900 max-w-5xl animate-slide-up">
               Your fashion should make
               <span className="block font-normal text-gray-600 mt-2">
                 you feel good, look great.
               </span>
             </h1>
             
-            <p className="text-lg lg:text-xl xl:text-2xl text-gray-600 mb-8 max-w-3xl leading-relaxed">
+            <p className="text-lg lg:text-xl xl:text-2xl text-gray-600 mb-8 max-w-3xl leading-relaxed animate-fade-in">
               Stay in the loop with daily trend updates at Alif Threads. Discover premium unstitched fabrics with authentic Pakistani designs.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Button size="lg" className="bg-black hover:bg-gray-800 text-white px-8 py-4 rounded-full text-lg">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-slide-up">
+              <Button 
+                size="lg" 
+                className="bg-black hover:bg-gray-800 text-white px-8 py-4 rounded-full text-lg transition-all duration-300 hover:scale-105"
+                onClick={handleShopNowClick}
+              >
                 Shop Now
               </Button>
-              <Button variant="outline" size="lg" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-4 rounded-full text-lg">
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-4 rounded-full text-lg transition-all duration-300 hover:scale-105"
+                onClick={handleExploreClick}
+              >
                 Explore Collection
               </Button>
             </div>
             
             {/* Customer Avatars */}
-            <div className="flex items-center justify-center space-x-4">
+            <div className="flex items-center justify-center space-x-4 animate-fade-in">
               <div className="flex -space-x-2">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-r from-pink-400 to-purple-400 border-2 border-white"></div>
                 <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-cyan-400 border-2 border-white"></div>

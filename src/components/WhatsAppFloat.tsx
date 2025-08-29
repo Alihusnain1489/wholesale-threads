@@ -8,12 +8,18 @@ const WhatsAppFloat = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleWhatsAppClick = () => {
-    const phoneNumber = "923261052244";
+    const phoneNumber = "923261052244"; // Validated number
     const message = "Hi! I'm interested in your unstitched women's clothing collection. Can you help me?";
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
     
     console.log('Opening WhatsApp URL:', whatsappUrl);
+    
+    // Validate phone number format
+    if (!/^92\d{10}$/.test(phoneNumber)) {
+      console.error('Invalid phone number format');
+      return;
+    }
     
     // Open WhatsApp in a new tab/window
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
@@ -21,10 +27,10 @@ const WhatsAppFloat = () => {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-4 right-4 z-50 animate-fade-in">
       {/* Chat Widget */}
       {isOpen && (
-        <Card className="mb-4 w-80 shadow-2xl border-0 bg-white">
+        <Card className="mb-4 w-80 shadow-2xl border-0 bg-white animate-scale-in">
           <CardContent className="p-0">
             {/* Header */}
             <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-4 rounded-t-lg">
@@ -87,7 +93,7 @@ const WhatsAppFloat = () => {
           className={`h-14 w-14 rounded-full shadow-2xl transition-all duration-300 border-2 border-white p-0 ${
             isOpen 
               ? 'bg-gray-500 hover:bg-gray-600' 
-              : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 hover:shadow-green-500/25'
+              : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 hover:shadow-green-500/25 hover:scale-110'
           }`}
           size="icon"
           aria-label={isOpen ? "Close chat" : "Contact us on WhatsApp"}
