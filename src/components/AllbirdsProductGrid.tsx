@@ -21,7 +21,7 @@ const AllbirdsProductGrid = ({
   selectedCategory = 'All',
   onCategoryChange
 }: AllbirdsProductGridProps) => {
-  const categories = ['All', 'Jackets', 'Lawn', 'Suits'];
+  const categories = ['All', 'Runners', 'Running', 'Slip-ons', 'Casual'];
   
   const filteredProducts = useMemo(() => {
     return products.filter(product => {
@@ -41,7 +41,7 @@ const AllbirdsProductGrid = ({
             Our Collection
           </h2>
           <p className="text-lg allbirds-subheading max-w-2xl mx-auto">
-            Discover our range of premium unstitched fabrics with authentic Pakistani designs
+            Sustainable, comfortable footwear made from natural materials like merino wool and eucalyptus tree fiber
           </p>
         </div>
 
