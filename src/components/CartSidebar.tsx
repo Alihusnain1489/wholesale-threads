@@ -5,7 +5,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Plus, Minus, Trash2, ShoppingBag } from "lucide-react";
-import { CartItem } from "@/pages/Index";
+import { CartItem } from "@/types";
 import { toast } from "@/hooks/use-toast";
 import BookingDialog from "@/components/BookingDialog";
 

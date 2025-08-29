@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ShoppingCart, Heart, Share2, Star, Minus, Plus, Package, Truck, Shield, Eye } from "lucide-react";
-import { Product } from "@/pages/Index";
+import { Product } from "@/types";
 
 interface ProductDetailModalProps {
   product: Product | null;

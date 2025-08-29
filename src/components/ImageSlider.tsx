@@ -44,7 +44,7 @@ const ImageSlider = () => {
   };
 
   return (
-    <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[500px] overflow-hidden bg-gray-100">
+    <div className="relative w-full h-[250px] sm:h-[350px] md:h-[450px] lg:h-[500px] overflow-hidden bg-gray-100">
       {/* Slides */}
       <div className="relative w-full h-full">
         {slides.map((slide, index) => (
@@ -61,13 +61,13 @@ const ImageSlider = () => {
             />
             <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
               <div className="text-center text-white px-4 max-w-4xl">
-                <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 sm:mb-4 leading-tight">
+                <h2 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-2 sm:mb-3 md:mb-4 leading-tight">
                   {slide.title}
                 </h2>
-                <p className="text-base sm:text-xl md:text-2xl font-light mb-2 sm:mb-4">
+                <p className="text-sm sm:text-base md:text-xl lg:text-2xl font-light mb-2 sm:mb-3 md:mb-4">
                   {slide.subtitle}
                 </p>
-                <p className="text-sm sm:text-lg md:text-xl max-w-2xl mx-auto px-2">
+                <p className="text-xs sm:text-sm md:text-lg lg:text-xl max-w-2xl mx-auto px-2 leading-relaxed">
                   {slide.description}
                 </p>
               </div>
@@ -80,7 +80,7 @@ const ImageSlider = () => {
       <Button
         variant="ghost"
         size="icon"
-        className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12"
+        className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 z-10"
         onClick={prevSlide}
       >
         <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
@@ -89,14 +89,14 @@ const ImageSlider = () => {
       <Button
         variant="ghost"
         size="icon"
-        className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12"
+        className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 z-10"
         onClick={nextSlide}
       >
         <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
       </Button>
 
       {/* Dots Indicator */}
-      <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+      <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
         {slides.map((_, index) => (
           <button
             key={index}
