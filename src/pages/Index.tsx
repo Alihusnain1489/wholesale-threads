@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Toaster } from "@/components/ui/toaster";
-import ModernNavbar from "@/components/ModernNavbar";
-import ModernHero from "@/components/ModernHero";
-import ProductGridModern from "@/components/ProductGridModern";
+import ElementoNavbar from "@/components/ElementoNavbar";
+import ElementoHero from "@/components/ElementoHero";
+import ElementoBestSellers from "@/components/ElementoBestSellers";
 import ProductDetailModal from "@/components/ProductDetailModal";
 import CartSidebar from "@/components/CartSidebar";
-import FooterModern from "@/components/FooterModern";
+import ElementoFooter from "@/components/ElementoFooter";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import LoginModal from "@/components/LoginModal";
 import { Product, CartItem } from "@/types";
@@ -182,8 +182,8 @@ const Index = () => {
   const isSearchActive = searchQuery.trim().length > 0;
 
   return (
-    <div className="min-h-screen bg-white">
-      <ModernNavbar 
+    <div className="min-h-screen bg-[hsl(var(--background))]">
+      <ElementoNavbar 
         cartItemsCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)}
         onCartClick={() => setIsCartOpen(true)}
         searchQuery={searchQuery}
@@ -194,26 +194,19 @@ const Index = () => {
       
       {/* Hide hero section when searching */}
       {!isSearchActive && (
-        <ModernHero 
+        <ElementoHero 
           onLoginClick={handleLoginClick}
           isLoggedIn={isLoggedIn}
         />
       )}
       
-      <ProductGridModern
+      <ElementoBestSellers
         products={products}
         onAddToCart={handleAddToCart}
-        selectedCategory={selectedCategory}
-        onCategoryChange={setSelectedCategory}
         onProductClick={handleProductClick}
-        searchQuery={searchQuery}
-        currentPage={currentPage}
-        onPageChange={setCurrentPage}
-        itemsPerPage={itemsPerPage}
         onLikeClick={handleLikeClick}
-        isLoggedIn={isLoggedIn}
       />
-      <FooterModern />
+      <ElementoFooter />
       
       <ProductDetailModal
         product={selectedProduct}
