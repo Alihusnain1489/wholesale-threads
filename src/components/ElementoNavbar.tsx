@@ -58,11 +58,11 @@ const ElementoNavbar = ({
                   </div>
                   
                   <nav className="space-y-4">
-                    <a href="#" className="block text-gray-900 hover:text-primary">Elegant Men's Suits</a>
-                    <a href="#" className="block text-gray-900 hover:text-primary">Classic Suits</a>
-                    <a href="#" className="block text-gray-900 hover:text-primary">Men's Accessories</a>
-                    <a href="#" className="block text-gray-900 hover:text-primary">Men's Tags</a>
-                    <a href="#" className="block text-gray-900 hover:text-primary">Men's Bottoms & Footwear</a>
+                    <a href="#" className="block text-gray-900 hover:text-primary">Lawn Suits</a>
+                    <a href="#" className="block text-gray-900 hover:text-primary">Chiffon Collection</a>
+                    <a href="#" className="block text-gray-900 hover:text-primary">Winter Wear</a>
+                    <a href="#" className="block text-gray-900 hover:text-primary">Party Wear</a>
+                    <a href="#" className="block text-gray-900 hover:text-primary">Casual Suits</a>
                     <a href="#" className="block text-gray-900 hover:text-primary">Contact</a>
                   </nav>
                 </div>
@@ -73,17 +73,16 @@ const ElementoNavbar = ({
           {/* Logo */}
           <div className="flex items-center">
             <h1 className="text-xl lg:text-2xl font-light tracking-[0.2em] text-white">
-              ALIF STORE
+              ALIF LADIES STORE
             </h1>
           </div>
 
-          {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8 text-sm font-light">
-            <a href="#" className="text-white hover:text-gray-300 transition-colors">Elegant Men's Suits</a>
-            <a href="#" className="text-white hover:text-gray-300 transition-colors">Classic Suits</a>
-            <a href="#" className="text-white hover:text-gray-300 transition-colors">Men's Accessories</a>
-            <a href="#" className="text-white hover:text-gray-300 transition-colors">Men's Tags</a>
-            <a href="#" className="text-white hover:text-gray-300 transition-colors">Men's Bottoms & Footwear</a>
+            <a href="#" className="text-white hover:text-gray-300 transition-colors">Lawn Suits</a>
+            <a href="#" className="text-white hover:text-gray-300 transition-colors">Chiffon Collection</a>
+            <a href="#" className="text-white hover:text-gray-300 transition-colors">Winter Wear</a>
+            <a href="#" className="text-white hover:text-gray-300 transition-colors">Party Wear</a>
+            <a href="#" className="text-white hover:text-gray-300 transition-colors">Casual Suits</a>
             <a href="#" className="text-white hover:text-gray-300 transition-colors">Contact</a>
           </nav>
 

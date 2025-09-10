@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import ElementoNavbar from "@/components/ElementoNavbar";
 import ElementoHero from "@/components/ElementoHero";
-import ElementoBestSellers from "@/components/ElementoBestSellers";
+import ElementoProductGrid from "@/components/ElementoProductGrid";
 import ProductDetailModal from "@/components/ProductDetailModal";
 import CartSidebar from "@/components/CartSidebar";
 import ElementoFooter from "@/components/ElementoFooter";
@@ -23,80 +23,188 @@ const Index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
-  // Sample products data with PKR pricing for women's clothing store
+  // Pakistani ladies suits collection with PKR pricing (2000-7000 range)
   const products: Product[] = [
     {
       id: 1,
-      name: "LambEdge Shearling-Lined Lambskin Jacket",
-      price: 82113,
-      imageUrl: "/lovable-uploads/169fe697-18b5-4551-babf-b05ff42d17cc.png",
-      category: "Jackets",
-      inStock: true,
-      description: "Premium lambskin jacket with shearling lining",
-      color: "Black",
-      fabric: "Lambskin",
-      pieces: "1 Piece"
-    },
-    {
-      id: 2,
-      name: "Lawn womens special",
-      price: 2500,
-      originalPrice: 3000,
-      imageUrl: "/lovable-uploads/3c1fc8db-6e9b-402d-827e-4072da43bc6c.png",
+      name: "Embroidered Lawn Suit Triple",
+      price: 3500,
+      imageUrl: "/src/assets/ladies-suit-1.jpg",
       category: "Lawn",
       inStock: true,
-      description: "Special lawn collection for women",
+      description: "Beautiful embroidered lawn suit perfect for summer",
       color: "Multi",
       fabric: "Lawn",
       pieces: "3 Piece"
     },
     {
-      id: 3,
-      name: "MEN ANTIQUE BROWN LEATHER JACKET BALLSTON",
-      price: 79637,
-      imageUrl: "/lovable-uploads/4a031324-00d1-4c00-95b9-3c959bd9a70c.png",
-      category: "Jackets",
+      id: 2,
+      name: "Chiffon Heavy Embroidery Suit",
+      price: 6200,
+      imageUrl: "/src/assets/ladies-suit-2.jpg", 
+      category: "Chiffon",
       inStock: true,
-      description: "Antique brown leather jacket",
-      color: "Brown",
-      fabric: "Leather",
-      pieces: "1 Piece"
-    },
-    {
-      id: 4,
-      name: "Reaper Skull Graphic Biker Jacket",
-      price: 84661,
-      imageUrl: "/lovable-uploads/515e1bb2-b7a9-4126-8e72-203817453fb8.png",
-      category: "Jackets",
-      inStock: true,
-      description: "Stylish biker jacket with skull graphic",
-      color: "Black",
-      fabric: "Leather",
-      pieces: "1 Piece"
-    },
-    {
-      id: 5,
-      name: "Elegant Chiffon Suit",
-      price: 3500,
-      imageUrl: "/lovable-uploads/5544a434-4a1f-46cc-b113-10304bbc10aa.png",
-      category: "Suits",
-      inStock: true,
-      description: "Elegant chiffon suit for special occasions",
-      color: "Cream",
+      description: "Elegant chiffon suit with heavy embroidery work",
+      color: "Royal Blue",
       fabric: "Chiffon",
       pieces: "3 Piece"
     },
     {
+      id: 3,
+      name: "Karandi Winter Collection",
+      price: 4800,
+      imageUrl: "/src/assets/ladies-suit-3.jpg",
+      category: "Winter",
+      inStock: true,
+      description: "Warm karandi suit for winter season",
+      color: "Brown",
+      fabric: "Karandi",
+      pieces: "3 Piece"
+    },
+    {
+      id: 4,
+      name: "Silk Mirror Work Suit",
+      price: 5500,
+      imageUrl: "/src/assets/ladies-suit-4.jpg",
+      category: "Silk",
+      inStock: true,
+      description: "Premium silk suit with mirror work",
+      color: "Maroon",
+      fabric: "Silk",
+      pieces: "3 Piece"
+    },
+    {
+      id: 5,
+      name: "Cotton Lawn Summer Special",
+      price: 2800,
+      imageUrl: "/src/assets/ladies-suit-5.jpg",
+      category: "Lawn",
+      inStock: true,
+      description: "Light cotton lawn perfect for summer",
+      color: "Pink",
+      fabric: "Cotton Lawn",
+      pieces: "3 Piece"
+    },
+    {
       id: 6,
-      name: "Premium Embroidered Collection",
+      name: "Georgette Party Wear",
+      price: 6800,
+      imageUrl: "/src/assets/ladies-suit-6.jpg",
+      category: "Party Wear",
+      inStock: true,
+      description: "Elegant georgette suit for parties",
+      color: "Black",
+      fabric: "Georgette",
+      pieces: "3 Piece"
+    },
+    {
+      id: 7,
+      name: "Net Heavy Work Suit",
+      price: 7000,
+      imageUrl: "/src/assets/ladies-suit-7.jpg",
+      category: "Net",
+      inStock: true,
+      description: "Net suit with heavy embellishment work",
+      color: "Red",
+      fabric: "Net",
+      pieces: "3 Piece"
+    },
+    {
+      id: 8,
+      name: "Organza Embroidered Collection",
+      price: 5200,
+      imageUrl: "/src/assets/ladies-suit-8.jpg",
+      category: "Organza",
+      inStock: true,
+      description: "Fine organza with beautiful embroidery",
+      color: "Green",
+      fabric: "Organza",
+      pieces: "3 Piece"
+    },
+    {
+      id: 9,
+      name: "Khaddar Casual Wear",
+      price: 3200,
+      imageUrl: "/src/assets/ladies-suit-9.jpg",
+      category: "Casual",
+      inStock: true,
+      description: "Comfortable khaddar for daily wear",
+      color: "Beige",
+      fabric: "Khaddar",
+      pieces: "3 Piece"
+    },
+    {
+      id: 10,
+      name: "Jamawar Traditional Suit",
       price: 4500,
-      originalPrice: 5200,
-      imageUrl: "/lovable-uploads/558c5917-b7c4-4092-9c5e-63316f2d53d6.png",
-      category: "Suits",
+      imageUrl: "/src/assets/ladies-suit-10.jpg",
+      category: "Traditional",
+      inStock: true,
+      description: "Traditional jamawar with classic patterns",
+      color: "Golden",
+      fabric: "Jamawar",
+      pieces: "3 Piece"
+    },
+    {
+      id: 11,
+      name: "Velvet Zari Work",
+      price: 6500,
+      originalPrice: 7200,
+      imageUrl: "/src/assets/ladies-suit-11.jpg",
+      category: "Winter",
+      inStock: true,
+      description: "Luxurious velvet with zari work",
+      color: "Purple",
+      fabric: "Velvet",
+      pieces: "3 Piece"
+    },
+    {
+      id: 12,
+      name: "Digital Print Modern",
+      price: 3800,
+      imageUrl: "/src/assets/ladies-suit-12.jpg",
+      category: "Digital Print",
+      inStock: true,
+      description: "Modern digital print design",
+      color: "Multi",
+      fabric: "Digital Print",
+      pieces: "3 Piece"
+    },
+    {
+      id: 13,
+      name: "Crinkle Chiffon Flowing",
+      price: 4200,
+      imageUrl: "/src/assets/ladies-suit-13.jpg",
+      category: "Chiffon",
+      inStock: true,
+      description: "Flowing crinkle chiffon suit",
+      color: "Peach",
+      fabric: "Crinkle Chiffon",
+      pieces: "3 Piece"
+    },
+    {
+      id: 14,
+      name: "Banarsi Golden Work",
+      price: 6800,
+      originalPrice: 7500,
+      imageUrl: "/src/assets/ladies-suit-14.jpg",
+      category: "Formal",
       inStock: false,
-      description: "Premium embroidered suit collection",
-      color: "Royal Blue",
-      fabric: "Premium Silk",
+      description: "Premium banarsi with golden work",
+      color: "Gold",
+      fabric: "Banarsi",
+      pieces: "3 Piece"
+    },
+    {
+      id: 15,
+      name: "Linen Casual Elegant",
+      price: 2500,
+      imageUrl: "/src/assets/ladies-suit-15.jpg",
+      category: "Casual",
+      inStock: true,
+      description: "Elegant linen for casual wear",
+      color: "White",
+      fabric: "Linen",
       pieces: "3 Piece"
     }
   ];
@@ -200,11 +308,11 @@ const Index = () => {
         />
       )}
       
-      <ElementoBestSellers
+      <ElementoProductGrid
         products={products}
         onAddToCart={handleAddToCart}
         onProductClick={handleProductClick}
-        onLikeClick={handleLikeClick}
+        searchQuery={searchQuery}
       />
       <ElementoFooter />
       

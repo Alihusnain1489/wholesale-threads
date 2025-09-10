@@ -55,7 +55,7 @@ const ElementoHero = ({ onLoginClick, isLoggedIn = false }: ElementoHeroProps) =
             </h1>
             
             <p className="text-xl lg:text-2xl text-white/90 mb-8 font-light leading-relaxed">
-              Discover our curated collection of premium menswear designed for the modern gentleman.
+              Discover our exquisite collection of Pakistani ladies suits designed for the modern woman.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
@@ -79,7 +79,7 @@ const ElementoHero = ({ onLoginClick, isLoggedIn = false }: ElementoHeroProps) =
 
         {/* Price Display */}
         <div className="absolute bottom-24 right-8 text-white text-right">
-          <div className="text-3xl font-light">$1,200.00 USD</div>
+          <div className="text-3xl font-light">₨2,000 - ₨7,000</div>
         </div>
       </div>
     </section>
