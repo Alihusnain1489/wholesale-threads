@@ -36,7 +36,7 @@ const ElementoFooter = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
           {/* Company Info */}
           <div className="md:col-span-2">
-            <h3 className="text-2xl font-light tracking-[0.2em] mb-6">ALIF STORE</h3>
+            <h3 className="text-2xl font-light tracking-[0.2em] mb-6">ALIF Wholesale clothes</h3>
             <p className="text-gray-300 mb-6 max-w-md font-light leading-relaxed">
               Discover our curated collection of premium menswear designed for the modern gentleman. 
               Crafted with attention to detail and superior quality materials.

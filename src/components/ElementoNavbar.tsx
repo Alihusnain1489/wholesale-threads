@@ -71,20 +71,11 @@ const ElementoNavbar = ({
           </div>
 
           {/* Logo */}
-          <div className="flex items-center">
-            <h1 className="text-xl lg:text-2xl font-light tracking-[0.2em] text-white">
-              ALIF LADIES STORE
+          <div className="flex items-center justify-center">
+            <h1 className="text-xl lg:text-2xl font-light tracking-[0.2em] text-white ">
+              Alif Wholesale Clothes
             </h1>
           </div>
-
-          <nav className="hidden lg:flex items-center space-x-8 text-sm font-light">
-            <a href="#" className="text-white hover:text-gray-300 transition-colors">Lawn Suits</a>
-            <a href="#" className="text-white hover:text-gray-300 transition-colors">Chiffon Collection</a>
-            <a href="#" className="text-white hover:text-gray-300 transition-colors">Winter Wear</a>
-            <a href="#" className="text-white hover:text-gray-300 transition-colors">Party Wear</a>
-            <a href="#" className="text-white hover:text-gray-300 transition-colors">Casual Suits</a>
-            <a href="#" className="text-white hover:text-gray-300 transition-colors">Contact</a>
-          </nav>
 
           {/* Right Actions */}
           <div className="flex items-center space-x-3">

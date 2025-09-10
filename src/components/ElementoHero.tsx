@@ -22,7 +22,7 @@ const ElementoHero = ({ onLoginClick, isLoggedIn = false }: ElementoHeroProps) =
       <div className="absolute inset-0">
         <div className="relative h-full">
           <img 
-            src="/lovable-uploads/4a031324-00d1-4c00-95b9-3c959bd9a70c.png"
+            src="/winter-hero.webp"
             alt="Elegant suit collection"
             className="w-full h-full object-cover object-center"
           />
