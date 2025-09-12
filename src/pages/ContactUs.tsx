@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import ElementoNavbar from "@/components/ElementoNavbar";
+import ElementoFooter from "@/components/ElementoFooter";
 import { MapPin, Phone, Mail, Clock, MessageCircle, Send, User, Building, Globe, Shield, Award, Users, CheckCircle, Home } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { Link } from 'react-router-dom';
@@ -89,28 +91,35 @@ Submitted via Website Contact Form`;
   };
 
   return (
-    <div className="min-h-screen bg-white animate-fade-in">
-      {/* Header */}
-      <div className="bg-black text-white py-6 sm:py-8">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link to="/">
-                <Button variant="ghost" size="sm" className="text-white hover:bg-white/20 animate-scale-in">
-                  <Home className="h-4 w-4 mr-2" />
-                  Back to Home
-                </Button>
-              </Link>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">
-                Contact Alif Threads
-              </h1>
-            </div>
+    <div className="min-h-screen bg-[hsl(var(--background))]">
+      <ElementoNavbar 
+        cartItemsCount={0}
+        onCartClick={() => {}}
+        searchQuery=""
+        onSearchChange={() => {}}
+        onLoginClick={() => {}}
+        isLoggedIn={false}
+      />
+      
+      {/* Hero Section */}
+      <section className="relative h-64 bg-gradient-to-br from-[hsl(var(--nav-dark))] via-gray-800 to-gray-900 flex items-center">
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="flex items-center space-x-4 mb-4">
+            <Link to="/">
+              <Button variant="ghost" size="sm" className="text-white hover:bg-white/20">
+                <Home className="h-4 w-4 mr-2" />
+                Back to Home
+              </Button>
+            </Link>
           </div>
-          <p className="text-lg text-gray-300 max-w-3xl mt-4">
+          <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
+            Contact Alif Store
+          </h1>
+          <p className="text-xl text-gray-200 max-w-3xl">
             Get in touch with us for any questions, support, or inquiries. We're here to help you with all your fabric needs.
           </p>
         </div>
-      </div>
+      </section>
 
       {/* Contact Cards */}
       <section className="py-12 sm:py-16 bg-gray-50">
@@ -394,6 +403,8 @@ Submitted via Website Contact Form`;
           </div>
         </div>
       </section>
+      
+      <ElementoFooter />
     </div>
   );
 };

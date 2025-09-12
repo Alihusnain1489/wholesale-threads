@@ -8,21 +8,41 @@ import productsData from "@/data/products.json"; // ✅ Correct import for Vite
 const ElementoProductGrid = ({ 
   onAddToCart, 
   onProductClick,
-  searchQuery
+  searchQuery,
+  selectedCategory,
+  sortBy,
+  onCategoryChange,
+  onSortChange
 }: { 
   onAddToCart: (product: Product) => void; 
   onProductClick: (product: Product) => void; 
-  searchQuery: string 
+  searchQuery: string;
+  selectedCategory: string;
+  sortBy: string;
+  onCategoryChange: (category: string) => void;
+  onSortChange: (sort: string) => void;
 }) => {
   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
 
   // ✅ Keep JSON in a ref
   const productsRef = useRef<Product[]>(productsData);
 
-  // ✅ Filtering
+  // Get categories
+  const categories = useMemo(() => {
+    const categorySet = new Set(productsRef.current.map(p => p.category));
+    return ['All', ...Array.from(categorySet)];
+  }, []);
+
+  // ✅ Filtering and Sorting
   const filteredProducts = useMemo(() => {
     let filtered = productsRef.current;
 
+    // Category filtering
+    if (selectedCategory !== 'All') {
+      filtered = filtered.filter(product => product.category === selectedCategory);
+    }
+
+    // Search filtering
     if (searchQuery.trim()) {
       filtered = filtered.filter(product =>
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -32,12 +52,65 @@ const ElementoProductGrid = ({
       );
     }
 
+    // Sorting
+    switch (sortBy) {
+      case 'price-low':
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-high':
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+      case 'name':
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case 'latest':
+        filtered.sort((a, b) => b.id - a.id);
+        break;
+      default:
+        break;
+    }
+
     return filtered;
-  }, [searchQuery]);
+  }, [searchQuery, selectedCategory, sortBy]);
 
   return (
     <section className="py-16 bg-[hsl(var(--nav-dark))]" id="products">
       <div className="container mx-auto px-4">
+        {/* Category and Sort Bar */}
+        <div className="mb-8 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+          {/* Categories */}
+          <div className="flex flex-wrap gap-2">
+            {categories.map(category => (
+              <button
+                key={category}
+                onClick={() => onCategoryChange(category)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                  selectedCategory === category
+                    ? 'bg-white text-[hsl(var(--nav-dark))] shadow-md'
+                    : 'bg-white/10 text-white hover:bg-white/20'
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+
+          {/* Sort Dropdown */}
+          <div className="flex items-center gap-2 text-white">
+            <span className="text-sm">Sort by:</span>
+            <select
+              value={sortBy}
+              onChange={(e) => onSortChange(e.target.value)}
+              className="bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-sm text-white focus:bg-white focus:text-[hsl(var(--nav-dark))] transition-all duration-200"
+            >
+              <option value="latest" className="text-black">Latest Design</option>
+              <option value="price-low" className="text-black">Price: Low to High</option>
+              <option value="price-high" className="text-black">Price: High to Low</option>
+              <option value="name" className="text-black">Name A-Z</option>
+            </select>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
           {filteredProducts.map(product => (
             <Card 

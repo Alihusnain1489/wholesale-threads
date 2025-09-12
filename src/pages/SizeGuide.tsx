@@ -3,33 +3,42 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import ElementoNavbar from "@/components/ElementoNavbar";
+import ElementoFooter from "@/components/ElementoFooter";
 import { Home, Ruler, Info, ChevronRight } from "lucide-react";
 import { Link } from 'react-router-dom';
 
 const SizeGuide = () => {
   return (
-    <div className="min-h-screen bg-white animate-fade-in">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-8 sm:py-12">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link to="/">
-                <Button variant="ghost" size="sm" className="text-white hover:bg-white/20 animate-scale-in">
-                  <Home className="h-4 w-4 mr-2" />
-                  Back to Home
-                </Button>
-              </Link>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">
-                Size Guide
-              </h1>
-            </div>
+    <div className="min-h-screen bg-[hsl(var(--background))]">
+      <ElementoNavbar 
+        cartItemsCount={0}
+        onCartClick={() => {}}
+        searchQuery=""
+        onSearchChange={() => {}}
+        onLoginClick={() => {}}
+        isLoggedIn={false}
+      />
+      
+      {/* Hero Section */}
+      <section className="relative h-64 bg-gradient-to-r from-purple-600 via-[hsl(var(--nav-dark))] to-indigo-700 flex items-center">
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="flex items-center space-x-4 mb-4">
+            <Link to="/">
+              <Button variant="ghost" size="sm" className="text-white hover:bg-white/20">
+                <Home className="h-4 w-4 mr-2" />
+                Back to Home
+              </Button>
+            </Link>
           </div>
-          <p className="text-lg text-purple-100 max-w-3xl mt-4">
+          <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
+            Size Guide
+          </h1>
+          <p className="text-xl text-purple-100 max-w-3xl">
             Find your perfect fit with our comprehensive size guide for women's unstitched clothing.
           </p>
         </div>
-      </div>
+      </section>
 
       <div className="container mx-auto px-4 py-8">
         {/* How to Measure */}
@@ -248,6 +257,8 @@ const SizeGuide = () => {
           </CardContent>
         </Card>
       </div>
+      
+      <ElementoFooter />
     </div>
   );
 };

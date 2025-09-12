@@ -20,6 +20,7 @@ const Index = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState('latest');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
@@ -309,10 +310,13 @@ const Index = () => {
       )}
       
       <ElementoProductGrid
-        products={products}
         onAddToCart={handleAddToCart}
         onProductClick={handleProductClick}
         searchQuery={searchQuery}
+        selectedCategory={selectedCategory}
+        sortBy={sortBy}
+        onCategoryChange={setSelectedCategory}
+        onSortChange={setSortBy}
       />
       <ElementoFooter />
       

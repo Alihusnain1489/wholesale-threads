@@ -1,6 +1,8 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import ElementoNavbar from "@/components/ElementoNavbar";
+import ElementoFooter from "@/components/ElementoFooter";
 import { 
   ArrowLeft, 
   Award, 
@@ -16,23 +18,34 @@ import { Link } from 'react-router-dom';
 
 const AboutUs = () => {
   return (
-    <div className="min-h-screen bg-gray-50 animate-fade-in">
-      {/* Header */}
-      <div className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link to="/">
-                <Button variant="ghost" size="sm" className="hover:bg-gray-50 animate-scale-in">
-                  <Home className="h-4 w-4 mr-2" />
-                  Back to Home
-                </Button>
-              </Link>
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">About Alif Threads</h1>
-            </div>
+    <div className="min-h-screen bg-[hsl(var(--background))]">
+      <ElementoNavbar 
+        cartItemsCount={0}
+        onCartClick={() => {}}
+        searchQuery=""
+        onSearchChange={() => {}}
+        onLoginClick={() => {}}
+        isLoggedIn={false}
+      />
+      
+      {/* Hero Section with Background Image */}
+      <section className="relative h-64 bg-gradient-to-r from-[hsl(var(--nav-dark))] to-gray-800 flex items-center">
+        <div className="absolute inset-0 bg-black/50"></div>
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="flex items-center space-x-4 mb-4">
+            <Link to="/">
+              <Button variant="ghost" size="sm" className="text-white hover:bg-white/20">
+                <Home className="h-4 w-4 mr-2" />
+                Back to Home
+              </Button>
+            </Link>
           </div>
+          <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">About Alif Store</h1>
+          <p className="text-xl text-gray-200 max-w-2xl">
+            Crafting Excellence in Women's Fashion Since 2020
+          </p>
         </div>
-      </div>
+      </section>
 
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
@@ -250,26 +263,28 @@ const AboutUs = () => {
         </div>
 
         {/* Contact CTA */}
-        <Card className="text-center">
+        <Card className="text-center bg-white shadow-lg">
           <CardContent className="p-8">
-            <h2 className="text-2xl font-bold mb-4">Get in Touch</h2>
+            <h2 className="text-2xl font-bold mb-4 text-[hsl(var(--nav-dark))]">Get in Touch</h2>
             <p className="text-gray-600 mb-6">
               Have questions about our products or want to learn more about our collections? 
               We'd love to hear from you!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/customer-services">
-                <Button className="bg-black text-white hover:bg-gray-800">
+                <Button className="bg-[hsl(var(--nav-dark))] text-white hover:bg-gray-700">
                   Contact Customer Service
                 </Button>
               </Link>
-              <Button variant="outline">
+              <Button variant="outline" className="border-[hsl(var(--nav-dark))] text-[hsl(var(--nav-dark))]">
                 Visit Our Store
               </Button>
             </div>
           </CardContent>
         </Card>
       </div>
+      
+      <ElementoFooter />
     </div>
   );
 };
