@@ -18,6 +18,7 @@ const Index = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [orderedItems, setOrderedItems] = useState<CartItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('latest');
@@ -231,9 +232,14 @@ const Index = () => {
     });
     
     toast({
-      title: "Added to Cart",
+      title: "Added to Cart Successfully",
       description: `${product.name} has been added to your cart.`,
     });
+
+    // Auto-redirect to cart
+    setTimeout(() => {
+      setIsCartOpen(true);
+    }, 800);
   };
 
   const handleUpdateQuantity = (productId: number, quantity: number) => {
@@ -263,6 +269,11 @@ const Index = () => {
   };
 
   const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+  const handleOrderSuccess = (orderedItems: CartItem[]) => {
+    setOrderedItems(prev => [...prev, ...orderedItems]);
+    setCartItems([]);
+  };
 
   const handleLoginSuccess = () => {
     setIsLoggedIn(true);
@@ -334,6 +345,7 @@ const Index = () => {
         onUpdateQuantity={handleUpdateQuantity}
         onRemoveFromCart={handleRemoveFromCart}
         totalPrice={totalPrice}
+        onOrderSuccess={handleOrderSuccess}
       />
 
       <LoginModal

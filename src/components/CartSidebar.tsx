@@ -16,6 +16,7 @@ interface CartSidebarProps {
   onUpdateQuantity: (productId: number, quantity: number) => void;
   onRemoveFromCart: (productId: number) => void;
   totalPrice: number;
+  onOrderSuccess?: (orderedItems: CartItem[]) => void;
 }
 
 const CartSidebar = ({ 
@@ -24,7 +25,8 @@ const CartSidebar = ({
   cartItems, 
   onUpdateQuantity, 
   onRemoveFromCart, 
-  totalPrice 
+  totalPrice,
+  onOrderSuccess
 }: CartSidebarProps) => {
   const [isBookingDialogOpen, setIsBookingDialogOpen] = useState(false);
 
@@ -135,6 +137,7 @@ const CartSidebar = ({
         onOpenChange={setIsBookingDialogOpen}
         cartItems={cartItems}
         totalPrice={totalPrice}
+        onOrderSuccess={onOrderSuccess}
       />
     </>
   );

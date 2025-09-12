@@ -15,9 +15,10 @@ interface BookingDialogProps {
   onOpenChange: (open: boolean) => void;
   cartItems?: CartItem[];
   totalPrice?: number;
+  onOrderSuccess?: (orderedItems: CartItem[]) => void;
 }
 
-const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0 }: BookingDialogProps) => {
+const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0, onOrderSuccess }: BookingDialogProps) => {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
@@ -54,6 +55,16 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0 }:
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Validate contact email
+    if (formData.email !== 'mr.alihusnain11@gmail.com') {
+      toast({
+        title: "Invalid Email",
+        description: "Please use the registered email: mr.alihusnain11@gmail.com",
+        variant: "destructive"
+      });
+      return;
+    }
+
     // Generate cart items section for WhatsApp message
     const cartItemsText = cartItems.length > 0 
       ? `\n🛍️ Cart Items:\n${cartItems.map(item => 
@@ -91,6 +102,11 @@ Thank you for choosing Alif Threads! 🌟`;
       title: "Order Sent Successfully!",
       description: "Your order has been sent via WhatsApp. We'll contact you soon!",
     });
+
+    // Move cart items to ordered items
+    if (onOrderSuccess && cartItems.length > 0) {
+      onOrderSuccess([...cartItems]);
+    }
     
     // Reset form and close dialog
     setFormData({
@@ -135,7 +151,7 @@ Thank you for choosing Alif Threads! 🌟`;
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              placeholder="Enter your email"
+              placeholder="mr.alihusnain11@gmail.com"
               required
               className="w-full border-gray-300 focus:border-black focus:ring-black"
             />
