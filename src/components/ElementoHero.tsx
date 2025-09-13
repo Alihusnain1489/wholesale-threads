@@ -17,17 +17,17 @@ const ElementoHero = ({ onLoginClick, isLoggedIn = false }: ElementoHeroProps) =
   };
 
   return (
-    <section className="relative h-screen overflow-hidden bg-gray-100">
+    <section className="relative h-[90vh] overflow-hidden bg-gray-100">
       {/* Background Image */}
       <div className="absolute inset-0">
-        <div className="relative h-full">
+        <div className="relative h-[90vh] w-full">
           <img 
             src="/winter-hero.webp"
             alt="Elegant suit collection"
-            className="w-full h-full object-cover object-center"
+            className="w-full h-full object-cover object-center "
           />
           {/* Overlay */}
-          <div className="absolute inset-0 bg-black/30"></div>
+          <div className="absolute inset-0 bg-black/40"></div>
         </div>
       </div>
 
@@ -46,11 +46,11 @@ const ElementoHero = ({ onLoginClick, isLoggedIn = false }: ElementoHeroProps) =
       <div className="relative z-10 h-full flex items-center">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl">
-            <Badge className="mb-6 bg-white/10 text-white border-white/20 backdrop-blur-sm">
+            <Badge className="mb-6 bg-black text-white border-white/20 backdrop-blur-sm">
               Premium Collection
             </Badge>
             
-            <h1 className="text-5xl lg:text-7xl font-light text-white mb-6 leading-tight">
+            <h1 className="text-5xl lg:text-7xl font-light text-white mb-6 leading-tight font-mono">
               Style your look
             </h1>
             
@@ -69,19 +69,15 @@ const ElementoHero = ({ onLoginClick, isLoggedIn = false }: ElementoHeroProps) =
               <Button 
                 variant="outline" 
                 size="lg"
-                className="border-white text-white hover:bg-white hover:text-black px-8 py-4 text-lg font-light"
+                className="border-white  hover:bg-white hover:text-black px-8 py-4 text-lg font-light"
               >
                 View Catalog
               </Button>
             </div>
           </div>
         </div>
-
-        {/* Price Display */}
-        <div className="absolute bottom-24 right-8 text-white text-right">
-          <div className="text-3xl font-light">₨2,000 - ₨7,000</div>
         </div>
-      </div>
+        
     </section>
   );
 };
