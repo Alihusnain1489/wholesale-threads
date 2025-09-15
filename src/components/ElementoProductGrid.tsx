@@ -54,11 +54,11 @@ const ElementoProductGrid = ({
 
     // Sorting
     switch (sortBy) {
-      case 'price-low':
-        filtered.sort((a, b) => a.price - b.price);
-        break;
       case 'price-high':
         filtered.sort((a, b) => b.price - a.price);
+        break;
+        case 'price-low':
+        filtered.sort((a, b) => a.price - b.price);
         break;
       case 'name':
         filtered.sort((a, b) => a.name.localeCompare(b.name));
@@ -76,24 +76,9 @@ const ElementoProductGrid = ({
   return (
     <section className="py-16 bg-[hsl(var(--nav-dark))]" id="products">
       <div className="container mx-auto px-4">
-        {/* Category and Sort Bar */}
+        {/* Sort Bar */}
         <div className="mb-8 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-          {/* Categories */}
-          <div className="flex flex-wrap gap-2">
-            {categories.map(category => (
-              <button
-                key={category}
-                onClick={() => onCategoryChange(category)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                  selectedCategory === category
-                    ? 'bg-white text-[hsl(var(--nav-dark))] shadow-md'
-                    : 'bg-white/10 text-white hover:bg-white/20'
-                }`}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
+          
 
           {/* Sort Dropdown */}
           <div className="flex items-center gap-2 text-white">
@@ -103,7 +88,6 @@ const ElementoProductGrid = ({
               onChange={(e) => onSortChange(e.target.value)}
               className="bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-sm text-white focus:bg-white focus:text-[hsl(var(--nav-dark))] transition-all duration-200"
             >
-              <option value="latest" className="text-black">Latest Design</option>
               <option value="price-low" className="text-black">Price: Low to High</option>
               <option value="price-high" className="text-black">Price: High to Low</option>
               <option value="name" className="text-black">Name A-Z</option>
@@ -163,7 +147,7 @@ const ElementoProductGrid = ({
               {/* Card Content */}
               <CardContent className="p-4">
                 <p className="text-xs text-gray-500 mb-2 font-light tracking-wide">
-                  Elemento Blaze
+                  Alif Clothes
                 </p>
                 <h3 className="font-light text-gray-900 mb-3 line-clamp-2 text-sm leading-relaxed">
                   {product.name}

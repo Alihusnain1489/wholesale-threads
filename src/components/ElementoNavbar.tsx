@@ -72,7 +72,7 @@ const ElementoNavbar = ({
 
           {/* Logo */}
           <div className="flex items-center justify-center">
-            <h1 className="text-xl lg:text-2xl font-light tracking-[0.2em] text-white ">
+            <h1 className="text-xl lg:text-2xl font-light tracking-[0.2em] text-white font-poppins">
               Alif Wholesale Clothes
             </h1>
           </div>
