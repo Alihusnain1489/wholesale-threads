@@ -48,37 +48,6 @@ const ElementoFooter = () => {
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h4 className="font-medium mb-6 text-white">Shop</h4>
-            <ul className="space-y-3 text-sm text-gray-300">
-              <li>
-                <button className="hover:text-white transition-colors font-light">
-                  Elegant Men's Suits
-                </button>
-              </li>
-              <li>
-                <button className="hover:text-white transition-colors font-light">
-                  Classic Suits
-                </button>
-              </li>
-              <li>
-                <button className="hover:text-white transition-colors font-light">
-                  Men's Accessories
-                </button>
-              </li>
-              <li>
-                <button className="hover:text-white transition-colors font-light">
-                  Men's Tags
-                </button>
-              </li>
-              <li>
-                <button className="hover:text-white transition-colors font-light">
-                  Bottoms & Footwear
-                </button>
-              </li>
-            </ul>
-          </div>
 
           {/* Support */}
           <div>

@@ -23,8 +23,8 @@ const ProductDetailModal = ({ product, isOpen, onOpenChange, onAddToCart }: Prod
   const productImages = [
     product.imageUrl,
     product.hoverImageUrl || product.imageUrl,
-    "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=400&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1583391733981-3cd898f6dbff?w=400&h=400&fit=crop",
+    "/129.webp",
+    "/124.webp",
   ];
 
   const handleAddToCart = () => {
@@ -51,7 +51,7 @@ const ProductDetailModal = ({ product, isOpen, onOpenChange, onAddToCart }: Prod
               <img 
                 src={productImages[selectedImageIndex]} 
                 alt={product.name}
-                className="w-full h-[300px] sm:h-[400px] lg:h-[500px] object-cover transition-transform duration-300 hover:scale-105"
+                className="w-full h-[300px] sm:h-[300px] lg:h-[600px] object-cover transition-transform duration-300 hover:scale-105"
               />
               {product.originalPrice && (
                 <Badge className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-black text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 shadow-lg">
@@ -65,30 +65,6 @@ const ProductDetailModal = ({ product, isOpen, onOpenChange, onAddToCart }: Prod
                 <Eye className="h-3 w-3" />
                 {Math.floor(Math.random() * 50) + 30}
               </div>
-            </div>
-            
-            {/* Thumbnail Images */}
-            <div className="grid grid-cols-4 gap-2 sm:gap-3">
-              {productImages.map((image, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSelectedImageIndex(index)}
-                  className={`relative overflow-hidden rounded border-2 transition-all duration-200 ${
-                    selectedImageIndex === index 
-                      ? 'border-black shadow-md scale-105' 
-                      : 'border-gray-200 hover:border-gray-400'
-                  }`}
-                >
-                  <img 
-                    src={image} 
-                    alt={`${product.name} ${index + 1}`}
-                    className="w-full h-16 sm:h-20 object-cover"
-                  />
-                  {selectedImageIndex === index && (
-                    <div className="absolute inset-0 bg-black/10"></div>
-                  )}
-                </button>
-              ))}
             </div>
           </div>
 
