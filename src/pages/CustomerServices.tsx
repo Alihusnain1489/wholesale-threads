@@ -1,7 +1,8 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import ElementoNavbar from "@/components/ElementoNavbar";
+import ElementoFooter from "@/components/ElementoFooter";
 import { 
   Phone, 
   Mail, 
@@ -12,79 +13,92 @@ import {
   Truck, 
   CreditCard,
   MapPin,
-  ArrowLeft
+  Home
 } from "lucide-react";
 import { Link } from 'react-router-dom';
 
 const CustomerServices = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link to="/">
-                <Button variant="ghost" size="sm">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back to Home
-                </Button>
+    <div className="min-h-screen bg-[hsl(var(--background))]">
+      <ElementoNavbar
+        cartItemsCount={0}
+        onCartClick={() => {}}
+        searchQuery=""
+        onSearchChange={() => {}}
+      />
+      
+      {/* Hero Section */}
+      <section className="relative h-[50vh] overflow-hidden">
+        <div className="absolute inset-0">
+          <img 
+            src="/winter-hero.webp"
+            alt="Customer Services"
+            className="w-full h-full object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 to-purple-900/80"></div>
+        </div>
+        <div className="relative z-10 h-full flex items-center">
+          <div className="container mx-auto px-4">
+            <div className="max-w-2xl text-white">
+              <Link to="/" className="inline-flex items-center mb-4 text-white/80 hover:text-white">
+                <Home className="h-4 w-4 mr-2" />
+                Back to Home
               </Link>
-              <h1 className="text-3xl font-bold text-gray-900">Customer Services</h1>
+              <h1 className="text-4xl lg:text-6xl font-light mb-4 font-mono">Customer Services</h1>
+              <p className="text-xl text-white/90 font-light">We're here to help you with all your inquiries</p>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div className="container mx-auto px-4 py-8">
-        {/* Contact Information */}
+      <div className="container mx-auto px-4 py-12">
+        {/* Contact Information Cards */}
         <div className="grid md:grid-cols-3 gap-6 mb-12">
-          <Card className="text-center">
-            <CardHeader>
-              <Phone className="h-8 w-8 mx-auto text-blue-600 mb-2" />
-              <CardTitle>Call Us</CardTitle>
+          <Card className="hover:shadow-lg transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm">
+            <CardHeader className="text-center">
+              <Phone className="h-12 w-12 mx-auto text-[hsl(var(--primary))] mb-4" />
+              <CardTitle className="text-lg">Call Us</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-lg font-semibold">+92 326 1052244</p>
-              <p className="text-gray-600">Mon - Fri: 9AM - 6PM</p>
-              <p className="text-gray-600">Sat: 10AM - 4PM</p>
+            <CardContent className="text-center">
+              <p className="text-xl font-semibold text-[hsl(var(--primary))]">+92 326 1052244</p>
+              <p className="text-[hsl(var(--muted-foreground))] text-sm">Mon - Fri: 9AM - 6PM</p>
+              <p className="text-[hsl(var(--muted-foreground))] text-sm">Sat: 10AM - 4PM</p>
             </CardContent>
           </Card>
 
-          <Card className="text-center">
-            <CardHeader>
-              <Mail className="h-8 w-8 mx-auto text-green-600 mb-2" />
-              <CardTitle>Email Us</CardTitle>
+          <Card className="hover:shadow-lg transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm">
+            <CardHeader className="text-center">
+              <Mail className="h-12 w-12 mx-auto text-[hsl(var(--primary))] mb-4" />
+              <CardTitle className="text-lg">Email Us</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-lg font-semibold">info@wholesalethreads.com</p>
-              <p className="text-gray-600">We reply within 24 hours</p>
-              <p className="text-gray-600">support@wholesalethreads.com</p>
+            <CardContent className="text-center">
+              <p className="text-lg font-semibold text-[hsl(var(--primary))]">mr.alihusnain11@gmail.com</p>
+              <p className="text-[hsl(var(--muted-foreground))] text-sm">We reply within 24 hours</p>
             </CardContent>
           </Card>
 
-          <Card className="text-center">
-            <CardHeader>
-              <MessageCircle className="h-8 w-8 mx-auto text-green-500 mb-2" />
-              <CardTitle>WhatsApp</CardTitle>
+          <Card className="hover:shadow-lg transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm">
+            <CardHeader className="text-center">
+              <MessageCircle className="h-12 w-12 mx-auto text-green-600 mb-4" />
+              <CardTitle className="text-lg">WhatsApp</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-lg font-semibold">+92 326 1052244</p>
-              <p className="text-gray-600">Quick responses</p>
-              <p className="text-gray-600">Available 24/7</p>
+            <CardContent className="text-center">
+              <p className="text-lg font-semibold text-green-600">+92 326 1052244</p>
+              <p className="text-[hsl(var(--muted-foreground))] text-sm">Quick responses</p>
+              <p className="text-[hsl(var(--muted-foreground))] text-sm">Available 24/7</p>
             </CardContent>
           </Card>
         </div>
 
         {/* Services Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <Card>
+          <Card className="bg-white/80 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
             <CardHeader className="text-center">
-              <ShoppingBag className="h-12 w-12 mx-auto text-purple-600 mb-4" />
+              <ShoppingBag className="h-12 w-12 mx-auto text-[hsl(var(--primary))] mb-4" />
               <CardTitle>Order Support</CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2 text-sm text-gray-600">
+              <ul className="space-y-2 text-sm text-[hsl(var(--muted-foreground))]">
                 <li>• Order tracking</li>
                 <li>• Order modifications</li>
                 <li>• Bulk order assistance</li>
@@ -93,13 +107,13 @@ const CustomerServices = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white/80 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
             <CardHeader className="text-center">
               <RefreshCw className="h-12 w-12 mx-auto text-orange-600 mb-4" />
               <CardTitle>Returns & Exchanges</CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2 text-sm text-gray-600">
+              <ul className="space-y-2 text-sm text-[hsl(var(--muted-foreground))]">
                 <li>• 7-day return policy</li>
                 <li>• Easy exchange process</li>
                 <li>• Quality guarantee</li>
@@ -108,13 +122,13 @@ const CustomerServices = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white/80 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
             <CardHeader className="text-center">
               <Truck className="h-12 w-12 mx-auto text-blue-600 mb-4" />
               <CardTitle>Shipping Info</CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2 text-sm text-gray-600">
+              <ul className="space-y-2 text-sm text-[hsl(var(--muted-foreground))]">
                 <li>• Free shipping over 5000 PKR</li>
                 <li>• Express delivery available</li>
                 <li>• Nationwide coverage</li>
@@ -123,13 +137,13 @@ const CustomerServices = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white/80 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
             <CardHeader className="text-center">
               <CreditCard className="h-12 w-12 mx-auto text-green-600 mb-4" />
               <CardTitle>Payment Support</CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2 text-sm text-gray-600">
+              <ul className="space-y-2 text-sm text-[hsl(var(--muted-foreground))]">
                 <li>• Multiple payment methods</li>
                 <li>• Secure transactions</li>
                 <li>• Installment options</li>
@@ -139,64 +153,53 @@ const CustomerServices = () => {
           </Card>
         </div>
 
-        {/* FAQ Section */}
-        <Card className="mb-12">
-          <CardHeader>
-            <CardTitle className="text-2xl">Frequently Asked Questions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              <div>
-                <h3 className="font-semibold mb-2">How can I track my order?</h3>
-                <p className="text-gray-600">You can track your order using the tracking number sent to your email or by contacting our customer service team.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold mb-2">What is your return policy?</h3>
-                <p className="text-gray-600">We offer a 7-day return policy for unused items in original condition. Please contact us for return authorization.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold mb-2">Do you offer custom stitching?</h3>
-                <p className="text-gray-600">Yes, we provide custom stitching services. Please visit our stitching section or contact us for more details.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold mb-2">What are your shipping charges?</h3>
-                <p className="text-gray-600">Shipping is free for orders above 5000 PKR. For orders below this amount, standard shipping charges apply.</p>
-              </div>
+        {/* Reference Images */}
+        <div className="grid md:grid-cols-3 gap-6 mb-12">
+          <Card className="bg-white/80 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+            <div className="aspect-square overflow-hidden rounded-t-lg">
+              <img 
+                src="/src/assets/ladies-suit-1.jpg" 
+                alt="Quality Assurance"
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+              />
             </div>
-          </CardContent>
-        </Card>
+            <CardContent className="p-4">
+              <h3 className="font-semibold mb-2">Quality Assurance</h3>
+              <p className="text-sm text-[hsl(var(--muted-foreground))]">Every product is carefully inspected before shipping</p>
+            </CardContent>
+          </Card>
 
-        {/* Store Location */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl flex items-center">
-              <MapPin className="h-6 w-6 mr-2" />
-              Visit Our Store
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="font-semibold mb-2">Wholesale Threads Main Store</h3>
-                <p className="text-gray-600 mb-4">
-                  123 Fashion Street, Textile Market<br />
-                  Lahore, Punjab, Pakistan<br />
-                  Postal Code: 54000
-                </p>
-                <div className="flex items-center space-x-4 text-sm">
-                  <div className="flex items-center">
-                    <Clock className="h-4 w-4 mr-1" />
-                    <span>Mon-Sat: 10AM-8PM</span>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-gray-100 h-64 rounded-lg flex items-center justify-center">
-                <p className="text-gray-500">Store Location Map</p>
-              </div>
+          <Card className="bg-white/80 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+            <div className="aspect-square overflow-hidden rounded-t-lg">
+              <img 
+                src="/src/assets/ladies-suit-2.jpg" 
+                alt="Premium Collection"
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+              />
             </div>
-          </CardContent>
-        </Card>
+            <CardContent className="p-4">
+              <h3 className="font-semibold mb-2">Premium Collection</h3>
+              <p className="text-sm text-[hsl(var(--muted-foreground))]">Curated selection of finest Pakistani suits</p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white/80 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+            <div className="aspect-square overflow-hidden rounded-t-lg">
+              <img 
+                src="/src/assets/ladies-suit-3.jpg" 
+                alt="Customer Satisfaction"
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+            <CardContent className="p-4">
+              <h3 className="font-semibold mb-2">Customer Satisfaction</h3>
+              <p className="text-sm text-[hsl(var(--muted-foreground))]">Your satisfaction is our top priority</p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
+      
+      <ElementoFooter />
     </div>
   );
 };

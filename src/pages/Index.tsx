@@ -7,7 +7,7 @@ import ProductDetailModal from "@/components/ProductDetailModal";
 import CartSidebar from "@/components/CartSidebar";
 import ElementoFooter from "@/components/ElementoFooter";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
-import LoginModal from "@/components/LoginModal";
+
 import { Product, CartItem } from "@/types";
 import { toast } from "@/hooks/use-toast";
 
@@ -15,8 +15,6 @@ const Index = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [orderedItems, setOrderedItems] = useState<CartItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -212,12 +210,6 @@ const Index = () => {
   ];
 
   const handleAddToCart = (product: Product) => {
-    // Check if user is logged in for booking/ordering
-    if (!isLoggedIn) {
-      setIsLoginModalOpen(true);
-      return;
-    }
-
     setCartItems(prev => {
       const existingItem = prev.find(item => item.id === product.id);
       if (existingItem) {
@@ -270,55 +262,21 @@ const Index = () => {
 
   const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-  const handleOrderSuccess = (orderedItems: CartItem[]) => {
-    setOrderedItems(prev => [...prev, ...orderedItems]);
-    setCartItems([]);
-  };
-
-  const handleLoginSuccess = () => {
-    setIsLoggedIn(true);
-    toast({
-      title: "Login Successful",
-      description: "You can now place orders!",
-    });
-  };
-
-  const handleLoginClick = () => {
-    setIsLoginModalOpen(true);
-  };
-
-  const handleLikeClick = () => {
-    if (!isLoggedIn) {
-      setIsLoginModalOpen(true);
-      return;
-    }
-    toast({
-      title: "Added to Wishlist",
-      description: "Item has been added to your wishlist!",
-    });
-  };
 
   // Check if search is active
   const isSearchActive = searchQuery.trim().length > 0;
 
   return (
     <div className="min-h-screen bg-[hsl(var(--background))]">
-      <ElementoNavbar 
-        cartItemsCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)}
-        onCartClick={() => setIsCartOpen(true)}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        onLoginClick={handleLoginClick}
-        isLoggedIn={isLoggedIn}
-      />
-      
-      {/* Hide hero section when searching */}
-      {!isSearchActive && (
-        <ElementoHero 
-          onLoginClick={handleLoginClick}
-          isLoggedIn={isLoggedIn}
+        <ElementoNavbar
+          cartItemsCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)}
+          onCartClick={() => setIsCartOpen(true)}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
         />
-      )}
+        
+        {/* Hide hero section when searching */}
+        {!isSearchActive && <ElementoHero />}
       
       <ElementoProductGrid
         onAddToCart={handleAddToCart}
@@ -345,14 +303,12 @@ const Index = () => {
         onUpdateQuantity={handleUpdateQuantity}
         onRemoveFromCart={handleRemoveFromCart}
         totalPrice={totalPrice}
-        onOrderSuccess={handleOrderSuccess}
+        onOrderSuccess={(orderedItems) => {
+          setOrderedItems(prev => [...prev, ...orderedItems]);
+          setCartItems([]);
+        }}
       />
 
-      <LoginModal
-        isOpen={isLoginModalOpen}
-        onOpenChange={setIsLoginModalOpen}
-        onSuccess={handleLoginSuccess}
-      />
 
       <WhatsAppFloat />
       

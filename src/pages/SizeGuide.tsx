@@ -16,8 +16,6 @@ const SizeGuide = () => {
         onCartClick={() => {}}
         searchQuery=""
         onSearchChange={() => {}}
-        onLoginClick={() => {}}
-        isLoggedIn={false}
       />
       
       {/* Hero Section */}

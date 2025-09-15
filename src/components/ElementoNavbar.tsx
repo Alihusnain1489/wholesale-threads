@@ -17,17 +17,13 @@ interface ElementoNavbarProps {
   onCartClick?: () => void;
   searchQuery?: string;
   onSearchChange?: (query: string) => void;
-  onLoginClick?: () => void;
-  isLoggedIn?: boolean;
 }
 
 const ElementoNavbar = ({ 
   cartItemsCount = 0, 
   onCartClick, 
   searchQuery = '', 
-  onSearchChange,
-  onLoginClick,
-  isLoggedIn = false
+  onSearchChange
 }: ElementoNavbarProps) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
@@ -89,15 +85,6 @@ const ElementoNavbar = ({
               <Search className="h-5 w-5" />
             </Button>
 
-            {/* User Account */}
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={onLoginClick} 
-              className="text-white hover:bg-white/10 p-2"
-            >
-              <User className="h-5 w-5" />
-            </Button>
 
             {/* Cart */}
             <Button 

@@ -19,13 +19,11 @@ import { Link } from 'react-router-dom';
 const AboutUs = () => {
   return (
     <div className="min-h-screen bg-[hsl(var(--background))]">
-      <ElementoNavbar 
+      <ElementoNavbar
         cartItemsCount={0}
         onCartClick={() => {}}
         searchQuery=""
         onSearchChange={() => {}}
-        onLoginClick={() => {}}
-        isLoggedIn={false}
       />
       
       {/* Hero Section with Background Image */}

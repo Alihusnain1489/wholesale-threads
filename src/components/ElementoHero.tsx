@@ -2,17 +2,8 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-interface ElementoHeroProps {
-  onLoginClick?: () => void;
-  isLoggedIn?: boolean;
-}
-
-const ElementoHero = ({ onLoginClick, isLoggedIn = false }: ElementoHeroProps) => {
+const ElementoHero = () => {
   const handleShopClick = () => {
-    if (!isLoggedIn) {
-      onLoginClick?.();
-      return;
-    }
     document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
   };
 
