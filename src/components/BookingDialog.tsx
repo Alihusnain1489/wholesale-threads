@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import { CartItem } from "@/types";
+import emailjs from '@emailjs/browser';
 
 interface BookingDialogProps {
   isOpen: boolean;
@@ -52,7 +53,52 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0, o
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const sendEmails = async () => {
+    // Initialize EmailJS with your public key
+    emailjs.init("YOUR_PUBLIC_KEY"); // Replace with your EmailJS public key
+    
+    // Generate cart items text for email
+    const cartItemsText = cartItems.length > 0 
+      ? cartItems.map(item => 
+          `${item.name} - Quantity: ${item.quantity} - Price: ₨${item.price.toLocaleString()}`
+        ).join('\n')
+      : 'No items in cart';
+
+    // Email to store owner (mr.alihusnain11@gmail.com)
+    const storeOwnerParams = {
+      to_email: 'mr.alihusnain11@gmail.com',
+      customer_name: formData.name,
+      customer_email: formData.email,
+      customer_mobile: formData.mobile,
+      shipping_address: formData.shippingAddress,
+      city: formData.city,
+      payment_type: formData.paymentType,
+      cart_items: cartItemsText,
+      total_amount: `₨${totalPrice.toLocaleString()}`,
+      additional_details: formData.additionalDetails || 'None'
+    };
+
+    // Email to customer
+    const customerParams = {
+      to_email: formData.email,
+      customer_name: formData.name,
+      message: "You have placed order successfully on Alif Wholesale Clothes. We will contact you soon. Your order is now in processing."
+    };
+
+    try {
+      // Send email to store owner
+      await emailjs.send('YOUR_SERVICE_ID', 'YOUR_STORE_TEMPLATE_ID', storeOwnerParams);
+      
+      // Send confirmation email to customer
+      await emailjs.send('YOUR_SERVICE_ID', 'YOUR_CUSTOMER_TEMPLATE_ID', customerParams);
+      
+      console.log('Emails sent successfully');
+    } catch (error) {
+      console.error('Error sending emails:', error);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Validate contact email
@@ -64,6 +110,9 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0, o
       });
       return;
     }
+
+    // Send emails
+    await sendEmails();
 
     // Generate cart items section for WhatsApp message
     const cartItemsText = cartItems.length > 0 
@@ -100,7 +149,7 @@ Thank you for choosing Alif Threads! 🌟`;
     // Show success message
     toast({
       title: "Order Sent Successfully!",
-      description: "Your order has been sent via WhatsApp. We'll contact you soon!",
+      description: "Order emails sent and WhatsApp message created. We'll contact you soon!",
     });
 
     // Move cart items to ordered items
