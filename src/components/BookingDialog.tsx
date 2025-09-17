@@ -34,7 +34,7 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0, o
   // EmailJS Configuration
   const EMAILJS_CONFIG = {
     PUBLIC_KEY: "K3YxwfZ-9he_23q3Z",
-    SERVICE_ID: "ognq7Ba2aPgKgTPTYEBig",
+    SERVICE_ID: "service_ognq7ba2apgkgtptyebig", // Updated to proper service format
     STORE_TEMPLATE_ID: "template_store_order",
     CUSTOMER_TEMPLATE_ID: "template_customer_confirm"
   };
@@ -165,12 +165,12 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0, o
 
   const sendEmails = async (): Promise<boolean> => {
     try {
-      console.log('Starting email sending process...');
+      console.log('=== Starting EmailJS Process ===');
       console.log('EmailJS Config:', EMAILJS_CONFIG);
 
-      // Initialize EmailJS with your public key
+      // Initialize EmailJS with public key
       emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
-      console.log('EmailJS initialized');
+      console.log('✓ EmailJS initialized with public key:', EMAILJS_CONFIG.PUBLIC_KEY);
       
       // Generate cart items text for email
       const cartItemsText = cartItems.length > 0 
@@ -179,8 +179,10 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0, o
           ).join('\n')
         : 'No items in cart';
 
-      // Email parameters for store owner (mr.alihusnain11@gmail.com)
-      const storeOwnerParams = {
+      console.log('📋 Cart Items:', cartItemsText);
+
+      // Create unified email template parameters
+      const emailParams = {
         to_name: 'Store Owner',
         to_email: 'mr.alihusnain11@gmail.com',
         from_name: formData.name,
@@ -193,10 +195,27 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0, o
         cart_items: cartItemsText,
         total_amount: `₨${totalPrice.toLocaleString()}`,
         additional_details: formData.additionalDetails || 'None',
-        order_date: new Date().toLocaleDateString('en-GB')
+        order_date: new Date().toLocaleDateString('en-GB'),
+        message: `New order received from ${formData.name} (${formData.email}) worth ${totalPrice.toLocaleString()} PKR.`
       };
 
-      // Email parameters for customer confirmation
+      console.log('📧 Email Parameters:', emailParams);
+
+      // Send order email to store owner
+      console.log('📤 Sending store order email...');
+      console.log('Service ID:', EMAILJS_CONFIG.SERVICE_ID);
+      console.log('Template ID:', EMAILJS_CONFIG.STORE_TEMPLATE_ID);
+
+      const storeEmailResponse = await emailjs.send(
+        EMAILJS_CONFIG.SERVICE_ID,
+        EMAILJS_CONFIG.STORE_TEMPLATE_ID,
+        emailParams,
+        EMAILJS_CONFIG.PUBLIC_KEY
+      );
+      
+      console.log('✅ Store email response:', storeEmailResponse);
+
+      // Customer confirmation parameters
       const customerParams = {
         to_name: formData.name,
         to_email: formData.email,
@@ -204,44 +223,42 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0, o
         customer_name: formData.name,
         order_date: new Date().toLocaleDateString('en-GB'),
         total_amount: `₨${totalPrice.toLocaleString()}`,
-        message: `Thank you for your order! We have received your order worth ${storeOwnerParams.total_amount}. Our team will contact you soon to confirm your order details and arrange delivery. Your order is now being processed.`
+        message: `Thank you for your order! We have received your order worth ₨${totalPrice.toLocaleString()}. Our team will contact you soon to confirm your order details and arrange delivery. Your order is now being processed.`
       };
 
-      console.log('Sending emails with params:', { storeOwnerParams, customerParams });
-
-      // Send email to store owner first
-      console.log('Sending store owner email...');
-      const storeEmailResponse = await emailjs.send(
-        EMAILJS_CONFIG.SERVICE_ID, 
-        EMAILJS_CONFIG.STORE_TEMPLATE_ID, 
-        storeOwnerParams
-      );
-      console.log('Store owner email sent:', storeEmailResponse);
-      
       // Send confirmation email to customer
-      console.log('Sending customer confirmation email...');
+      console.log('📤 Sending customer confirmation email...');
       const customerEmailResponse = await emailjs.send(
-        EMAILJS_CONFIG.SERVICE_ID, 
-        EMAILJS_CONFIG.CUSTOMER_TEMPLATE_ID, 
-        customerParams
+        EMAILJS_CONFIG.SERVICE_ID,
+        EMAILJS_CONFIG.CUSTOMER_TEMPLATE_ID,
+        customerParams,
+        EMAILJS_CONFIG.PUBLIC_KEY
       );
-      console.log('Customer email sent:', customerEmailResponse);
       
-      console.log('Both emails sent successfully');
+      console.log('✅ Customer email response:', customerEmailResponse);
+      console.log('🎉 Both emails sent successfully!');
+      
       return true;
     } catch (error) {
-      console.error('Error sending emails:', error);
-      // Log the specific error for debugging
+      console.error('❌ EmailJS Error:', error);
+      
+      // Log detailed error information
       if (error instanceof Error) {
-        console.error('Email error details:', error.message);
+        console.error('Error message:', error.message);
+        console.error('Error stack:', error.stack);
       }
       
-      // Don't fail the entire process if email fails
+      // Check if it's a specific EmailJS error
+      if (typeof error === 'object' && error !== null) {
+        console.error('Error object:', JSON.stringify(error, null, 2));
+      }
+
       toast({
-        title: "Email Warning",
-        description: "Order processed but email notification failed. Please check EmailJS configuration.",
-        variant: "default"
+        title: "Email Error",
+        description: `Failed to send order emails: ${error instanceof Error ? error.message : 'Unknown error'}. Please try again.`,
+        variant: "destructive"
       });
+      
       return false;
     }
   };
@@ -269,18 +286,18 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0, o
     setIsLoading(true);
 
     try {
+      console.log('🚀 Starting order submission process...');
+      
       // Send emails
       const emailsSent = await sendEmails();
       
       if (!emailsSent) {
-        toast({
-          title: "Email Error",
-          description: "Failed to send emails. Please check your email configuration and try again.",
-          variant: "destructive"
-        });
+        console.log('❌ Email sending failed, stopping order process');
         setIsLoading(false);
         return;
       }
+
+      console.log('✅ Emails sent successfully, completing order...');
 
       // Show success message
       toast({
