@@ -31,12 +31,12 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0, o
     additionalDetails: ''
   });
 
-  // EmailJS Configuration - Replace with your actual credentials
+  // EmailJS Configuration
   const EMAILJS_CONFIG = {
-    PUBLIC_KEY: import.meta.env.VITE_EMAILJS_PUBLIC_KEY || "YOUR_PUBLIC_KEY",
-    SERVICE_ID: import.meta.env.VITE_EMAILJS_SERVICE_ID || "YOUR_SERVICE_ID",
-    STORE_TEMPLATE_ID: import.meta.env.VITE_EMAILJS_STORE_TEMPLATE_ID || "YOUR_STORE_TEMPLATE_ID",
-    CUSTOMER_TEMPLATE_ID: import.meta.env.VITE_EMAILJS_CUSTOMER_TEMPLATE_ID || "YOUR_CUSTOMER_TEMPLATE_ID"
+    PUBLIC_KEY: "K3YxwfZ-9he_23q3Z",
+    SERVICE_ID: "ognq7Ba2aPgKgTPTYEBig",
+    STORE_TEMPLATE_ID: "template_store_order",
+    CUSTOMER_TEMPLATE_ID: "template_customer_confirm"
   };
 
   const pakistaniCities = [
@@ -132,19 +132,7 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0, o
 
   const sendEmails = async (): Promise<boolean> => {
     try {
-      // Check if EmailJS is properly configured
-      if (EMAILJS_CONFIG.PUBLIC_KEY === "YOUR_PUBLIC_KEY" || 
-          EMAILJS_CONFIG.SERVICE_ID === "YOUR_SERVICE_ID" ||
-          EMAILJS_CONFIG.STORE_TEMPLATE_ID === "YOUR_STORE_TEMPLATE_ID" ||
-          EMAILJS_CONFIG.CUSTOMER_TEMPLATE_ID === "YOUR_CUSTOMER_TEMPLATE_ID") {
-        console.warn('EmailJS not configured - skipping email sending');
-        toast({
-          title: "EmailJS Not Configured",
-          description: "Please configure EmailJS credentials to enable email notifications",
-          variant: "default"
-        });
-        return true; // Continue with WhatsApp even if email is not configured
-      }
+      // EmailJS is configured
 
       // Initialize EmailJS with your public key
       emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
@@ -221,41 +209,6 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0, o
     }
   };
 
-  const sendWhatsAppMessage = () => {
-    // Generate cart items section for WhatsApp message
-    const cartItemsText = cartItems.length > 0 
-      ? `\n🛍️ Cart Items:\n${cartItems.map(item => 
-          `• ${item.name} - Qty: ${item.quantity} - ₨${item.price.toLocaleString()}`
-        ).join('\n')}\n💰 Total Amount: ₨${totalPrice.toLocaleString()}\n`
-      : '';
-
-    // Auto-send WhatsApp message
-    const phoneNumber = "923261052244";
-    const message = `🛒 NEW ORDER BOOKING
-
-👤 Customer Details:
-Name: ${formData.name}
-Email: ${formData.email}
-Mobile: ${formData.mobile}
-${cartItemsText}
-📦 Shipping Details:
-Address: ${formData.shippingAddress}
-City: ${formData.city}
-Payment Type: ${formData.paymentType}
-
-📝 Additional Details:
-${formData.additionalDetails || 'None'}
-
-📅 Order Date: ${new Date().toLocaleDateString('en-GB')}
-
-Thank you for choosing Alif Threads! 🌟`;
-    
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-    
-    // Open WhatsApp
-    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
-  };
 
   const resetForm = () => {
     setFormData({
@@ -282,13 +235,10 @@ Thank you for choosing Alif Threads! 🌟`;
       // Send emails
       await sendEmails();
 
-      // Send WhatsApp message
-      sendWhatsAppMessage();
-      
       // Show success message
       toast({
         title: "Order Sent Successfully!",
-        description: "Order emails sent and WhatsApp message created. We'll contact you soon!",
+        description: "Your order has been sent via email. We'll contact you soon!",
       });
 
       // Move cart items to ordered items
@@ -314,9 +264,9 @@ Thank you for choosing Alif Threads! 🌟`;
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white border-0 shadow-lg">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white border-0 shadow-lg mx-4 sm:mx-auto">
         <DialogHeader className="border-b border-gray-100 pb-4">
-          <DialogTitle className="text-2xl font-bold text-black flex items-center gap-2">
+          <DialogTitle className="text-xl sm:text-2xl font-bold text-black flex items-center gap-2">
             🛒 Order Booking
           </DialogTitle>
           <p className="text-gray-600 text-sm mt-1">Fill in your details to place an order</p>
