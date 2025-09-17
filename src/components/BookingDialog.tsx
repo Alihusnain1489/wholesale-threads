@@ -62,6 +62,7 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0, o
   };
 
   const validateForm = (): boolean => {
+    // Name validation
     if (!formData.name.trim()) {
       toast({
         title: "Validation Error",
@@ -71,6 +72,16 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0, o
       return false;
     }
 
+    if (formData.name.trim().length < 2) {
+      toast({
+        title: "Validation Error",
+        description: "Name must be at least 2 characters long",
+        variant: "destructive"
+      });
+      return false;
+    }
+
+    // Email validation
     if (!formData.email.trim()) {
       toast({
         title: "Validation Error", 
@@ -80,6 +91,17 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0, o
       return false;
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email.trim())) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address",
+        variant: "destructive"
+      });
+      return false;
+    }
+
+    // Mobile validation
     if (!formData.mobile.trim()) {
       toast({
         title: "Validation Error",
@@ -89,6 +111,17 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0, o
       return false;
     }
 
+    const mobileRegex = /^[\+]?[0-9\s\-\(\)]{10,15}$/;
+    if (!mobileRegex.test(formData.mobile.trim())) {
+      toast({
+        title: "Invalid Mobile Number",
+        description: "Please enter a valid mobile number (10-15 digits)",
+        variant: "destructive"
+      });
+      return false;
+    }
+
+    // Address validation
     if (!formData.shippingAddress.trim()) {
       toast({
         title: "Validation Error",
@@ -98,15 +131,16 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0, o
       return false;
     }
 
-    if (!formData.paymentType) {
+    if (formData.shippingAddress.trim().length < 10) {
       toast({
         title: "Validation Error",
-        description: "Please select a payment type",
+        description: "Please enter a complete shipping address with area details",
         variant: "destructive"
       });
       return false;
     }
 
+    // City validation
     if (!formData.city) {
       toast({
         title: "Validation Error",
@@ -116,12 +150,11 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0, o
       return false;
     }
 
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
+    // Payment type validation
+    if (!formData.paymentType) {
       toast({
-        title: "Invalid Email",
-        description: "Please enter a valid email address",
+        title: "Validation Error",
+        description: "Please select a payment type",
         variant: "destructive"
       });
       return false;
@@ -132,10 +165,12 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0, o
 
   const sendEmails = async (): Promise<boolean> => {
     try {
-      // EmailJS is configured
+      console.log('Starting email sending process...');
+      console.log('EmailJS Config:', EMAILJS_CONFIG);
 
       // Initialize EmailJS with your public key
       emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
+      console.log('EmailJS initialized');
       
       // Generate cart items text for email
       const cartItemsText = cartItems.length > 0 
@@ -175,6 +210,7 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0, o
       console.log('Sending emails with params:', { storeOwnerParams, customerParams });
 
       // Send email to store owner first
+      console.log('Sending store owner email...');
       const storeEmailResponse = await emailjs.send(
         EMAILJS_CONFIG.SERVICE_ID, 
         EMAILJS_CONFIG.STORE_TEMPLATE_ID, 
@@ -183,6 +219,7 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0, o
       console.log('Store owner email sent:', storeEmailResponse);
       
       // Send confirmation email to customer
+      console.log('Sending customer confirmation email...');
       const customerEmailResponse = await emailjs.send(
         EMAILJS_CONFIG.SERVICE_ID, 
         EMAILJS_CONFIG.CUSTOMER_TEMPLATE_ID, 
@@ -202,10 +239,10 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0, o
       // Don't fail the entire process if email fails
       toast({
         title: "Email Warning",
-        description: "Order processed but email notification failed. Please check EmailJS configuration. WhatsApp message will still be sent.",
+        description: "Order processed but email notification failed. Please check EmailJS configuration.",
         variant: "default"
       });
-      return true;
+      return false;
     }
   };
 
@@ -233,7 +270,17 @@ const BookingDialog = ({ isOpen, onOpenChange, cartItems = [], totalPrice = 0, o
 
     try {
       // Send emails
-      await sendEmails();
+      const emailsSent = await sendEmails();
+      
+      if (!emailsSent) {
+        toast({
+          title: "Email Error",
+          description: "Failed to send emails. Please check your email configuration and try again.",
+          variant: "destructive"
+        });
+        setIsLoading(false);
+        return;
+      }
 
       // Show success message
       toast({

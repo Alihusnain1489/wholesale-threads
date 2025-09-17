@@ -36,7 +36,7 @@ const ProductDetailModal = ({ product, isOpen, onOpenChange, onAddToCart }: Prod
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-6xl max-h-[95vh] overflow-y-auto bg-white border border-gray-200">
+      <DialogContent className="w-[90vw] max-w-[90vw] max-h-[95vh] overflow-y-auto bg-white border border-gray-200">
         <DialogHeader className="border-b border-gray-200 pb-4">
           <DialogTitle className="text-xl sm:text-2xl font-bold text-black flex items-center gap-2">
             <Package className="h-5 w-5 sm:h-6 sm:w-6" />
